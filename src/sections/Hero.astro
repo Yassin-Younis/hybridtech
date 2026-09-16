@@ -17,8 +17,8 @@ const home = path(lang, '/');
 // Depth per layer: 1 = closest to the viewer (follows the pointer most, stays with the page on
 // scroll); lower = further back (drifts slower than the page on scroll).
 const people = [
-  { src: person1, cls: 'hero__person--1', depth: 0.55, alt: '', eager: false },
-  { src: person3, cls: 'hero__person--3', depth: 0.7, alt: '', eager: false },
+  { src: person1, cls: 'hero__person--1', depth: 0.55, alt: '', eager: true },
+  { src: person3, cls: 'hero__person--3', depth: 0.7, alt: '', eager: true },
   { src: person2, cls: 'hero__person--2', depth: 1, alt: d.hero.team, eager: true },
 ];
 ---
@@ -46,7 +46,7 @@ const people = [
       </div>
       {people.map((p, i) => (
         <div class={`hero__person hero__layer ${p.cls}`} style={`--d:${p.depth}; --i:${i}`}>
-          <Image src={p.src} alt={p.alt} widths={[480, 720, 900]} sizes="(min-width: 1000px) 34vw, 72vw" loading={p.eager ? 'eager' : 'lazy'} fetchpriority={p.eager ? 'high' : 'auto'} decoding="async" />
+          <Image src={p.src} alt={p.alt} format="webp" quality={68} widths={[320, 480, 640, 900]} sizes="(min-width: 1000px) 30vw, 46vw" loading="eager" fetchpriority={p.depth === 1 ? 'high' : 'auto'} decoding="async" />
         </div>
       ))}
     </div>
@@ -64,6 +64,16 @@ const people = [
   [dir='rtl'] .hero__glow { transform: scaleX(-1); }
   .hero__in { position: relative; z-index: 1; display: grid; gap: 24px; align-items: end; }
   .hero__copy { align-self: center; padding-block-end: 8px; }
+  @media (max-width: 999px) {
+    .hero { height: calc(100svh - var(--mq-h)); min-height: 540px; padding-block-start: 96px; }
+    .hero__in { grid-template-rows: auto minmax(0, 1fr); gap: 0; height: 100%; }
+    .hero__copy { align-self: start; padding-block-end: 0; }
+    .hero__h1 { font-size: clamp(2rem, 8.4vw, 3.2rem); }
+    .hero__h1 .eyebrow { margin-block-end: 14px; font-size: 0.68rem; letter-spacing: 0.22em; }
+    .hero__sub { margin-block: 12px 18px; font-size: 1rem; }
+    .hero__cta .btn { padding: 0.8em 1.2em; font-size: 0.88rem; }
+  }
+  @media (max-width: 480px) { .hero__sub { display: none; } .hero__h1 { margin-block-end: 18px; } }
   @media (min-width: 1000px) {
     .hero { --hero-pb: 96px; padding-block-start: 132px; }
     .hero__in { grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: 0; }
@@ -83,7 +93,7 @@ const people = [
 
 
   /* Stage: a fixed-height box so the absolutely positioned layers never shift layout */
-  .hero__stage { --px: 0px; --py: 0px; --sx: 0px; --sy: 0px; position: relative; height: clamp(380px, 118vw, 580px); margin-inline: -8vw; pointer-events: none; }
+  .hero__stage { --px: 0px; --py: 0px; --sx: 0px; --sy: 0px; position: relative; height: auto; min-height: 200px; margin-inline: -8vw; pointer-events: none; }
   @media (min-width: 1000px) { .hero__stage { height: min(62vw, 880px, 100svh - var(--mq-h) - 76px); margin-block-start: -56px; margin-inline: -80px -7vw; } }
   .hero__layer { position: absolute; --d: 1; }
   html.motion-ok .hero__layer { transform: translate3d(calc(var(--px) * var(--d) + var(--sx) * (1 - var(--d))), calc(var(--py) * var(--d) + var(--sy) * (1 - var(--d))), 0); will-change: transform; }
@@ -96,6 +106,7 @@ const people = [
   @keyframes arcFill { to { opacity: 0.1; } }
 
   .hero__person { bottom: 0; }
+  .hero__person :global(picture) { display: contents; }
   .hero__person img { display: block; height: 100%; width: auto; max-width: none; mask-image: linear-gradient(to top, transparent 0, #000 16%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 16%); }
   .hero__person--1 { inset-inline-start: -2%; height: 90%; z-index: 1; filter: brightness(0.86) saturate(0.92); }
   .hero__person--3 { inset-inline-end: -4%; height: 80%; z-index: 2; filter: brightness(0.9) saturate(0.95); }

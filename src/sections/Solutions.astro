@@ -20,7 +20,7 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
     <ul class="strip" data-reveal>
       {d.solutions.items.map((s, i) => (
         <li class="panel" id={`sol-${s.id}`} tabindex="0" style={`--i:${i}`}>
-          <Image src={img(s.id)!} alt={s.title} widths={[480, 800, 1100]} sizes="(max-width: 760px) 100vw, 40vw" class="panel__img" loading={i === 0 ? 'eager' : 'lazy'} />
+          <Image src={img(s.id)!} alt={s.title} format="webp" quality={66} widths={[400, 640, 928]} sizes="(min-width: 900px) 36vw, 100vw" class="panel__img" loading="lazy" decoding="async" />
           <div class="panel__shade" aria-hidden="true"></div>
           <span class="panel__icon"><Icon name={s.icon} /></span>
           <div class="panel__body">
@@ -37,6 +37,7 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
   .container--wide { width: min(100% - 2 * var(--gutter), 1360px); }
   .strip { display: grid; gap: 14px; }
   .panel { position: relative; overflow: hidden; border-radius: var(--radius-lg); background: var(--blue-ink); color: #fff; min-height: 420px; display: flex; flex-direction: column; justify-content: space-between; padding: 20px; isolation: isolate; outline-offset: 4px; cursor: pointer; }
+  .panel :global(picture) { display: contents; }
   .panel__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: scale 1.2s var(--ease-out), filter 0.6s; filter: saturate(0.85); }
   .panel__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,38,61,0.25) 0%, rgba(0,38,61,0.1) 35%, rgba(0,38,61,0.85) 75%, rgba(0,38,61,0.95) 100%); }
   .panel__icon { align-self: flex-start; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.12); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); color: #fff; }

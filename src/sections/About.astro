@@ -50,8 +50,10 @@ const lines = [
       <figure class="about__photo" data-reveal="fade">
         <Image
           src={team}
+          format="webp"
+          quality={66}
           alt="Hybrid Technology team in Cairo"
-          widths={[480, 760, 1000, 1264]}
+          widths={[480, 760, 1000]}
           sizes="(max-width: 959px) 100vw, (max-width: 1280px) 56vw, 680px"
           loading="lazy"
         />
@@ -120,6 +122,7 @@ const lines = [
   [dir='rtl'] .about__photo { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--cut))); }
   [dir='rtl'] .about__photo img { clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--seam)), 0 calc(100% - var(--cut) - var(--seam))); }
   .about__photo:hover img { scale: 1.035; }
+  .about__photo :global(picture) { display: contents; }
   .about__mark { position: absolute; z-index: 1; inset-inline-end: -6%; inset-block-end: 14%; width: 34%; color: #fff; opacity: 0.35; pointer-events: none; }
   [dir='rtl'] .about__mark { transform: scaleX(-1); }
   @media (min-width: 960px) {
