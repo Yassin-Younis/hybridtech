@@ -1,4 +1,4 @@
-// Hero parallax: the stage (people, arc mark, pills) reacts to the pointer and to scroll.
+// Hero parallax: the stage (people, arc mark) reacts to the pointer and to scroll.
 // The script only writes four custom properties on the stage; each layer's CSS turns them into a
 // transform weighted by its own depth (--d), so one style write per frame moves every layer.
 // Gated on prefers-reduced-motion like motion.ts; with reduced motion or no JS the props stay 0
