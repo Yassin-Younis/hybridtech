@@ -34,8 +34,8 @@ const preloadFonts = lang === 'ar' ? [messiri700, messiri400] : [chakra700, inst
           var pref = localStorage.getItem(key);
           if (!pref) { pref = /^ar\b/i.test(navigator.language || '') ? 'ar' : 'en'; localStorage.setItem(key, pref); }
           if (pref !== cur && !sessionStorage.getItem('hy_redir')) { sessionStorage.setItem('hy_redir', '1'); location.replace(h.dataset.alt + location.hash); return; }
-          // Logo intro: first page view of the session only, never with reduced motion (Intro.astro).
-          if (!sessionStorage.getItem('hy_intro') && matchMedia('(prefers-reduced-motion: no-preference)').matches) { sessionStorage.setItem('hy_intro', '1'); h.classList.add('hy-intro'); }
+          // Logo intro: every page load, never with reduced motion (Intro.astro).
+          if (matchMedia('(prefers-reduced-motion: no-preference)').matches) h.classList.add('hy-intro');
         } catch (e) {}
       })();
     </script>
