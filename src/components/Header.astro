@@ -33,7 +33,10 @@ const alt = path(otherLang(lang), page);
         <a class="btn btn--sm" href={`${home}#contact`} data-magnetic>{d.nav.cta}<Icon name="arrow" class="icon--dir" /></a>
       </div>
     </nav>
-    <label for="nav-toggle" class="hdr__burger" aria-label={d.nav.menu}><Icon name="menu" class="i-menu" /><Icon name="close" class="i-close" /></label>
+    <div class="hdr__bar">
+      <a class="hdr__lang hdr__lang--bar" href={alt} hreflang={otherLang(lang)} lang={otherLang(lang)} data-lang-toggle={otherLang(lang)}><Icon name="globe" /><span>{d.otherName}</span></a>
+      <label for="nav-toggle" class="hdr__burger" aria-label={d.nav.menu}><Icon name="menu" class="i-menu" /><Icon name="close" class="i-close" /></label>
+    </div>
   </div>
 </header>
 <style>
@@ -59,11 +62,17 @@ const alt = path(otherLang(lang), page);
   .hdr__lang { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; transition: border-color 0.25s, background 0.25s; }
   .hdr__lang:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
   .hdr__lang .icon { width: 18px; height: 18px; }
+  /* Phones: the language switch sits in the bar next to the menu, one tap away. */
+  .hdr__bar { display: none; align-items: center; gap: 8px; }
   .hdr__burger { display: none; width: 44px; height: 44px; place-items: center; cursor: pointer; border-radius: 10px; }
   .hdr__burger :global(.icon) { width: 26px; height: 26px; grid-area: 1 / 1; }
   .hdr__burger :global(.i-close) { display: none; }
   @media (max-width: 960px) {
+    .hdr__bar { display: flex; }
     .hdr__burger { display: grid; }
+    .hdr__actions .hdr__lang { display: none; }
+    .hdr__lang--bar { font-size: 0.85rem; padding: 6px 11px; }
+    .hdr__lang--bar .icon { width: 16px; height: 16px; }
     .hdr__nav { position: fixed; inset: 76px 0 0 0; background: var(--blue-ink); flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 32px var(--gutter); gap: 32px; translate: 0 -8px; opacity: 0; visibility: hidden; transition: opacity 0.35s var(--ease-out), translate 0.35s var(--ease-out), visibility 0.35s; overflow: auto; }
     .hdr:has(.nav-toggle:checked) .hdr__nav { opacity: 1; visibility: visible; translate: 0 0; }
     .hdr:has(.nav-toggle:checked) .hdr__burger :global(.i-menu) { display: none; }
