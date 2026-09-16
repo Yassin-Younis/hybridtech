@@ -6,7 +6,7 @@ import Icon from '../components/Icon.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
 import person1 from '../assets/hero/person-1.png';
 import person2 from '../assets/hero/person-2.png';
-import person3 from '../assets/hero/person-3.png';
+import omar from '../assets/hero/omar.png';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
@@ -14,9 +14,9 @@ const home = path(lang, '/');
 // Depth per layer: 1 = closest to the viewer (follows the pointer most, stays with the page on
 // scroll); lower = further back (drifts slower than the page on scroll).
 const people = [
-  { src: person1, cls: 'hero__person--1', depth: 0.55, alt: '', eager: true },
-  { src: person3, cls: 'hero__person--3', depth: 0.7, alt: '', eager: true },
-  { src: person2, cls: 'hero__person--2', depth: 1, alt: d.hero.team, eager: true },
+  { src: person2, cls: 'hero__person--1', depth: 0.55, alt: '', eager: true },
+  { src: person1, cls: 'hero__person--3', depth: 0.7, alt: '', eager: true },
+  { src: omar, cls: 'hero__person--2', depth: 1, alt: d.hero.team, eager: true },
 ];
 ---
 <section class="hero section--dark" id="top">
@@ -95,14 +95,14 @@ const people = [
   .hero__person { bottom: 0; }
   .hero__person :global(picture) { display: contents; }
   .hero__person img { display: block; height: 100%; width: auto; max-width: none; mask-image: linear-gradient(to top, transparent 0, #000 16%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 16%); }
-  .hero__person--1 { inset-inline-start: -9%; height: 90%; z-index: 1; filter: brightness(0.86) saturate(0.92); }
-  .hero__person--3 { inset-inline-end: -2%; height: 80%; z-index: 2; filter: brightness(0.9) saturate(0.95); }
-  .hero__person--2 { inset-inline-start: 15%; height: 100%; z-index: 3; filter: drop-shadow(0 24px 40px rgba(0, 20, 35, 0.55)); }
+  .hero__person--1 { inset-inline-start: -6%; height: 90%; z-index: 1; filter: brightness(0.86) saturate(0.92); }
+  .hero__person--3 { inset-inline-end: 2%; height: 76%; z-index: 2; filter: brightness(0.9) saturate(0.95); }
+  .hero__person--2 { inset-inline-start: 23%; height: 100%; z-index: 3; filter: drop-shadow(0 24px 40px rgba(0, 20, 35, 0.55)); }
   /* In RTL the stage sits against the start edge, so the group shifts toward the copy */
   @media (min-width: 1000px) {
-    :global([dir='rtl']) .hero__person--1 { inset-inline-start: -3%; }
-    :global([dir='rtl']) .hero__person--2 { inset-inline-start: 21%; }
-    :global([dir='rtl']) .hero__person--3 { inset-inline-end: -8%; }
+    :global([dir='rtl']) .hero__person--1 { inset-inline-start: 0%; }
+    :global([dir='rtl']) .hero__person--2 { inset-inline-start: 29%; }
+    :global([dir='rtl']) .hero__person--3 { inset-inline-end: -4%; }
   }
 
 
@@ -119,9 +119,9 @@ const people = [
      so the figures scale with the screen. */
   @media (max-width: 999px) {
     .hero__stage { align-self: stretch; container-type: size; margin-inline: calc(-1 * var(--gutter)); }
-    .hero__person--2 { height: 100cqh; inset-inline-start: auto; left: calc(50% - 30.6cqh); }
-    .hero__person--1 { height: 84cqh; inset-inline-start: max(-18cqh, -12%); }
-    .hero__person--3 { height: 80cqh; inset-inline-end: max(-20cqh, -14%); }
+    .hero__person--2 { height: 100cqh; inset-inline-start: auto; left: calc(50% - 24.3cqh); }
+    .hero__person--1 { height: 82cqh; inset-inline-start: max(-10cqh, -7%); }
+    .hero__person--3 { height: 74cqh; inset-inline-end: max(-8cqh, -6%); }
     .hero__person img { mask-image: linear-gradient(to top, transparent 0, #000 10%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 10%); }
   }
 </style>
