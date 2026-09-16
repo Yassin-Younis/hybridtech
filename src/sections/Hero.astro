@@ -36,9 +36,6 @@ const people = [
         <a class="btn" href={`${home}#solutions`} data-magnetic>{d.hero.primary}<Icon name="arrow" class="icon--dir" /></a>
         <a class="btn btn--ghost" href={`${home}#contact`}>{d.hero.secondary}</a>
       </div>
-      <div class="hero__proof hero__fade" style="--i:2">
-        <p class="hero__stat"><strong class="num">{d.hero.projects.n}</strong><span>{d.hero.projects.label}</span></p>
-      </div>
     </div>
     <div class="hero__stage">
       <div class="hero__arc-wrap hero__layer" style="--d:0.3" aria-hidden="true">
@@ -54,7 +51,7 @@ const people = [
       ))}
     </div>
   </div>
-  <a class="hero__scroll hero__fade" style="--i:4" href={`${home}#partners`} aria-label={d.hero.scroll}><span>{d.hero.scroll}</span><Icon name="chevron" /></a>
+  <a class="hero__scroll" style="--i:4" href={`${home}#partners`} aria-label={d.hero.scroll}><span>{d.hero.scroll}</span><Icon name="chevron" /></a>
 </section>
 <script>import '../scripts/hero';</script>
 <style>
@@ -84,12 +81,6 @@ const people = [
   .hero__sub { margin-block: 24px 32px; max-width: 44ch; font-size: 1.1rem; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; }
 
-  /* Social proof */
-  .hero__proof { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 36px; margin-block-start: 44px; padding-block-start: 22px; border-block-start: 1px solid rgba(255, 255, 255, 0.12); }
-  .hero__stat { display: flex; align-items: baseline; gap: 10px; white-space: nowrap; }
-  .hero__stat strong { font-family: var(--font-num); font-size: 1.7rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: #fff; }
-  .hero__stat span { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--on-dark-muted); }
-  :lang(ar) .hero__stat span { letter-spacing: 0; text-transform: none; font-size: 0.9rem; }
 
   /* Stage: a fixed-height box so the absolutely positioned layers never shift layout */
   .hero__stage { --px: 0px; --py: 0px; --sx: 0px; --sy: 0px; position: relative; height: clamp(380px, 118vw, 580px); margin-inline: -8vw; pointer-events: none; }
@@ -112,9 +103,11 @@ const people = [
 
 
   /* Scroll cue */
-  .hero__scroll { position: absolute; bottom: 26px; inset-inline-start: max(var(--gutter), calc((100% - var(--container)) / 2)); display: none; flex-direction: column; align-items: flex-start; gap: 2px; font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); z-index: 2; }
+  .hero__scroll { position: absolute; bottom: 22px; left: 50%; translate: -50% 0; display: none; flex-direction: column; align-items: center; gap: 2px; font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); z-index: 5; text-shadow: 0 2px 12px rgba(0, 20, 35, 0.6); }
   @media (min-width: 1000px) { .hero__scroll { display: inline-flex; } }
   :lang(ar) .hero__scroll { letter-spacing: 0; font-size: 0.85rem; }
+  .hero__scroll span { padding-inline-start: 0.3em; }
+  :lang(ar) .hero__scroll span { padding-inline-start: 0; }
   .hero__scroll .icon { width: 18px; height: 18px; animation: bob 2s ease-in-out infinite; }
   @keyframes bob { 50% { translate: 0 5px; } }
   @media (prefers-reduced-motion: reduce) { .hero__scroll .icon { animation: none; } }

@@ -74,6 +74,10 @@ const lines = [
   /* Flat on the page: copy on the start side, the team photo bleeding off the inline-end edge of the
      viewport behind a slanted orange seam (the letterhead bar), values as a ruled strip under the copy. */
   .about { --cut: clamp(40px, 7vw, 110px); --seam: 5px; overflow: hidden; }
+  /* The shared `.circuit + *` rule makes the container a positioning box; release it so the photo
+     can anchor to the section itself and bleed to its top, bottom and inline-end edges. */
+  .about > .container { position: static; }
+  @media (max-width: 959px) { .about { padding-block-start: 0; } }
   .about__plate { position: relative; display: grid; }
   @media (min-width: 960px) {
     .about__plate { position: static; grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); grid-template-rows: 1fr auto; min-height: 460px; }

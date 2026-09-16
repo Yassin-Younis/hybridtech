@@ -10,7 +10,6 @@ export const en = {
     sub: 'Enterprise hardware, networks and managed IT. One partner, since 2020.',
     primary: 'Explore solutions',
     secondary: 'Request a quote',
-    projects: { n: '500+', label: 'projects delivered' },
     team: 'The Hybrid Technology team',
     scroll: 'Scroll',
   },
