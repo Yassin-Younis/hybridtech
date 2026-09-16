@@ -1,0 +1,42 @@
+---
+import { en } from '../i18n/en';
+import { ar } from '../i18n/ar';
+import { path, asset } from '../i18n';
+import '@fontsource/chakra-petch/700.css';
+import '@fontsource/el-messiri/700.css';
+import '@fontsource/instrument-sans/400.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 · Hybrid Technology</title>
+    <meta name="robots" content="noindex" />
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <script is:inline>
+      try { var l = localStorage.getItem('hy_lang') || (/^ar\b/i.test(navigator.language || '') ? 'ar' : 'en'); document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'; } catch (e) {}
+    </script>
+  </head>
+  <body class="nf section--dark">
+    <main class="nf__in">
+      <img src={asset('brand/logo-mono.svg')} alt="Hybrid Technology" width="260" height="19" />
+      <p class="nf__code num">404</p>
+      <div class="nf__en"><h1>{en.notFound.title}</h1><p>{en.notFound.body}</p><a class="btn" href={path('en', '/')}>{en.notFound.home}</a></div>
+      <div class="nf__ar" lang="ar" dir="rtl"><h1>{ar.notFound.title}</h1><p>{ar.notFound.body}</p><a class="btn" href={path('ar', '/')}>{ar.notFound.home}</a></div>
+    </main>
+  </body>
+</html>
+<style>
+  .nf { min-height: 100svh; display: grid; place-items: center; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); color: var(--on-dark); }
+  .nf__in { text-align: center; padding: 40px var(--gutter); display: grid; gap: 24px; justify-items: center; }
+  .nf__in img { color: #fff; }
+  .nf__code { font-family: 'Chakra Petch', sans-serif; font-size: clamp(5rem, 18vw, 10rem); line-height: 1; font-weight: 700; color: var(--orange); }
+  .nf__en, .nf__ar { display: grid; gap: 12px; justify-items: center; }
+  html[lang='ar'] .nf__en { display: none; }
+  html[lang='en'] .nf__ar { display: none; }
+  .nf__ar { font-family: 'El Messiri', sans-serif; }
+  h1 { font-size: 1.8rem; color: #fff; }
+</style>

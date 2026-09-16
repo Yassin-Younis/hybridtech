@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://yassin-younis.github.io/hybridtech/sitemap-index.xml

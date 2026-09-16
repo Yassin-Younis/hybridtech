@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import type { Lang } from '../i18n';
+import { t, path } from '../i18n';
+import ProductCard from '../components/ProductCard.astro';
+import Icon from '../components/Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const items = (await getCollection('products', (p) => p.data.featured)).slice(0, 8);
+---
+<section class="section section--surface fp" id="products">
+  <div class="container">
+    <div class="section-head section-head--split" data-reveal>
+      <div><p class="eyebrow">{d.products.eyebrow}</p><h2 class="title">{d.products.title}</h2></div>
+      <p class="lead">{d.products.intro}</p>
+    </div>
+    <div class="grid grid--4">
+      {items.map((p) => <div data-reveal><ProductCard product={p} lang={lang} /></div>)}
+    </div>
+    <div class="fp__more" data-reveal>
+      <p class="lead">{d.products.stockNote}</p>
+      <a class="btn" href={path(lang, '/products')} data-magnetic>{d.products.viewAll}<Icon name="arrow" class="icon--dir" /></a>
+    </div>
+  </div>
+</section>
+<style>
+  .fp__more { margin-block-start: 48px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+</style>

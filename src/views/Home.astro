@@ -1,0 +1,30 @@
+---
+import type { Lang } from '../i18n';
+import { t } from '../i18n';
+import Base from '../layouts/Base.astro';
+import Hero from '../sections/Hero.astro';
+import Marquee from '../sections/Marquee.astro';
+import About from '../sections/About.astro';
+import Stats from '../sections/Stats.astro';
+import Solutions from '../sections/Solutions.astro';
+import WhyUs from '../sections/WhyUs.astro';
+import FeaturedProducts from '../sections/FeaturedProducts.astro';
+import Partners from '../sections/Partners.astro';
+import Clients from '../sections/Clients.astro';
+import Contact from '../sections/Contact.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+---
+<Base lang={lang} title={d.seo.title} description={d.seo.description} page="/">
+  <Hero lang={lang} />
+  <Marquee lang={lang} />
+  <About lang={lang} />
+  <Stats lang={lang} />
+  <Solutions lang={lang} />
+  <WhyUs lang={lang} />
+  <FeaturedProducts lang={lang} />
+  <Partners lang={lang} />
+  <Clients lang={lang} />
+  <Contact lang={lang} />
+</Base>

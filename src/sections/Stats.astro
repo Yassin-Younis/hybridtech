@@ -1,0 +1,28 @@
+---
+import type { Lang } from '../i18n';
+import { t } from '../i18n';
+interface Props { lang: Lang }
+const d = t(Astro.props.lang);
+---
+<section class="stats section--dark band" aria-label="Key figures">
+  <div class="container">
+    <ul class="stats__grid">
+      {d.stats.items.map((s) => (
+        <li data-reveal>
+          <p class="stats__n num"><span data-count={s.n}>{s.n}</span><span class="stats__sfx">{s.suffix}</span></p>
+          <p class="stats__l">{s.label}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .stats { background: linear-gradient(100deg, var(--blue-ink), var(--blue-deep) 60%, var(--blue)); }
+  .stats__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  @media (min-width: 900px) { .stats__grid { grid-template-columns: repeat(4, 1fr); } }
+  .stats__grid li { position: relative; padding-inline-start: 20px; }
+  .stats__grid li::before { content: ''; position: absolute; inset-inline-start: 0; top: 8px; bottom: 8px; width: 2px; background: var(--orange); }
+  .stats__n { font-size: clamp(2.6rem, 5vw, 4rem); font-weight: 700; line-height: 1; color: #fff; }
+  .stats__sfx { color: var(--orange); font-size: 0.6em; margin-inline-start: 2px; }
+  .stats__l { margin-block-start: 10px; color: var(--on-dark-muted); max-width: 22ch; }
+</style>

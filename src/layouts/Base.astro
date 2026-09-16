@@ -1,0 +1,56 @@
+---
+import '@fontsource/chakra-petch/500.css';
+import '@fontsource/chakra-petch/600.css';
+import '@fontsource/chakra-petch/700.css';
+import '@fontsource/instrument-sans/400.css';
+import '@fontsource/instrument-sans/500.css';
+import '@fontsource/instrument-sans/600.css';
+import '@fontsource/el-messiri/400.css';
+import '@fontsource/el-messiri/600.css';
+import '@fontsource/el-messiri/700.css';
+import '../styles/tokens.css';
+import '../styles/base.css';
+import '../styles/motion.css';
+import type { Lang } from '../i18n';
+import { dirOf, path, asset, otherLang } from '../i18n';
+import SEO from '../components/SEO.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+interface Props { lang: Lang; title: string; description: string; page: string }
+const { lang, title, description, page } = Astro.props;
+const alt = path(otherLang(lang), page);
+---
+<!doctype html>
+<html lang={lang} dir={dirOf(lang)} data-alt={alt}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Language preference: honour a stored choice (or the browser's Arabic) once per session.
+      (function () {
+        try {
+          var h = document.documentElement, cur = h.lang, key = 'hy_lang';
+          var pref = localStorage.getItem(key);
+          if (!pref) { pref = /^ar\b/i.test(navigator.language || '') ? 'ar' : 'en'; localStorage.setItem(key, pref); }
+          if (pref !== cur && !sessionStorage.getItem('hy_redir')) { sessionStorage.setItem('hy_redir', '1'); location.replace(h.dataset.alt + location.hash); }
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+    <link rel="icon" href={asset('favicon-32.png')} type="image/png" sizes="32x32" />
+    <link rel="apple-touch-icon" href={asset('apple-touch-icon.png')} />
+    <link rel="manifest" href={asset('site.webmanifest')} />
+    <SEO {lang} {title} {description} {page} />
+    <meta name="generator" content={Astro.generator} />
+  </head>
+  <body>
+    <Header {lang} {page} />
+    <main id="main"><slot /></main>
+    <Footer {lang} {page} />
+    <WhatsAppFab {lang} />
+    <script>
+      import '../scripts/main';
+    </script>
+  </body>
+</html>

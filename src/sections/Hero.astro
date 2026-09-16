@@ -1,0 +1,71 @@
+---
+import mark from '../../public/brand/mark.svg?raw';
+import type { Lang } from '../i18n';
+import { t, path } from '../i18n';
+import Icon from '../components/Icon.astro';
+import CircuitLayer from '../components/CircuitLayer.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const viewBox = mark.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
+const paths = Array.from(mark.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
+const home = path(lang, '/');
+---
+<section class="hero section--dark" id="top">
+  <CircuitLayer draw />
+  <div class="container hero__in">
+    <div class="hero__copy">
+      <h1 class="hero__h1">
+        <span class="eyebrow hero__fade" style="--i:-4">{d.hero.eyebrow}</span>
+        {d.hero.lines.map((line, i) => <span class="hero__line-wrap"><span class="hero__line" style={`--i:${i}`}>{line}</span></span>)}
+      </h1>
+      <p class="lead hero__sub hero__fade" style="--i:0">{d.hero.sub}</p>
+      <div class="hero__cta hero__fade" style="--i:1">
+        <a class="btn" href={`${home}#solutions`} data-magnetic>{d.hero.primary}<Icon name="arrow" class="icon--dir" /></a>
+        <a class="btn btn--ghost" href={`${home}#contact`}>{d.hero.secondary}</a>
+      </div>
+      <ul class="hero__trust hero__fade" style="--i:2">
+        {d.hero.trust.map((s) => <li><Icon name="check" />{s}</li>)}
+      </ul>
+    </div>
+    <div class="hero__visual" aria-hidden="true">
+      <svg class="hero__arc" viewBox={viewBox} fill="none">
+        {paths.map((p) => <path d={p} pathLength="1" stroke="currentColor" stroke-width="0.35" />)}
+        {paths.map((p) => <path d={p} class="hero__arc-fill" fill="currentColor" />)}
+      </svg>
+    </div>
+  </div>
+  <a class="hero__scroll hero__fade" style="--i:4" href={`${home}#partners`} aria-label={d.hero.scroll}><span>{d.hero.scroll}</span><Icon name="chevron" /></a>
+</section>
+<style>
+  .hero { position: relative; min-height: 100svh; display: grid; align-items: center; padding-block: 140px 96px; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; }
+  .hero__in { display: grid; gap: 40px; align-items: center; }
+  @media (min-width: 1000px) { .hero__in { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); } }
+  .hero__h1 { font-size: clamp(2.6rem, 7vw, 5.4rem); line-height: 1; letter-spacing: -0.025em; }
+  :lang(ar) .hero__h1 { font-size: clamp(2.4rem, 6.5vw, 4.8rem); line-height: 1.25; }
+  .hero__h1 .eyebrow { display: inline-flex; font-size: 0.8rem; margin-block-end: 28px; color: var(--orange); letter-spacing: 0.3em; }
+  :lang(ar) .hero__h1 .eyebrow { font-size: 1rem; letter-spacing: 0; }
+  .hero__line-wrap { display: block; overflow: hidden; padding-block-end: 0.08em; }
+  .hero__line { display: block; }
+  .hero__line-wrap:last-child .hero__line { color: #fff; }
+  .hero__line-wrap:last-child .hero__line { background: linear-gradient(90deg, #fff 30%, #9fd3ec); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero__sub { margin-block: 28px 36px; max-width: 54ch; font-size: 1.15rem; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; }
+  .hero__trust { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-block-start: 40px; font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--on-dark-muted); }
+  :lang(ar) .hero__trust { letter-spacing: 0; font-size: 0.95rem; }
+  .hero__trust li { display: inline-flex; align-items: center; gap: 8px; }
+  .hero__trust .icon { width: 16px; height: 16px; color: var(--orange); }
+  .hero__visual { position: relative; display: none; }
+  @media (min-width: 1000px) { .hero__visual { display: block; } }
+  .hero__arc { width: 100%; max-width: 520px; margin-inline-start: auto; color: #fff; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.35)); }
+  [dir='rtl'] .hero__arc { transform: scaleX(-1); margin-inline-start: auto; }
+  .hero__arc-fill { opacity: 0.12; }
+  html.motion-ok .hero__arc-fill { opacity: 0; animation: arcFill 1.2s var(--ease-out) 1.9s forwards; }
+  @keyframes arcFill { to { opacity: 0.12; } }
+  .hero__scroll { position: absolute; bottom: 28px; inset-inline-start: 50%; translate: -50% 0; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); }
+  [dir='rtl'] .hero__scroll { translate: 50% 0; }
+  :lang(ar) .hero__scroll { letter-spacing: 0; font-size: 0.85rem; }
+  .hero__scroll .icon { width: 18px; height: 18px; animation: bob 2s ease-in-out infinite; }
+  @keyframes bob { 50% { translate: 0 5px; } }
+  @media (prefers-reduced-motion: reduce) { .hero__scroll .icon { animation: none; } }
+</style>

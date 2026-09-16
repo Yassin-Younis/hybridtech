@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import type { Lang } from '../i18n';
+import { t, pick, fill, path } from '../i18n';
+import { categories } from '../data/categories';
+import Base from '../layouts/Base.astro';
+import ProductCard from '../components/ProductCard.astro';
+import CircuitLayer from '../components/CircuitLayer.astro';
+import Icon from '../components/Icon.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const items = await getCollection('products');
+const brands = [...new Set(items.map((p) => p.data.brand))].sort();
+const counts = Object.fromEntries(categories.map((c) => [c.id, items.filter((p) => p.data.category === c.id).length]));
+const home = path(lang, '/');
+---
+<Base lang={lang} title={d.seo.productsTitle} description={d.seo.productsDescription} page="/products">
+  <section class="ph section--dark">
+    <CircuitLayer />
+    <div class="container">
+      <p class="eyebrow">{d.products.eyebrow}</p>
+      <h1 class="title ph__title">{d.products.pageTitle}</h1>
+      <p class="lead">{d.products.pageIntro}</p>
+    </div>
+  </section>
+  <section class="section section--surface cat">
+    <div class="container">
+      <div class="cat__bar">
+        <nav class="cat__chips" aria-label={d.products.filterCat}>
+          <a href={path(lang, '/products')} class="cat__chip is-active" data-cat="all">{d.products.all}<span class="num">{items.length}</span></a>
+          {categories.map((c) => <a href={`${path(lang, '/products')}?cat=${c.id}`} class="cat__chip" data-cat={c.id}><Icon name={c.icon} />{pick(lang, c.label)}<span class="num">{counts[c.id]}</span></a>)}
+        </nav>
+        <div class="cat__tools">
+          <label class="cat__brand"><span>{d.products.filterBrand}</span>
+            <select id="brand"><option value="all">{d.products.allBrands}</option>{brands.map((b) => <option value={b}>{b}</option>)}</select>
+          </label>
+          <p class="cat__count" id="count" data-tpl={d.products.count}>{fill(d.products.count, { n: items.length })}</p>
+        </div>
+      </div>
+      <div class="grid grid--4" id="catalog">
+        {items.map((p) => <ProductCard product={p} lang={lang} />)}
+      </div>
+      <p class="cat__empty card" id="empty" hidden>{d.products.empty}</p>
+      <div class="cat__note">
+        <p class="lead">{d.products.stockNote}</p>
+        <a class="btn" href={`${home}#contact`} data-magnetic>{d.nav.cta}<Icon name="arrow" class="icon--dir" /></a>
+      </div>
+    </div>
+  </section>
+  <script>import '../scripts/filter';</script>
+</Base>
+<style>
+  .ph { position: relative; padding-block: 150px 72px; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; }
+  .ph__title { color: #fff; }
+  .cat__bar { display: grid; gap: 18px; margin-block-end: 32px; }
+  .cat__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .cat__chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; transition: background 0.25s, color 0.25s, border-color 0.25s; }
+  .cat__chip .icon { width: 16px; height: 16px; }
+  .cat__chip .num { font-size: 0.75rem; color: var(--muted); }
+  .cat__chip:hover { border-color: var(--blue); }
+  .cat__chip.is-active { background: var(--blue-deep); color: #fff; border-color: var(--blue-deep); }
+  .cat__chip.is-active .num { color: var(--on-dark-muted); }
+  .cat__tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; }
+  .cat__brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  :lang(ar) .cat__brand { letter-spacing: 0; font-size: 0.95rem; }
+  .cat__brand select { font: inherit; font-family: var(--font-body); letter-spacing: 0; text-transform: none; color: var(--ink); background: var(--paper); border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; }
+  .cat__count { font-family: var(--font-display); color: var(--muted); font-size: 0.9rem; }
+  .cat__empty { text-align: center; color: var(--muted); }
+  .cat__note { margin-block-start: 48px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between; }
+</style>

@@ -1,0 +1,71 @@
+---
+import type { Lang } from '../i18n';
+import { t, path, asset, fill, otherLang } from '../i18n';
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; page: string }
+const { lang, page } = Astro.props;
+const d = t(lang);
+const home = path(lang, '/');
+const year = new Date().getFullYear();
+---
+<footer class="ftr">
+  <div class="ftr__bars" aria-hidden="true">
+    <div class="ftr__bar ftr__bar--orange"><span>{d.footer.site}</span></div>
+    <div class="ftr__bar ftr__bar--blue"><span><bdi dir="ltr">{site.address.street}, {site.address.area}, {site.address.city} {site.address.postal}</bdi></span></div>
+  </div>
+  <div class="container ftr__in">
+    <div class="ftr__brand">
+      <img src={asset('brand/logo-mono.svg')} alt="Hybrid Technology" width="240" height="18" />
+      <p class="ftr__tag">{d.footer.tagline}</p>
+      <a class="ftr__site" href={site.url} rel="noopener"><bdi dir="ltr">{d.footer.site}</bdi><Icon name="external" /></a>
+    </div>
+    <div class="ftr__col">
+      <h3 class="ftr__h">{d.footer.explore}</h3>
+      <ul>
+        <li><a href={`${home}#about`}>{d.nav.about}</a></li>
+        <li><a href={`${home}#solutions`}>{d.nav.solutions}</a></li>
+        <li><a href={path(lang, '/products')}>{d.nav.products}</a></li>
+        <li><a href={`${home}#partners`}>{d.nav.partners}</a></li>
+        <li><a href={`${home}#clients`}>{d.nav.clients}</a></li>
+        <li><a href={path(otherLang(lang), page)} hreflang={otherLang(lang)} lang={otherLang(lang)} data-lang-toggle={otherLang(lang)}>{d.otherName}</a></li>
+      </ul>
+    </div>
+    <div class="ftr__col">
+      <h3 class="ftr__h">{d.footer.reach}</h3>
+      <ul>
+        <li><a href={`tel:${site.phoneE164}`}><Icon name="phone" /><bdi dir="ltr">{site.phoneDisplay}</bdi></a></li>
+        <li><a href={`https://wa.me/${site.whatsapp}`} rel="noopener" target="_blank"><Icon name="whatsapp" />WhatsApp</a></li>
+        <li><a href={`mailto:${site.email}`}><Icon name="mail" /><bdi dir="ltr">{site.email}</bdi></a></li>
+        <li><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsQuery)}`} rel="noopener" target="_blank"><Icon name="pin" />{d.contact.address}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container ftr__legal">
+    <p>{fill(d.footer.rights, { year })}</p>
+    <p class="ftr__tm">{d.footer.trademarks}</p>
+  </div>
+</footer>
+<style>
+  .ftr { background: var(--blue-ink); color: var(--on-dark); position: relative; }
+  .ftr__bars { display: flex; font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; overflow: hidden; }
+  .ftr__bar { padding: 14px clamp(20px, 5vw, 64px); display: flex; align-items: center; white-space: nowrap; }
+  .ftr__bar--orange { background: var(--orange); color: #fff; font-style: italic; font-size: 1.05rem; padding-inline-end: calc(clamp(20px, 5vw, 64px) + 28px); clip-path: polygon(0 0, 100% 0, calc(100% - 28px) 100%, 0 100%); flex: none; }
+  .ftr__bar--blue { background: var(--blue-deep); flex: 1; margin-inline-start: -28px; padding-inline-start: 48px; color: var(--on-dark); overflow: hidden; text-overflow: ellipsis; }
+  [dir='rtl'] .ftr__bar--orange { clip-path: polygon(28px 0, 100% 0, 100% 100%, 0 100%); }
+  @media (max-width: 640px) { .ftr__bar--blue { display: none; } .ftr__bar--orange { flex: 1; clip-path: none; padding-inline-end: 20px; } }
+  .ftr__in { display: grid; gap: 40px; padding-block: clamp(48px, 6vw, 80px) 32px; }
+  @media (min-width: 800px) { .ftr__in { grid-template-columns: 1.4fr 1fr 1.2fr; } }
+  .ftr__brand img { width: 240px; height: auto; color: #fff; }
+  .ftr__tag { margin-block: 20px 12px; color: var(--on-dark-muted); max-width: 36ch; }
+  .ftr__site { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 600; color: var(--orange); }
+  .ftr__site .icon { width: 16px; height: 16px; }
+  .ftr__h { font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); margin-block-end: 18px; }
+  :lang(ar) .ftr__h { letter-spacing: 0; font-size: 1rem; }
+  .ftr__col li { margin-block: 10px; }
+  .ftr__col a { display: inline-flex; align-items: center; gap: 10px; transition: color 0.25s; }
+  .ftr__col a:hover { color: var(--orange); }
+  .ftr__col .icon { width: 18px; height: 18px; color: var(--on-dark-muted); }
+  .ftr__legal { border-top: 1px solid rgba(255,255,255,0.1); padding-block: 22px 32px; display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; font-size: 0.85rem; color: var(--on-dark-muted); }
+  .ftr__tm { max-width: 60ch; }
+</style>

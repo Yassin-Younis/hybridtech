@@ -1,0 +1,77 @@
+---
+import type { Lang } from '../i18n';
+import { t, path, asset, otherLang } from '../i18n';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; page: string }
+const { lang, page } = Astro.props;
+const d = t(lang);
+const home = path(lang, '/');
+const links = [
+  { href: `${home}#about`, label: d.nav.about },
+  { href: `${home}#solutions`, label: d.nav.solutions },
+  { href: path(lang, '/products'), label: d.nav.products, active: page === '/products' },
+  { href: `${home}#partners`, label: d.nav.partners },
+  { href: `${home}#clients`, label: d.nav.clients },
+  { href: `${home}#contact`, label: d.nav.contact },
+];
+const alt = path(otherLang(lang), page);
+---
+<a class="skip" href="#main">{d.nav.skip}</a>
+<header class="hdr" id="hdr">
+  <div class="container hdr__in">
+    <a href={home} class="hdr__logo" aria-label="Hybrid Technology">
+      <img class="hdr__logo-mono" src={asset('brand/logo-mono.svg')} alt="" width="200" height="15" />
+      <img class="hdr__logo-color" src={asset('brand/logo.svg')} alt="" width="200" height="15" />
+    </a>
+    <input type="checkbox" id="nav-toggle" class="sr-only nav-toggle" />
+    <nav class="hdr__nav" aria-label="Primary">
+      <ul class="hdr__links">
+        {links.map((l) => <li><a href={l.href} class:list={{ 'is-active': l.active }}>{l.label}</a></li>)}
+      </ul>
+      <div class="hdr__actions">
+        <a class="hdr__lang" href={alt} hreflang={otherLang(lang)} lang={otherLang(lang)} data-lang-toggle={otherLang(lang)}><Icon name="globe" /><span>{d.otherName}</span></a>
+        <a class="btn btn--sm" href={`${home}#contact`} data-magnetic>{d.nav.cta}<Icon name="arrow" class="icon--dir" /></a>
+      </div>
+    </nav>
+    <label for="nav-toggle" class="hdr__burger" aria-label={d.nav.menu}><Icon name="menu" class="i-menu" /><Icon name="close" class="i-close" /></label>
+  </div>
+</header>
+<style>
+  .skip { position: fixed; inset-inline-start: 12px; top: -60px; z-index: 100; background: var(--orange); color: #fff; padding: 10px 16px; border-radius: 8px; }
+  .skip:focus { top: 12px; }
+  .hdr { position: fixed; inset-inline: 0; top: 0; z-index: 50; color: #fff; transition: background 0.4s, box-shadow 0.4s, color 0.4s; }
+  .hdr::before { content: ''; position: absolute; inset: 0; background: rgba(0, 38, 61, 0.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); opacity: 0; transition: opacity 0.4s; z-index: -1; }
+  .hdr.is-scrolled::before, .hdr:has(.nav-toggle:checked)::before { opacity: 1; }
+  .hdr.is-scrolled { box-shadow: 0 1px 0 rgba(255,255,255,0.08); }
+  .hdr__in { display: flex; align-items: center; justify-content: space-between; gap: 24px; height: 76px; }
+  .hdr__logo { display: block; width: clamp(160px, 18vw, 210px); }
+  .hdr__logo img { width: 100%; height: auto; }
+  .hdr__logo-color { display: none; }
+  .hdr__nav { display: flex; align-items: center; gap: 28px; }
+  .hdr__links { display: flex; gap: clamp(14px, 2vw, 26px); font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; letter-spacing: 0.04em; }
+  :lang(ar) .hdr__links { letter-spacing: 0; font-size: 1rem; }
+  .hdr__links a { position: relative; padding-block: 6px; opacity: 0.85; transition: opacity 0.25s; }
+  .hdr__links a::after { content: ''; position: absolute; inset-inline-start: 0; bottom: 0; height: 2px; width: 100%; background: var(--orange); scale: 0 1; transform-origin: 0 50%; transition: scale 0.35s var(--ease-out); }
+  [dir='rtl'] .hdr__links a::after { transform-origin: 100% 50%; }
+  .hdr__links a:hover, .hdr__links a.is-active { opacity: 1; }
+  .hdr__links a:hover::after, .hdr__links a.is-active::after { scale: 1 1; }
+  .hdr__actions { display: flex; align-items: center; gap: 16px; }
+  .hdr__lang { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.25); border-radius: 999px; transition: border-color 0.25s, background 0.25s; }
+  .hdr__lang:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+  .hdr__lang .icon { width: 18px; height: 18px; }
+  .hdr__burger { display: none; width: 44px; height: 44px; place-items: center; cursor: pointer; border-radius: 10px; }
+  .hdr__burger .icon { width: 26px; height: 26px; grid-area: 1 / 1; }
+  .i-close { display: none; }
+  @media (max-width: 960px) {
+    .hdr__burger { display: grid; }
+    .hdr__nav { position: fixed; inset: 76px 0 0 0; background: var(--blue-ink); flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 32px var(--gutter); gap: 32px; translate: 0 -8px; opacity: 0; visibility: hidden; transition: opacity 0.35s var(--ease-out), translate 0.35s var(--ease-out), visibility 0.35s; overflow: auto; }
+    .hdr:has(.nav-toggle:checked) .hdr__nav { opacity: 1; visibility: visible; translate: 0 0; }
+    .hdr:has(.nav-toggle:checked) .i-menu { display: none; }
+    .hdr:has(.nav-toggle:checked) .i-close { display: block; }
+    .hdr__links { flex-direction: column; gap: 4px; font-size: 1.5rem; }
+    .hdr__links a { display: block; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .hdr__links a::after { display: none; }
+    .hdr__actions { flex-direction: column; align-items: stretch; }
+    .hdr__actions .btn { justify-content: center; }
+  }
+</style>

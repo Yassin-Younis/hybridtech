@@ -1,0 +1,35 @@
+:root {
+  /* Brand (from the letterhead) */
+  --blue: #005e8a;
+  --blue-deep: #00466b;
+  --blue-ink: #00263d;
+  --blue-tint: #e6f0f5;
+  --orange: #f1511b;
+  --orange-soft: #fde9e2;
+  --paper: #ffffff;
+  --surface: #f5f7fa;
+  --ink: #0b1b27;
+  --muted: #4c6272;
+  --line: #d9e3ea;
+  --line-strong: #b8c8d3;
+  --on-dark: #eaf3f8;
+  --on-dark-muted: #9fbccb;
+
+  --font-display: 'Chakra Petch', 'El Messiri', system-ui, sans-serif;
+  --font-body: 'Instrument Sans', 'El Messiri', system-ui, sans-serif;
+  --font-num: 'Chakra Petch', system-ui, sans-serif;
+
+  --radius: 14px;
+  --radius-lg: 22px;
+  --slant: clamp(28px, 5vw, 72px);
+  --gutter: clamp(16px, 4vw, 40px);
+  --container: 1200px;
+  --section: clamp(72px, 10vw, 128px);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow: 0 12px 40px -18px rgba(0, 38, 61, 0.35);
+}
+
+:root[lang='ar'] {
+  --font-display: 'El Messiri', 'Chakra Petch', system-ui, sans-serif;
+  --font-body: 'El Messiri', 'Instrument Sans', system-ui, sans-serif;
+}

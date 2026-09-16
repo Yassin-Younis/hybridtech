@@ -1,0 +1,15 @@
+export const site = {
+  name: 'Hybrid Technology',
+  nameAr: 'هيبرد تكنولوجي',
+  domain: 'hybridtech-eg.com',
+  url: 'https://hybridtech-eg.com',
+  email: 'omar@hybridtech-eg.com',
+  phoneE164: '+201001722290',
+  phoneDisplay: '+20 10 0172 2290',
+  whatsapp: '201001722290',
+  contactPerson: 'Omar Taher',
+  address: { street: 'Building 9476, Huda Shaarawy St.', area: 'El Mokattam', city: 'Cairo', postal: '11571', country: 'EG' },
+  mapsQuery: 'Building 9476, Huda Shaarawy Street, El Mokattam, Cairo, Egypt',
+  founded: '2020',
+  socials: [] as { name: string; url: string; icon: string }[],
+};

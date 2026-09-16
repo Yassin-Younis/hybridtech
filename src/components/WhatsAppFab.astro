@@ -1,0 +1,20 @@
+---
+import type { Lang } from '../i18n';
+import { t } from '../i18n';
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { lang: Lang }
+const d = t(Astro.props.lang);
+const text = encodeURIComponent(Astro.props.lang === 'ar' ? 'مرحبًا هيبرد تكنولوجي، ' : 'Hello Hybrid Technology, ');
+---
+<a class="fab" id="wa-fab" href={`https://wa.me/${site.whatsapp}?text=${text}`} target="_blank" rel="noopener" aria-label={d.contact.whatsappFab}>
+  <Icon name="whatsapp" />
+  <span class="fab__label">{d.contact.whatsappFab}</span>
+</a>
+<style>
+  .fab { position: fixed; inset-inline-end: 20px; bottom: 20px; z-index: 40; display: inline-flex; align-items: center; gap: 10px; background: #25d366; color: #fff; padding: 12px 14px; border-radius: 999px; box-shadow: 0 12px 30px -10px rgba(37, 211, 102, 0.6); transition: translate 0.4s var(--ease-out), opacity 0.4s, box-shadow 0.3s; }
+  .fab .icon { width: 26px; height: 26px; }
+  .fab__label { font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.4s var(--ease-out), padding 0.4s; }
+  .fab:hover .fab__label, .fab:focus-visible .fab__label { max-width: 220px; padding-inline-end: 4px; }
+  .fab.is-hidden { translate: 0 120px; opacity: 0; pointer-events: none; }
+</style>

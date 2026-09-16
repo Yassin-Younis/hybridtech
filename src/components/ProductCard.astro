@@ -1,0 +1,47 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import type { Lang } from '../i18n';
+import { t, pick, fill } from '../i18n';
+import { categories } from '../data/categories';
+import { site } from '../data/site';
+import Icon from './Icon.astro';
+interface Props { product: CollectionEntry<'products'>; lang: Lang }
+const { product, lang } = Astro.props;
+const p = product.data;
+const d = t(lang);
+const cat = categories.find((c) => c.id === p.category)!;
+const name = pick(lang, p.name);
+const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(fill(d.quote.template, { name, model: p.model }))}`;
+---
+<article class="pc" data-category={p.category} data-brand={p.brand}>
+  <div class="pc__visual" aria-hidden="true">
+    <Icon name={cat.icon} />
+    <span class="pc__brand">{p.brand}</span>
+    {p.deal && <span class="pc__deal">{pick(lang, p.deal.label)}</span>}
+  </div>
+  <div class="pc__body">
+    <p class="pc__cat">{pick(lang, cat.label)}</p>
+    <h3 class="pc__name">{name}</h3>
+    <p class="pc__blurb">{pick(lang, p.blurb)}</p>
+    <ul class="pc__specs">{p.specs.slice(0, 4).map((s) => <li><bdi dir="ltr">{s}</bdi></li>)}</ul>
+    {p.price && <p class="pc__price num">{new Intl.NumberFormat('en').format(p.price.amount)} {p.price.currency}</p>}
+    <a class="btn btn--blue btn--sm pc__cta" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" />{d.products.quote}</a>
+  </div>
+</article>
+<style>
+  .pc { display: flex; flex-direction: column; background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius-lg); overflow: hidden; transition: translate 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out); }
+  .pc:hover { translate: 0 -4px; box-shadow: var(--shadow); }
+  .pc__visual { position: relative; aspect-ratio: 16 / 9; display: grid; place-items: center; background: linear-gradient(135deg, var(--blue-tint), #fff 60%); color: var(--blue); border-bottom: 1px solid var(--line); }
+  .pc__visual .icon { width: 56px; height: 56px; stroke-width: 1.25; }
+  .pc__brand { position: absolute; inset-inline-start: 14px; top: 12px; font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; color: var(--blue-deep); }
+  .pc__deal { position: absolute; inset-inline-end: 0; top: 14px; background: var(--orange); color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-start-start-radius: 999px; border-end-start-radius: 999px; }
+  .pc__body { display: flex; flex-direction: column; gap: 8px; padding: 20px; flex: 1; }
+  .pc__cat { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--orange); font-family: var(--font-display); font-weight: 600; }
+  :lang(ar) .pc__cat { letter-spacing: 0; font-size: 0.85rem; }
+  .pc__name { font-size: 1.1rem; color: var(--blue-deep); }
+  .pc__blurb { color: var(--muted); font-size: 0.95rem; }
+  .pc__specs { display: flex; flex-wrap: wrap; gap: 6px; margin-block: 6px 10px; }
+  .pc__specs li { font-size: 0.75rem; font-family: var(--font-num); padding: 3px 8px; border: 1px solid var(--line); border-radius: 6px; color: var(--muted); }
+  .pc__price { font-weight: 700; color: var(--blue); font-size: 1.1rem; }
+  .pc__cta { margin-block-start: auto; align-self: flex-start; }
+</style>

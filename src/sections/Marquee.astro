@@ -1,0 +1,22 @@
+---
+import type { Lang } from '../i18n';
+import { t } from '../i18n';
+import { partners } from '../data/partners';
+import BrandTile from '../components/BrandTile.astro';
+interface Props { lang: Lang }
+const d = t(Astro.props.lang);
+const list = partners.filter((p) => p.featured);
+---
+<section class="mq section--surface" aria-label={d.marquee.title}>
+  <div class="container"><p class="mq__title">{d.marquee.title}</p></div>
+  <div class="marquee">
+    <div class="marquee__track">
+      {[...list, ...list].map((p) => <BrandTile partner={p} variant="marquee" />)}
+    </div>
+  </div>
+</section>
+<style>
+  .mq { padding-block: 40px 44px; border-block: 1px solid var(--line); }
+  .mq__title { text-align: center; font-family: var(--font-display); font-size: 0.78rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); margin-block-end: 28px; }
+  :lang(ar) .mq__title { letter-spacing: 0; font-size: 0.95rem; }
+</style>
