@@ -1,40 +1,35 @@
 ---
 import type { Lang } from '../i18n';
-import { t, pick, asset } from '../i18n';
+import { t, asset } from '../i18n';
 import { clients } from '../data/clients';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
+const list = clients.filter((c) => c.logo);
 ---
 <section class="section section--surface cl" id="clients">
   <div class="container">
-    <div class="section-head" data-reveal>
+    <div class="section-head cl__head" data-reveal>
       <p class="eyebrow">{d.clients.eyebrow}</p>
       <h2 class="title">{d.clients.title}</h2>
-      <p class="lead">{d.clients.intro}</p>
     </div>
-    <ul class="cl__grid">
-      {clients.map((c) => (
-        <li class="cl__tile" style={`--brand:#${c.hex}`} data-reveal>
-          {c.logo ? (
-            <img src={asset(`logos/clients/${c.logo}`)} alt={c.name} loading="lazy" decoding="async" height="48" />
-          ) : (
-            <span class="cl__word" role="img" aria-label={c.name}><span class="cl__mono" aria-hidden="true">{c.mono}</span>{lang === 'ar' ? c.nameAr : c.name}</span>
-          )}
-          <span class="cl__sector">{pick(lang, c.sector)}</span>
-        </li>
+  </div>
+  <div class="marquee cl__marquee" data-reveal>
+    <div class="marquee__track cl__track">
+      {[...list, ...list].map((c) => (
+        <div class="cl__logo" title={c.name}>
+          <img src={asset(`logos/clients/${c.logo}`)} alt={c.name} loading="lazy" decoding="async" height="44" />
+        </div>
       ))}
-    </ul>
+    </div>
   </div>
 </section>
 <style>
-  .cl__grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); }
-  .cl__tile { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); padding: 26px 22px; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.3s, box-shadow 0.3s; }
-  .cl__tile:hover { border-color: var(--brand); box-shadow: var(--shadow); }
-  .cl__tile img { height: 48px; width: auto; max-width: 200px; object-fit: contain; object-position: left center; mix-blend-mode: multiply; }
-  [dir='rtl'] .cl__tile img { object-position: right center; }
-  .cl__word { display: inline-flex; align-items: center; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--ink); }
-  .cl__mono { display: inline-grid; place-items: center; min-width: 44px; height: 44px; padding-inline: 8px; border-radius: 10px; background: var(--brand); color: #fff; font-size: 0.8rem; letter-spacing: 0.05em; font-family: 'Chakra Petch', sans-serif; }
-  .cl__sector { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; font-family: var(--font-display); }
-  :lang(ar) .cl__sector { letter-spacing: 0; font-size: 0.9rem; }
+  .cl { padding-block-end: calc(var(--section) * 0.8); }
+  .cl__head { text-align: center; display: grid; justify-items: center; margin-block-end: clamp(28px, 4vw, 44px); }
+  .cl__track { animation-duration: 56s; gap: clamp(48px, 7vw, 96px); padding-inline-end: clamp(48px, 7vw, 96px); align-items: center; }
+  .cl__logo { display: inline-flex; align-items: center; justify-content: center; height: 56px; }
+  .cl__logo img { height: 44px; width: auto; max-width: 190px; object-fit: contain; filter: grayscale(1) opacity(0.75); transition: filter 0.35s; }
+  .cl__logo:hover img { filter: none; }
+  @media (prefers-reduced-motion: reduce) { .cl__track { row-gap: 32px; } }
 </style>

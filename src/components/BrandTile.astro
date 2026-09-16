@@ -18,8 +18,8 @@ const icon = !partner.logo && partner.slug ? (si as unknown as Record<string, { 
 <style>
   .brand { display: inline-flex; align-items: center; justify-content: center; color: var(--muted); transition: color 0.3s; }
   .brand:hover { color: var(--brand); }
-  .brand__img { height: 36px; width: auto; max-width: 150px; object-fit: contain; mix-blend-mode: multiply; }
-  .brand--marquee .brand__img { height: 34px; max-width: 140px; filter: grayscale(1) opacity(0.7); transition: filter 0.3s; }
+  .brand__img { height: 36px; width: auto; max-width: 150px; object-fit: contain; }
+  .brand--marquee .brand__img { height: 32px; max-width: 140px; filter: grayscale(1) opacity(0.65); transition: filter 0.3s; }
   .brand--marquee:hover .brand__img { filter: none; }
   .brand__icon { height: 34px; width: auto; aspect-ratio: 1; }
   .brand__word { font-family: 'Chakra Petch', var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em; white-space: nowrap; }
