@@ -11,7 +11,6 @@ export const en = {
     primary: 'Explore solutions',
     secondary: 'Request a quote',
     trust: ['HP Amplify Partner', '24/7 support'],
-    trusted: 'Trusted by',
     projects: { n: '500+', label: 'projects delivered' },
     team: 'The Hybrid Technology team',
     scroll: 'Scroll',

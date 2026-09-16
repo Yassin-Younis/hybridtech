@@ -27,7 +27,9 @@
   --section: clamp(72px, 10vw, 128px);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --shadow: 0 12px 40px -18px rgba(0, 38, 61, 0.35);
+  --mq-h: 176px;
 }
+@media (min-width: 700px) { :root { --mq-h: 150px; } }
 
 :root[lang='ar'] {
   --font-display: 'El Messiri', 'Chakra Petch', system-ui, sans-serif;

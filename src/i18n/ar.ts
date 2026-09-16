@@ -13,7 +13,6 @@ export const ar = {
     primary: 'استكشف الحلول',
     secondary: 'اطلب عرض سعر',
     trust: ['شريك HP Amplify', 'دعم 24/7'],
-    trusted: 'يثق بنا',
     projects: { n: '500+', label: 'مشروع منجز' },
     team: 'فريق هيبرد تكنولوجي',
     scroll: 'مرّر',

@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import mark from '../../public/brand/mark.svg?raw';
 import type { Lang } from '../i18n';
-import { t, path, asset } from '../i18n';
+import { t, path } from '../i18n';
 import Icon from '../components/Icon.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
 import person1 from '../assets/hero/person-1.png';
@@ -14,14 +14,6 @@ const d = t(lang);
 const viewBox = mark.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
 const paths = Array.from(mark.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
 const home = path(lang, '/');
-// Client marks that read cleanly as white silhouettes on the navy hero.
-const logos = [
-  { file: 'qnb.svg', name: 'QNB' },
-  { file: 'mashreq.png', name: 'Mashreq' },
-  { file: 'hikma.svg', name: 'Hikma' },
-  { file: 'al-ahly-sabbour.svg', name: 'Al Ahly Sabbour' },
-  { file: 'redcon.png', name: 'Redcon Construction' },
-];
 // Depth per layer: 1 = closest to the viewer (follows the pointer most, stays with the page on
 // scroll); lower = further back (drifts slower than the page on scroll).
 const people = [
@@ -46,12 +38,6 @@ const people = [
       </div>
       <div class="hero__proof hero__fade" style="--i:2">
         <p class="hero__stat"><strong class="num">{d.hero.projects.n}</strong><span>{d.hero.projects.label}</span></p>
-        <div class="hero__trusted">
-          <span class="hero__trusted-l">{d.hero.trusted}</span>
-          <ul class="hero__logos">
-            {logos.map((l) => <li><img src={asset(`logos/clients/${l.file}`)} alt={l.name} height="22" loading="lazy" decoding="async" /></li>)}
-          </ul>
-        </div>
       </div>
     </div>
     <div class="hero__stage">
@@ -75,7 +61,7 @@ const people = [
 </section>
 <script>import '../scripts/hero';</script>
 <style>
-  .hero { --hero-pb: 56px; position: relative; min-height: 100svh; display: grid; align-items: stretch; padding-block: 120px 0; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; isolation: isolate; }
+  .hero { --hero-pb: 56px; position: relative; min-height: calc(100svh - var(--mq-h)); display: grid; align-items: stretch; padding-block: 120px 0; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; isolation: isolate; }
   .hero__glow { position: absolute; inset: 0; z-index: 0; pointer-events: none;
     background:
       radial-gradient(42% 46% at 76% 62%, rgba(16, 132, 186, 0.55) 0%, rgba(16, 132, 186, 0) 100%),
@@ -107,18 +93,10 @@ const people = [
   .hero__stat strong { font-family: var(--font-num); font-size: 1.7rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: #fff; }
   .hero__stat span { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--on-dark-muted); }
   :lang(ar) .hero__stat span { letter-spacing: 0; text-transform: none; font-size: 0.9rem; }
-  .hero__trusted { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; }
-  .hero__trusted-l { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--on-dark-muted); }
-  :lang(ar) .hero__trusted-l { letter-spacing: 0; text-transform: none; font-size: 0.9rem; }
-  .hero__logos { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 22px; }
-  .hero__logos img { display: block; height: 20px; width: auto; filter: brightness(0) invert(1); opacity: 0.62; transition: opacity 0.3s; }
-  .hero__logos li:nth-child(4) img { height: 30px; }
-  .hero__logos li:nth-child(5) img { height: 24px; }
-  .hero__logos li:hover img { opacity: 1; }
 
   /* Stage: a fixed-height box so the absolutely positioned layers never shift layout */
   .hero__stage { --px: 0px; --py: 0px; --sx: 0px; --sy: 0px; position: relative; height: clamp(300px, 88vw, 440px); margin-inline: -8vw; pointer-events: none; }
-  @media (min-width: 1000px) { .hero__stage { height: min(46vw, 680px, 100svh - 180px); margin-inline: -40px -6vw; } }
+  @media (min-width: 1000px) { .hero__stage { height: min(46vw, 680px, 100svh - var(--mq-h) - 150px); margin-inline: -40px -6vw; } }
   .hero__layer { position: absolute; --d: 1; }
   html.motion-ok .hero__layer { transform: translate3d(calc(var(--px) * var(--d) + var(--sx) * (1 - var(--d))), calc(var(--py) * var(--d) + var(--sy) * (1 - var(--d))), 0); will-change: transform; }
 
