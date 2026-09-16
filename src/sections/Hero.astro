@@ -46,7 +46,7 @@ const people = [
       </div>
       {people.map((p, i) => (
         <div class={`hero__person hero__layer ${p.cls}`} style={`--d:${p.depth}; --i:${i}`}>
-          <Image src={p.src} alt={p.alt} format="webp" quality={68} widths={[320, 480, 640, 900]} sizes="(min-width: 1000px) 30vw, 46vw" loading="eager" fetchpriority={p.depth === 1 ? 'high' : 'auto'} decoding="async" />
+          <Image src={p.src} alt={p.alt} format="webp" quality={68} widths={[320, 480, 640, 900]} sizes="(min-width: 1000px) 30vw, 64vw" loading="eager" fetchpriority={p.depth === 1 ? 'high' : 'auto'} decoding="async" />
         </div>
       ))}
     </div>
@@ -122,4 +122,14 @@ const people = [
   .hero__scroll .icon { width: 18px; height: 18px; animation: bob 2s ease-in-out infinite; }
   @keyframes bob { 50% { translate: 0 5px; } }
   @media (prefers-reduced-motion: reduce) { .hero__scroll .icon { animation: none; } }
+  /* Phones/tablets: the stage fills the space under the copy; layers are sized from its height (cqh)
+     so the figures scale with the screen and the arc never outgrows them. */
+  @media (max-width: 999px) {
+    .hero__stage { align-self: stretch; container-type: size; margin-inline: calc(-1 * var(--gutter)); }
+    .hero__arc-wrap { width: 86cqh; max-width: 110%; inset-inline-start: auto; left: calc(50% - 43cqh); bottom: 6%; opacity: 0.45; }
+    .hero__person--2 { height: 100cqh; inset-inline-start: auto; left: calc(50% - 30.6cqh); }
+    .hero__person--1 { height: 84cqh; inset-inline-start: max(-18cqh, -12%); }
+    .hero__person--3 { height: 80cqh; inset-inline-end: max(-20cqh, -14%); }
+    .hero__person img { mask-image: linear-gradient(to top, transparent 0, #000 10%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 10%); }
+  }
 </style>
