@@ -1,0 +1,351 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { getCollection } from 'astro:content';
+import type { Lang } from '../i18n';
+import { t, pick, fill, path } from '../i18n';
+import { site } from '../data/site';
+import { partners } from '../data/partners';
+import { solutions, solutionIds, type SolutionId } from '../data/solutions';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CircuitLayer from '../components/CircuitLayer.astro';
+import ProductCard from '../components/ProductCard.astro';
+import BrandTile from '../components/BrandTile.astro';
+
+interface Props { lang: Lang; id: SolutionId }
+const { lang, id } = Astro.props;
+const d = t(lang);
+const ui = d.solutionPage;
+const items = d.solutions.items;
+const item = items.find((s) => s.id === id)!;
+const c = solutions[id];
+const index = solutionIds.indexOf(id);
+const pad = (n: number) => String(n).padStart(2, '0');
+
+const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/solutions/*.png', { eager: true });
+const img = (s: string) => imgs[`../assets/solutions/${s}.png`]!.default;
+
+// Suggested products: featured first, then round-robin across the mapped categories for variety.
+const all = await getCollection('products');
+const byCat = c.categories.map((cat) => all.filter((p) => p.data.category === cat));
+const featured = byCat.flat().filter((p) => p.data.featured);
+const rest = byCat.map((list) => list.filter((p) => !p.data.featured));
+const rr: typeof all = [];
+for (let i = 0; rest.some((l) => l[i]); i++) rest.forEach((l) => l[i] && rr.push(l[i]));
+const products = [...featured, ...rr].slice(0, 8);
+
+const vendors = c.vendors.map((v) => partners.find((p) => p.name === v) ?? partners.find((p) => p.name.startsWith(v)) ?? { name: v, hex: '4c6272' });
+
+const home = path(lang, '/');
+const solutionsHref = `${home}#solutions`;
+const contactHref = `${home}#contact`;
+const catalogueHref = `${path(lang, '/products')}?cat=${c.categories[0]}`;
+const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(fill(ui.waTemplate, { solution: item.title }))}`;
+const others = items.filter((s) => s.id !== id);
+
+const origin = Astro.site?.origin ?? '';
+const pageUrl = origin + path(lang, `/solutions/${id}`);
+const jsonLd = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${pageUrl}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: d.nav.home, item: origin + home },
+      { '@type': 'ListItem', position: 2, name: d.nav.solutions, item: origin + solutionsHref },
+      { '@type': 'ListItem', position: 3, name: item.title, item: pageUrl },
+    ],
+  },
+  {
+    '@type': 'Service',
+    '@id': `${pageUrl}#service`,
+    name: item.title,
+    description: item.blurb,
+    url: pageUrl,
+    inLanguage: lang === 'ar' ? 'ar-EG' : 'en',
+    serviceType: item.title,
+    provider: { '@id': `${origin + path('en', '/')}#organization` },
+    areaServed: { '@type': 'Country', name: 'Egypt' },
+    brand: vendors.map((v) => ({ '@type': 'Brand', name: v.name })),
+  },
+];
+---
+<Base lang={lang} title={pick(lang, c.seo.title)} description={pick(lang, c.seo.description)} page={`/solutions/${id}`} {jsonLd}>
+  <!-- Hero -->
+  <section class="sh section--dark">
+    <div class="sh__media" aria-hidden="true">
+      <Image src={img(id)} alt="" format="webp" quality={68} widths={[480, 720, 928]} sizes="(min-width: 900px) 58vw, 100vw" loading="eager" fetchpriority="high" decoding="async" class="sh__img" />
+    </div>
+    <div class="sh__shade" aria-hidden="true"></div>
+    <CircuitLayer parallax={false} />
+    <div class="container sh__in">
+      <nav class="crumbs" aria-label={ui.breadcrumb}>
+        <ol>
+          <li><a href={home}>{d.nav.home}</a></li>
+          <li><a href={solutionsHref}>{d.nav.solutions}</a></li>
+          <li aria-current="page">{item.title}</li>
+        </ol>
+      </nav>
+      <div class="sh__tag">
+        <span class="sh__icon"><Icon name={item.icon} /></span>
+        <span class="sh__count num" aria-label={fill(ui.counter, { n: index + 1, total: items.length })}><b>{pad(index + 1)}</b> / {pad(items.length)}</span>
+      </div>
+      <h1 class="sh__title">{item.title}</h1>
+      <p class="sh__lead">{item.short}</p>
+      <div class="sh__cta">
+        <a class="btn" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" />{ui.talk}</a>
+        <a class="btn btn--ghost" href={contactHref}>{ui.quote}<Icon name="arrow" class="icon--dir" /></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Problem → solution -->
+  <section class="section section--surface flow">
+    <div class="container flow__grid">
+      <article class="fc fc--problem" data-reveal>
+        <p class="fc__label">{ui.challenge}</p>
+        <h2 class="fc__title">{pick(lang, c.problem.title)}</h2>
+        <ul class="fc__pains">
+          {c.problem.points.map((p) => <li><span class="fc__ic"><Icon name={p.icon} /></span><span>{pick(lang, p.label)}</span></li>)}
+        </ul>
+      </article>
+      <div class="flow__link" aria-hidden="true">
+        <span class="flow__node"><Icon name="arrow" class="flow__arrow" /></span>
+      </div>
+      <article class="fc fc--solution" data-reveal style="--d:140ms">
+        <CircuitLayer parallax={false} />
+        <div class="fc__in">
+          <p class="fc__label">{ui.solve}</p>
+          <h2 class="fc__title">{pick(lang, c.solution.title)}</h2>
+          <ol class="fc__steps">
+            {c.solution.steps.map((s, i) => (
+              <li>
+                <span class="fc__num num">{pad(i + 1)}</span>
+                <span class="fc__ic"><Icon name={s.icon} /></span>
+                <span class="fc__step">{pick(lang, s.label)}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- Outcomes -->
+  <section class="oc" aria-labelledby="oc-h">
+    <div class="container oc__in">
+      <h2 id="oc-h" class="oc__h">{ui.outcomes}</h2>
+      <ul class="oc__list">
+        {c.outcomes.map((o, i) => <li data-reveal style={`--d:${i * 90}ms`}><span class="oc__ic"><Icon name={o.icon} /></span>{pick(lang, o.label)}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Vendors + suggested products -->
+  <section class="section sp" aria-labelledby="sp-h">
+    <div class="container">
+      <div class="sp__vendors" data-reveal>
+        <p class="sp__vlabel">{ui.vendors}</p>
+        <ul class="sp__logos">{vendors.map((v) => <li><BrandTile partner={v} /></li>)}</ul>
+      </div>
+      <div class="sp__head" data-reveal>
+        <h2 id="sp-h" class="title sp__title">{ui.products}</h2>
+        <a class="sp__all" href={catalogueHref}>{ui.catalogue}<Icon name="arrow" class="icon--dir" /></a>
+      </div>
+      <div class="grid grid--4 sp__grid">
+        {products.map((p) => <ProductCard product={p} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA band -->
+  <section class="ctab" aria-labelledby="ctab-h">
+    <div class="container">
+      <div class="ctab__card" data-reveal>
+        <CircuitLayer parallax={false} />
+        <div class="ctab__in">
+          <div>
+            <h2 id="ctab-h" class="ctab__title">{ui.ctaTitle}</h2>
+            <p class="ctab__body">{ui.ctaBody}</p>
+          </div>
+          <div class="ctab__btns">
+            <a class="btn" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" />{ui.talk}</a>
+            <a class="btn btn--ghost" href={contactHref}>{ui.quote}<Icon name="arrow" class="icon--dir" /></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other solutions -->
+  <nav class="section section--surface os" aria-labelledby="os-h">
+    <div class="container">
+      <div class="os__head">
+        <h2 id="os-h" class="os__title">{ui.other}</h2>
+        <a class="sp__all" href={solutionsHref}>{ui.all}<Icon name="arrow" class="icon--dir" /></a>
+      </div>
+      <ul class="os__grid">
+        {others.map((s, i) => (
+          <li data-reveal style={`--d:${i * 80}ms`}>
+            <a class="ot" href={path(lang, `/solutions/${s.id}`)}>
+              <Image src={img(s.id)} alt="" format="webp" quality={62} widths={[320, 480, 640]} sizes="(min-width: 900px) 280px, 50vw" loading="lazy" decoding="async" class="ot__img" />
+              <span class="ot__shade" aria-hidden="true"></span>
+              <span class="ot__ic" aria-hidden="true"><Icon name={s.icon} /></span>
+              <span class="ot__title">{s.title}</span>
+              <span class="ot__go" aria-hidden="true"><Icon name="arrow" class="icon--dir" /></span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </nav>
+</Base>
+
+<style>
+  /* ---------- Hero ---------- */
+  .sh { position: relative; isolation: isolate; overflow: hidden; background: var(--blue-ink); min-height: min(100svh, 780px); display: flex; align-items: flex-end; }
+  .sh__media { position: absolute; inset: 0; z-index: -2; }
+  .sh__media :global(picture) { display: contents; }
+  .sh__img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+  .sh__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,38,61,0.55) 0%, rgba(0,38,61,0.25) 30%, rgba(0,38,61,0.82) 62%, var(--blue-ink) 94%); }
+  .sh :global(.circuit) { z-index: -1; }
+  .sh :global(.circuit svg) { opacity: 0.06; }
+  .sh__in { position: relative; z-index: 1; padding-block: 140px clamp(48px, 7vw, 88px); }
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-family: var(--font-display); font-size: 0.82rem; color: var(--on-dark-muted); }
+  .crumbs li + li::before { content: '›'; margin-inline-end: 10px; color: var(--orange); }
+  [dir='rtl'] .crumbs li + li::before { content: '‹'; }
+  .crumbs a { color: var(--on-dark); transition: color 0.2s; }
+  .crumbs a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .crumbs [aria-current] { color: var(--on-dark-muted); }
+  .sh__tag { display: flex; align-items: center; gap: 14px; margin-block: 28px 18px; }
+  .sh__icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--orange); color: #fff; box-shadow: 0 14px 30px -12px rgba(241,81,27,0.6); }
+  .sh__icon .icon { width: 26px; height: 26px; }
+  .sh__count { font-size: 0.85rem; letter-spacing: 0.18em; color: var(--on-dark-muted); }
+  .sh__count b { color: #fff; font-weight: 700; }
+  .sh__title { color: #fff; font-size: clamp(2.5rem, 6vw, 4.5rem); max-width: 14ch; text-wrap: balance; }
+  .sh__lead { margin-block-start: 16px; color: var(--on-dark); font-size: clamp(1.05rem, 1.6vw, 1.25rem); max-width: 42ch; }
+  .sh__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-block-start: 32px; }
+  .sh__cta .btn--ghost { color: #fff; }
+
+  @media (min-width: 900px) {
+    .sh { align-items: center; min-height: clamp(620px, 84vh, 760px); }
+    .sh__media { inset-inline-start: auto; width: 60%; }
+    .sh__shade { background:
+      linear-gradient(90deg, var(--blue-ink) 36%, rgba(0,38,61,0.55) 58%, rgba(0,38,61,0.05) 86%),
+      linear-gradient(0deg, rgba(0,38,61,0.6), transparent 30%); }
+    [dir='rtl'] .sh__shade { background:
+      linear-gradient(270deg, var(--blue-ink) 36%, rgba(0,38,61,0.55) 58%, rgba(0,38,61,0.05) 86%),
+      linear-gradient(0deg, rgba(0,38,61,0.6), transparent 30%); }
+    .sh__in { padding-block: 130px 80px; }
+    .sh__in > * { max-width: 600px; }
+  }
+
+  /* ---------- Problem → solution ---------- */
+  .flow__grid { display: grid; gap: 0; align-items: stretch; }
+  .fc { position: relative; overflow: hidden; border-radius: var(--radius-lg); padding: clamp(24px, 3.4vw, 40px); }
+  .fc__label { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 600; font-size: 0.75rem; letter-spacing: 0.24em; text-transform: uppercase; }
+  .fc__label::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  :lang(ar) .fc__label { letter-spacing: 0; font-size: 0.95rem; }
+  .fc__title { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-block: 14px 26px; text-wrap: balance; max-width: 18ch; }
+  .fc__ic { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; flex: none; }
+  .fc__ic .icon { width: 22px; height: 22px; }
+
+  .fc--problem { background: var(--paper); border: 1px solid var(--line); }
+  .fc--problem .fc__label { color: var(--orange); }
+  .fc--problem .fc__title { color: var(--ink); }
+  .fc__pains { display: grid; gap: 10px; }
+  .fc__pains li { display: flex; align-items: center; gap: 14px; padding: 10px; padding-inline-end: 16px; border-radius: 14px; background: var(--surface); font-family: var(--font-display); font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .fc--problem .fc__ic { background: var(--orange-soft); color: var(--orange); }
+
+  .fc--solution { background: radial-gradient(120% 120% at 100% 0%, #0a6a97 0%, var(--blue-deep) 45%, var(--blue-ink) 100%); color: var(--on-dark); }
+  [dir='rtl'] .fc--solution { background: radial-gradient(120% 120% at 0% 0%, #0a6a97 0%, var(--blue-deep) 45%, var(--blue-ink) 100%); }
+  .fc--solution :global(.circuit svg) { opacity: 0.08; }
+  .fc__in { position: relative; z-index: 1; }
+  .fc--solution .fc__label { color: #7fd0f5; }
+  .fc--solution .fc__title { color: #fff; }
+  .fc__steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  @media (max-width: 420px) { .fc__steps li { padding: 12px; gap: 10px; } .fc__step { font-size: 0.92rem; } .fc__num { inset-inline-end: 10px; top: 10px; } }
+  .fc__steps li { position: relative; display: grid; gap: 14px; align-content: start; padding: 16px; border-radius: 14px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); }
+  .fc__num { position: absolute; inset-inline-end: 14px; top: 12px; font-size: 0.8rem; color: var(--on-dark-muted); letter-spacing: 0.1em; }
+  .fc--solution .fc__ic { background: rgba(255,255,255,0.12); color: #fff; }
+  .fc__step { font-family: var(--font-display); font-weight: 600; color: #fff; line-height: 1.3; }
+
+  .flow__link { position: relative; display: grid; place-items: center; height: 64px; }
+  .flow__link::before { content: ''; position: absolute; inset-block: 0; inset-inline-start: 50%; width: 0; border-inline-start: 2px dashed var(--line-strong); }
+  .flow__node { position: relative; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: var(--orange); color: #fff; box-shadow: 0 0 0 6px var(--surface), 0 10px 24px -10px rgba(241,81,27,0.7); }
+  .flow__arrow { width: 20px; height: 20px; rotate: 90deg; }
+
+  @media (min-width: 900px) {
+    .flow__grid { grid-template-columns: 1fr 72px 1.25fr; }
+    .flow__link { height: auto; }
+    .flow__link::before { inset-block: 50% auto; inset-inline: 0; width: auto; height: 0; border-inline-start: 0; border-block-start: 2px dashed var(--line-strong); }
+    .flow__arrow { rotate: none; }
+    [dir='rtl'] .flow__arrow { scale: -1 1; }
+    .fc--problem { display: flex; flex-direction: column; }
+    .fc__pains { margin-block-start: auto; }
+  }
+
+  /* ---------- Outcomes ---------- */
+  .oc { background: var(--blue); color: #fff; padding-block: clamp(28px, 4vw, 40px); }
+  .oc__in { display: grid; gap: 18px; align-items: center; }
+  .oc__h { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: rgba(255,255,255,0.75); }
+  :lang(ar) .oc__h { letter-spacing: 0; font-size: 1rem; }
+  .oc__list { display: grid; gap: 12px; }
+  .oc__list li { display: flex; align-items: center; gap: 14px; font-family: var(--font-display); font-weight: 600; font-size: clamp(1.05rem, 1.6vw, 1.2rem); line-height: 1.25; }
+  .oc__ic { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: #fff; color: var(--blue); flex: none; }
+  .oc__ic .icon { width: 20px; height: 20px; stroke-width: 2; }
+  @media (min-width: 900px) {
+    .oc__in { grid-template-columns: 170px 1fr; }
+    .oc__list { grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .oc__list li { padding-inline: 24px; border-inline-start: 1px solid rgba(255,255,255,0.22); }
+  }
+
+  /* ---------- Vendors + products ---------- */
+  .sp__vendors { display: grid; gap: 16px; justify-items: center; text-align: center; padding-block-end: clamp(40px, 6vw, 64px); margin-block-end: clamp(40px, 6vw, 64px); border-block-end: 1px solid var(--line); }
+  .sp__vlabel { font-family: var(--font-display); font-size: 0.75rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); }
+  :lang(ar) .sp__vlabel { letter-spacing: 0; font-size: 0.95rem; }
+  .sp__logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 20px clamp(28px, 5vw, 64px); }
+  .sp__logos :global(.brand__img) { height: 34px; max-width: 130px; }
+  .sp__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; margin-block-end: clamp(24px, 3vw, 36px); }
+  .sp__title { margin: 0; }
+  .sp__all { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 600; color: var(--blue); padding-block: 6px; border-block-end: 2px solid transparent; transition: border-color 0.25s; }
+  .sp__all .icon { width: 18px; height: 18px; }
+  .sp__all:hover { border-color: var(--orange); }
+  .sp__all:hover .icon--dir { translate: 4px 0; }
+  [dir='rtl'] .sp__all:hover .icon--dir { translate: -4px 0; }
+
+  /* ---------- CTA band ---------- */
+  .ctab { padding-block-end: var(--section); }
+  .ctab__card { position: relative; overflow: hidden; border-radius: var(--radius-lg); background: linear-gradient(120deg, var(--blue-ink), var(--blue-deep)); color: var(--on-dark); padding: clamp(28px, 4.5vw, 52px); }
+  .ctab__card::after { content: ''; position: absolute; inset-block: 0; inset-inline-start: 0; width: 6px; background: var(--orange); }
+  .ctab__card :global(.circuit svg) { opacity: 0.08; }
+  .ctab__in { position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 40px; }
+  .ctab__title { color: #fff; font-size: clamp(1.6rem, 3vw, 2.3rem); }
+  .ctab__body { margin-block-start: 8px; color: var(--on-dark-muted); }
+  .ctab__btns { display: flex; flex-wrap: wrap; gap: 12px; }
+  .ctab__btns .btn--ghost { color: #fff; }
+
+  /* ---------- Other solutions ---------- */
+  .os__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; margin-block-end: 24px; }
+  .os__title { font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--blue-deep); }
+  .os__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  @media (min-width: 700px) { .os__grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+  .ot { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 4 / 5; padding: 14px; border-radius: var(--radius); color: #fff; background: var(--blue-ink); }
+  @media (min-width: 700px) { .ot { aspect-ratio: 3 / 4; } }
+  @media (min-width: 900px) { .ot { padding: 18px; border-radius: var(--radius-lg); } }
+  .ot :global(picture) { display: contents; }
+  .ot__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: scale 0.9s var(--ease-out); }
+  .ot__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0,38,61,0.15) 30%, rgba(0,38,61,0.92) 100%); }
+  .ot__ic { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+  .ot__ic .icon { width: 19px; height: 19px; }
+  .ot__title { font-family: var(--font-display); font-weight: 700; font-size: clamp(0.98rem, 1.5vw, 1.15rem); line-height: 1.2; padding-inline-end: 40px; text-wrap: balance; }
+  .ot__go { position: absolute; inset-inline-end: 14px; bottom: 14px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--orange); transition: scale 0.3s var(--ease-out); }
+  .ot__go .icon { width: 16px; height: 16px; }
+  .ot:hover .ot__img, .ot:focus-visible .ot__img { scale: 1.07; }
+  .ot:hover .ot__go, .ot:focus-visible .ot__go { scale: 1.12; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ot__img, .ot__go, .sp__all .icon--dir { transition: none; }
+    .ot:hover .ot__img, .ot:focus-visible .ot__img { scale: none; }
+  }
+</style>

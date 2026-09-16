@@ -2,55 +2,35 @@
 import type { Lang } from '../i18n';
 import { t, asset } from '../i18n';
 import Icon from '../components/Icon.astro';
-import CircuitLayer from '../components/CircuitLayer.astro';
 import markSvg from '../../public/brand/mark.svg?raw';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
 const markVB = markSvg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
 const markPaths = Array.from(markSvg.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
-const lines = [
-  { icon: 'eye', ...d.about.vision },
-  { icon: 'target', ...d.about.mission },
-];
 ---
 <section class="section about" id="about">
-  <CircuitLayer />
-  <div class="container about__in">
-    <p class="eyebrow about__eyebrow" data-reveal>{d.about.eyebrow}</p>
-    <h2 class="title about__title" data-reveal>{d.about.title}</h2>
-
-    <div class="about__logo" data-reveal="fade" aria-hidden="true">
-      <svg class="about__rings" viewBox="0 0 400 400" fill="none">
-        <circle class="ring ring--a" cx="200" cy="200" r="190" stroke="currentColor" stroke-width="1" stroke-dasharray="2 10" />
-        <circle class="ring ring--b" cx="200" cy="200" r="150" stroke="currentColor" stroke-width="1.5" stroke-dasharray="60 18 4 18" />
-        <circle class="ring ring--c" cx="200" cy="200" r="112" stroke="currentColor" stroke-width="1" opacity="0.5" />
-        <g class="orbit orbit--a"><circle cx="200" cy="10" r="5" /></g>
-        <g class="orbit orbit--b"><circle cx="200" cy="50" r="4" /></g>
-      </svg>
-      <div class="about__glow"></div>
-      <svg class="about__mark" viewBox={markVB}>
-        {markPaths.map((p) => <path class="mark__stroke" d={p} pathLength="1" />)}
-        {markPaths.map((p) => <path class="mark__fill" d={p} />)}
+  <div class="about__clip" aria-hidden="true">
+    <div class="about__bg">
+      <svg class="about__mark" viewBox={markVB} fill="none">
+        {markPaths.map((p) => <path class="about__fill" d={p} />)}
+        {markPaths.map((p) => <path class="about__stroke" d={p} pathLength="1" />)}
       </svg>
     </div>
+  </div>
 
-    <ul class="about__facts" data-reveal>
+  <div class="container about__in">
+    <p class="eyebrow" data-reveal>{d.about.eyebrow}</p>
+    <h2 class="title about__title" data-reveal>{d.about.title}</h2>
+
+    <dl class="about__facts" data-reveal>
       {d.about.facts.map((f) => (
-        <li class="about__fact">
-          <span class="about__fact-icon">
-            {f.icon === 'handshake' ? <img src={asset('logos/partners/hp.svg')} alt="HP" width="22" height="22" /> : <Icon name={f.icon} />}
-          </span>
-          <span class="about__fact-text"><span class="about__fact-k">{f.k}</span><span class="about__fact-v">{f.v}</span></span>
-        </li>
-      ))}
-    </ul>
-
-    <dl class="about__vm" data-reveal>
-      {lines.map((l) => (
-        <div class="about__vm-item">
-          <dt><Icon name={l.icon} />{l.t}</dt>
-          <dd>{l.d}</dd>
+        <div class="about__fact">
+          <dt>{f.k}</dt>
+          <dd>
+            {f.icon === 'handshake' && <img src={asset('logos/partners/hp.svg')} alt="" width="22" height="22" />}
+            <bdi>{f.v}</bdi>
+          </dd>
         </div>
       ))}
     </dl>
@@ -61,58 +41,102 @@ const lines = [
   </div>
 </section>
 
+<script>
+  // Scroll-linked brand mark. Writes one custom property on the section, --p (0 -> 1 as the section
+  // travels from "top at viewport bottom" to "bottom at viewport top"); CSS derives the stroke draw-on
+  // and the parallax from it. Only runs with motion allowed, and only listens while the section is on
+  // screen. Without JS or with reduced motion the mark stays fully drawn and static.
+  const section = document.getElementById('about');
+  const mq = matchMedia('(prefers-reduced-motion: no-preference)');
+  if (section && 'IntersectionObserver' in window) {
+    let raf = 0, last = -1, active = false;
+    const frame = () => {
+      raf = 0;
+      const r = section.getBoundingClientRect();
+      const vh = innerHeight;
+      const p = Math.round(Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height))) * 1000) / 1000;
+      if (p !== last) { last = p; section.style.setProperty('--p', String(p)); }
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(frame); };
+    const listen = (on: boolean) => {
+      if (on === active) return;
+      active = on;
+      if (on) { addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll, { passive: true }); onScroll(); }
+      else { removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); cancelAnimationFrame(raf); raf = 0; }
+    };
+    const io = new IntersectionObserver((entries) => listen(entries[entries.length - 1].isIntersecting));
+    const apply = () => {
+      if (mq.matches) {
+        frame();
+        section.classList.add('about--scroll');
+        io.observe(section);
+      } else {
+        io.disconnect(); listen(false); last = -1;
+        section.classList.remove('about--scroll');
+        section.style.removeProperty('--p');
+      }
+    };
+    apply();
+    mq.addEventListener('change', apply);
+  }
+</script>
+
 <style>
-  .about__in { display: flex; flex-direction: column; align-items: center; text-align: center; }
-  .about__eyebrow { justify-content: center; }
-  .about__title { color: var(--blue-deep); margin-inline: auto; max-width: 20ch; margin-block: 0.5em 0; }
+  .about { padding-block: calc(var(--section) * 0.85); background: var(--paper); overflow: hidden; isolation: isolate; }
 
-  /* Animated brand mark */
-  .about__logo { position: relative; width: clamp(200px, 26vw, 280px); aspect-ratio: 1; margin-block: clamp(20px, 3vw, 32px); display: grid; place-items: center; color: var(--blue); }
-  .about__rings { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-strong); overflow: visible; }
-  .ring, .orbit { transform-origin: 200px 200px; transform-box: view-box; }
-  .ring--a { animation: aboutSpin 60s linear infinite; }
-  .ring--b { animation: aboutSpin 38s linear infinite reverse; color: var(--blue); opacity: 0.35; }
-  .orbit--a { animation: aboutSpin 14s linear infinite; fill: var(--orange); }
-  .orbit--b { animation: aboutSpin 22s linear infinite reverse; fill: var(--blue); }
-  .about__glow { position: absolute; inset: 22%; border-radius: 50%; background: radial-gradient(circle, rgba(0, 94, 138, 0.16), rgba(0, 94, 138, 0) 70%); animation: aboutBreathe 5s ease-in-out infinite; }
-  .about__mark { position: relative; width: 42%; overflow: visible; }
-  [dir='rtl'] .about__mark { transform: scaleX(-1); }
-  .mark__stroke { fill: none; stroke: currentColor; stroke-width: 0.3; stroke-dasharray: 1; stroke-dashoffset: 0; }
-  .mark__fill { fill: currentColor; }
-  html.motion-ok .about__logo .mark__stroke { stroke-dashoffset: 1; }
-  html.motion-ok .about__logo .mark__fill { opacity: 0; }
-  html.motion-ok .about__logo.is-in .mark__stroke { animation: aboutDraw 1.8s var(--ease-out) 0.2s forwards; }
-  html.motion-ok .about__logo.is-in .mark__fill { animation: aboutFill 0.9s var(--ease-out) 1.4s forwards; }
-  @keyframes aboutSpin { to { transform: rotate(360deg); } }
-  @keyframes aboutDraw { to { stroke-dashoffset: 0; } }
-  @keyframes aboutFill { to { opacity: 1; } }
-  @keyframes aboutBreathe { 0%, 100% { scale: 1; opacity: 0.8; } 50% { scale: 1.12; opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) { .ring, .orbit, .about__glow { animation: none; } }
+  /* Massive background mark, bleeding off the inline-end, top and bottom edges. The clip layer fades
+     it out before the section's bottom edge so it never shows a hard cut above the slanted Stats band. */
+  .about__clip { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; -webkit-mask-image: linear-gradient(#000 calc(100% - 160px), transparent 96%); mask-image: linear-gradient(#000 calc(100% - 160px), transparent 96%); }
+  .about__bg {
+    --w: clamp(620px, 66vw, 1080px);
+    --dir: 1;
+    position: absolute;
+    width: var(--w); aspect-ratio: 22.63 / 21.85;
+    top: 50%; margin-block-start: calc(var(--w) * -0.5);
+    inset-inline-end: calc(var(--w) * -0.16);
+    color: var(--blue);
+    transform-origin: 91% 93%; /* the quarter-circle's own centre, so it turns along its arc */
+  }
+  :global([dir='rtl']) .about__bg { --dir: -1; transform-origin: 9% 93%; }
+  .about__mark { width: 100%; height: 100%; overflow: visible; }
+  :global([dir='rtl']) .about__mark { transform: scaleX(-1); }
+  .about__stroke { fill: none; stroke: currentColor; stroke-width: 0.09; stroke-linejoin: round; stroke-opacity: 0.16; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .about__fill { fill: currentColor; opacity: 0.05; }
 
-  /* Facts */
-  .about__facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px clamp(20px, 4vw, 44px); }
-  .about__fact { display: inline-flex; align-items: center; gap: 12px; text-align: start; }
-  .about__fact-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; background: var(--blue-tint); color: var(--blue); flex: none; }
-  .about__fact-icon .icon { width: 19px; height: 19px; }
-  .about__fact-icon img { width: 22px; height: 22px; }
-  .about__fact-text { display: grid; }
-  .about__fact-k { font-family: var(--font-display); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); line-height: 1.3; }
-  :lang(ar) .about__fact-k { letter-spacing: 0; font-size: 0.8rem; }
-  .about__fact-v { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--blue-deep); line-height: 1.25; white-space: nowrap; }
+  /* Scroll-linked state (class added by the script only when motion is allowed).
+     Draw: the stroke traces on as the section enters and is complete by the time it is centred;
+     the faint fill follows. Parallax: drifts against the scroll, turns a few degrees about the
+     arc's centre and grows slightly. */
+  .about--scroll .about__bg {
+    --k: calc(var(--p, 0.5) - 0.5);
+    transform: translate3d(0, calc(var(--k) * 22%), 0) rotate(calc(var(--k) * -12deg * var(--dir))) scale(calc(1 + var(--k) * 0.1));
+    will-change: transform;
+  }
+  .about--scroll .about__stroke { stroke-dashoffset: calc((1 - clamp(0, (var(--p, 0.5) - 0.08) * 2.4, 1)) * 1px); }
+  .about--scroll .about__fill { opacity: calc(clamp(0, (var(--p, 0.5) - 0.3) * 4, 1) * 0.05); }
 
-  /* Vision / mission */
-  .about__vm { display: grid; gap: 18px; margin: clamp(28px, 4vw, 40px) 0 0; width: min(100%, 760px); }
-  @media (min-width: 700px) { .about__vm { grid-template-columns: 1fr 1fr; gap: 0; } .about__vm-item + .about__vm-item { border-inline-start: 1px solid var(--line); } }
-  .about__vm-item { padding-inline: clamp(12px, 3vw, 32px); }
-  .about__vm dt { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
-  :lang(ar) .about__vm dt { letter-spacing: 0; font-size: 0.85rem; }
-  .about__vm dt .icon { width: 15px; height: 15px; color: var(--orange); }
-  .about__vm dd { margin: 6px 0 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.05rem, 1.5vw, 1.2rem); line-height: 1.35; color: var(--ink); text-wrap: balance; }
+  /* Content, flat on top */
+  .about__in { position: relative; z-index: 1; }
+  .about__title { color: var(--blue-deep); max-width: 17ch; margin-block: 0.5em 0; }
+  :lang(ar) .about__title { max-width: 19ch; }
 
-  /* Values */
-  .about__values { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-block-start: clamp(28px, 4vw, 40px); }
-  .about__values li { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-display); font-weight: 600; font-size: 0.88rem; color: var(--blue-deep); transition: border-color 0.3s, translate 0.3s var(--ease-out); }
-  :lang(ar) .about__values li { font-size: 0.98rem; }
-  .about__values li:hover { border-color: var(--orange); translate: 0 -2px; }
-  .about__values .icon { width: 17px; height: 17px; color: var(--orange); }
+  .about__facts { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 18px clamp(28px, 5vw, 64px); margin: clamp(28px, 4vw, 44px) 0 0; padding-block-start: 22px; border-block-start: 1px solid var(--line); width: fit-content; max-width: 100%; }
+  .about__fact { display: grid; gap: 4px; align-content: start; }
+  .about__fact dt { font-family: var(--font-display); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); line-height: 1.3; }
+  :lang(ar) .about__fact dt { letter-spacing: 0; font-size: 0.82rem; }
+  .about__fact dd { margin: 0; display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.05rem, 1.8vw, 1.3rem); line-height: 1.2; color: var(--blue-deep); }
+  .about__fact dd img { width: 22px; height: 22px; flex: none; }
+
+  .about__values { display: flex; flex-wrap: wrap; gap: 12px clamp(20px, 3vw, 36px); margin-block-start: clamp(22px, 3vw, 30px); }
+  .about__values li { display: inline-flex; align-items: center; gap: 9px; font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; line-height: 1.25; color: var(--ink); }
+  :lang(ar) .about__values li { font-size: 1.05rem; }
+  .about__values .icon { width: 18px; height: 18px; color: var(--orange); stroke-width: 1.6; }
+
+  @media (max-width: 640px) {
+    .about__bg { --w: 132vw; margin-block-start: calc(var(--w) * -0.42); inset-inline-end: calc(var(--w) * -0.42); }
+    .about__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); width: auto; }
+    .about__fact:last-child { grid-column: 1 / -1; }
+    .about__values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; }
+    .about__values li { font-size: 0.9rem; }
+  }
 </style>

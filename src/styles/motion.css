@@ -4,7 +4,7 @@ html.motion-ok [data-reveal].is-in { opacity: 1; translate: 0 0; transition: opa
 html.motion-ok [data-reveal='fade'] { translate: 0 0; }
 html.motion-ok [data-reveal='left'] { translate: -32px 0; }
 html.motion-ok [data-reveal='left'].is-in { translate: 0 0; }
-[dir='rtl'] html.motion-ok [data-reveal='left'] { translate: 32px 0; }
+html[dir='rtl'].motion-ok [data-reveal='left'] { translate: 32px 0; }
 
 /* Marquee */
 .marquee { overflow: hidden; mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }

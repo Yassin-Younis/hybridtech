@@ -1,0 +1,9 @@
+---
+import Solution from '../../views/Solution.astro';
+import { solutionIds, type SolutionId } from '../../data/solutions';
+export function getStaticPaths() {
+  return solutionIds.map((id) => ({ params: { id } }));
+}
+const id = Astro.params.id as SolutionId;
+---
+<Solution lang="en" id={id} />
