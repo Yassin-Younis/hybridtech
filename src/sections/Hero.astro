@@ -1,5 +1,5 @@
 ---
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import type { Lang } from '../i18n';
 import { t, path } from '../i18n';
 import Icon from '../components/Icon.astro';
@@ -18,6 +18,12 @@ const people = [
   { src: person1, cls: 'hero__person--3', depth: 0.7, alt: '', eager: true },
   { src: omar, cls: 'hero__person--2', depth: 1, alt: d.hero.team, eager: true },
 ];
+// Rendered widths are ~50vw on phones (the figures are sized from the stage height), ~36vw on
+// portrait tablets and <=30vw on desktop. AVIF at q55 is ~25-35% lighter than the WebP q68 fallback
+// at equal or better fidelity (PSNR), so browsers that support it get it first.
+const widths = [320, 480, 640, 900];
+const sizes = '(min-width: 1000px) 30vw, (min-width: 700px) 36vw, 50vw';
+const avif = await Promise.all(people.map((p) => getImage({ src: p.src, format: 'avif', quality: 55, widths })));
 ---
 <section class="hero section--dark" id="top">
   <CircuitLayer draw flow />
@@ -41,7 +47,10 @@ const people = [
     <div class="hero__stage">
       {people.map((p, i) => (
         <div class={`hero__person hero__layer ${p.cls}`} style={`--d:${p.depth}; --i:${i}`}>
-          <Image src={p.src} alt={p.alt} format="webp" quality={68} widths={[320, 480, 640, 900]} sizes="(min-width: 1000px) 30vw, 64vw" loading="eager" fetchpriority={p.depth === 1 ? 'high' : 'auto'} decoding="async" />
+          <picture>
+            <source type="image/avif" srcset={avif[i].srcSet.attribute} sizes={sizes} />
+            <Image src={p.src} alt={p.alt} format="webp" quality={68} widths={widths} sizes={sizes} loading="eager" fetchpriority={p.depth === 1 ? 'high' : 'auto'} decoding="async" />
+          </picture>
         </div>
       ))}
     </div>

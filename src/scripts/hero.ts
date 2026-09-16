@@ -4,6 +4,11 @@
 // Gated on prefers-reduced-motion like motion.ts; with reduced motion or no JS the props stay 0
 // and the hero is a static composition.
 
+import { liveBoard } from './circuit-flow';
+
+const board = document.querySelector<HTMLElement>('.hero .circuit--flow');
+if (board) liveBoard(board);
+
 const stage = document.querySelector<HTMLElement>('.hero__stage');
 
 if (stage) {

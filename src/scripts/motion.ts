@@ -64,8 +64,9 @@ function start(): () => void {
   const rtl = html.dir === 'rtl';
   const from = { y: -6, x: rtl ? 2 : -2 }, to = { y: 14, x: rtl ? -3 : 3 };
   const layers = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'))
-    .map((layer) => ({ host: layer.parentElement as HTMLElement, svg: layer.querySelector('svg') as SVGSVGElement | null, top: 0, h: 0, cur: -1 }))
-    .filter((l) => l.host && l.svg);
+    // The board's <svg> and, on the hero, the <canvas> that draws the live board move together.
+    .map((layer) => ({ host: layer.parentElement as HTMLElement, els: Array.from(layer.querySelectorAll<HTMLElement | SVGSVGElement>(':scope > svg, :scope > canvas')), top: 0, h: 0, cur: -1 }))
+    .filter((l) => l.host && l.els.length);
   if (layers.length) {
     let raf = 0, vh = innerHeight;
     const measure = () => {
@@ -83,7 +84,8 @@ function start(): () => void {
         const d = target - l.cur;
         if (Math.abs(d) < 0.0005) { if (l.cur === target) return; l.cur = target; } else { l.cur += d * 0.14; moving = true; }
         const p = l.cur;
-        l.svg!.style.transform = `translate3d(${from.x + (to.x - from.x) * p}%, ${from.y + (to.y - from.y) * p}%, 0)`;
+        const tf = `translate3d(${from.x + (to.x - from.x) * p}%, ${from.y + (to.y - from.y) * p}%, 0)`;
+        l.els.forEach((el) => { el.style.transform = tf; });
       });
       if (moving) raf = requestAnimationFrame(frame);
     };
@@ -95,7 +97,7 @@ function start(): () => void {
     addEventListener('load', onResize);
     cleanups.push(() => {
       removeEventListener('scroll', schedule); removeEventListener('resize', onResize); removeEventListener('load', onResize);
-      cancelAnimationFrame(raf); layers.forEach((l) => { l.svg!.style.transform = ''; });
+      cancelAnimationFrame(raf); layers.forEach((l) => l.els.forEach((el) => { el.style.transform = ''; }));
     });
   }
 

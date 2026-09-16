@@ -18,7 +18,8 @@ const tag = logoParts.filter((p) => p.row === 'tag');
   .intro { display: none; }
   :global(html.hy-intro) .intro { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; direction: ltr; animation: introFailsafe 0.5s ease 5.4s forwards; }
   .intro::before { content: ''; position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, var(--blue-deep) 0%, var(--blue-ink) 100%); }
-  .intro__logo { position: relative; width: min(520px, 76vw); height: auto; overflow: visible; transform-origin: 0 0; animation: introHold 2.75s linear; }
+  /* Own compositor layer: the per-frame trace/fill repaints stay inside the logo and never re-raster the full-screen cover. */
+  .intro__logo { position: relative; width: min(520px, 76vw); height: auto; overflow: visible; transform-origin: 0 0; animation: introHold 2.75s linear; will-change: transform; }
 
   .intro__trace { fill: none; stroke: #fff; stroke-width: 0.26; stroke-linejoin: round; stroke-dasharray: 1 2; stroke-dashoffset: 1.01; animation: introDraw 1.55s cubic-bezier(0.55, 0.1, 0.25, 1) calc(0.5s + var(--x) * 0.56s) forwards; }
   .intro__fill { fill: #fff; fill-opacity: 0; animation: introFill 0.9s var(--ease-out) calc(1.13s + var(--x) * 0.56s) forwards; }
