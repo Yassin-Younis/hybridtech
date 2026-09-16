@@ -4,147 +4,115 @@ import { t, asset } from '../i18n';
 import Icon from '../components/Icon.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
 import markSvg from '../../public/brand/mark.svg?raw';
-import { Image } from 'astro:assets';
-import team from '../assets/solutions/team.png';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
 const markVB = markSvg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
 const markPaths = Array.from(markSvg.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
-const values = d.about.values.items;
 const lines = [
   { icon: 'eye', ...d.about.vision },
   { icon: 'target', ...d.about.mission },
 ];
 ---
-<section class="section section--tight about" id="about">
+<section class="section about" id="about">
   <CircuitLayer />
-  <div class="container">
-    <div class="about__plate">
-      <div class="about__copy">
-        <p class="eyebrow" data-reveal>{d.about.eyebrow}</p>
-        <h2 class="title about__title" data-reveal>{d.about.title}</h2>
+  <div class="container about__in">
+    <p class="eyebrow about__eyebrow" data-reveal>{d.about.eyebrow}</p>
+    <h2 class="title about__title" data-reveal>{d.about.title}</h2>
 
-        <ul class="about__facts" data-reveal>
-          {d.about.facts.map((f) => (
-            <li class="about__fact">
-              <span class="about__fact-icon">
-                {f.icon === 'handshake' ? <img src={asset('logos/partners/hp.svg')} alt="HP" width="22" height="22" /> : <Icon name={f.icon} />}
-              </span>
-              <span class="about__fact-k">{f.k}</span>
-              <span class="about__fact-v">{f.v}</span>
-            </li>
-          ))}
-        </ul>
-
-        <dl class="about__ledger" data-reveal>
-          {lines.map((l) => (
-            <div class="about__line">
-              <dt class="about__line-k"><Icon name={l.icon} />{l.t}</dt>
-              <dd class="about__line-v">{l.d}</dd>
-            </div>
-          ))}
-        </dl>
-      </div>
-
-      <figure class="about__photo" data-reveal="fade">
-        <Image
-          src={team}
-          format="webp"
-          quality={66}
-          alt="Hybrid Technology team in Cairo"
-          widths={[480, 760, 1000]}
-          sizes="(max-width: 959px) 100vw, (max-width: 1280px) 56vw, 680px"
-          loading="lazy"
-        />
-        <svg class="about__mark" viewBox={markVB} aria-hidden="true">{markPaths.map((p) => <path d={p} fill="currentColor" />)}</svg>
-      </figure>
-
-      <div class="about__values" data-reveal>
-        <p class="about__values-t">{d.about.values.t}</p>
-        <ul class="about__values-list">
-          {values.map((v) => (
-            <li class="about__value"><Icon name={v.icon} /><span>{v.label}</span></li>
-          ))}
-        </ul>
-      </div>
+    <div class="about__logo" data-reveal="fade" aria-hidden="true">
+      <svg class="about__rings" viewBox="0 0 400 400" fill="none">
+        <circle class="ring ring--a" cx="200" cy="200" r="190" stroke="currentColor" stroke-width="1" stroke-dasharray="2 10" />
+        <circle class="ring ring--b" cx="200" cy="200" r="150" stroke="currentColor" stroke-width="1.5" stroke-dasharray="60 18 4 18" />
+        <circle class="ring ring--c" cx="200" cy="200" r="112" stroke="currentColor" stroke-width="1" opacity="0.5" />
+        <g class="orbit orbit--a"><circle cx="200" cy="10" r="5" /></g>
+        <g class="orbit orbit--b"><circle cx="200" cy="50" r="4" /></g>
+      </svg>
+      <div class="about__glow"></div>
+      <svg class="about__mark" viewBox={markVB}>
+        {markPaths.map((p) => <path class="mark__stroke" d={p} pathLength="1" />)}
+        {markPaths.map((p) => <path class="mark__fill" d={p} />)}
+      </svg>
     </div>
+
+    <ul class="about__facts" data-reveal>
+      {d.about.facts.map((f) => (
+        <li class="about__fact">
+          <span class="about__fact-icon">
+            {f.icon === 'handshake' ? <img src={asset('logos/partners/hp.svg')} alt="HP" width="22" height="22" /> : <Icon name={f.icon} />}
+          </span>
+          <span class="about__fact-text"><span class="about__fact-k">{f.k}</span><span class="about__fact-v">{f.v}</span></span>
+        </li>
+      ))}
+    </ul>
+
+    <dl class="about__vm" data-reveal>
+      {lines.map((l) => (
+        <div class="about__vm-item">
+          <dt><Icon name={l.icon} />{l.t}</dt>
+          <dd>{l.d}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <ul class="about__values" data-reveal aria-label={d.about.values.t}>
+      {d.about.values.items.map((v) => <li><Icon name={v.icon} /><span>{v.label}</span></li>)}
+    </ul>
   </div>
 </section>
 
 <style>
-  /* Flat on the page: copy on the start side, the team photo bleeding off the inline-end edge of the
-     viewport behind a slanted orange seam (the letterhead bar), values as a ruled strip under the copy. */
-  .about { --cut: clamp(40px, 7vw, 110px); --seam: 5px; overflow: hidden; }
-  /* The shared `.circuit + *` rule makes the container a positioning box; release it so the photo
-     can anchor to the section itself and bleed to its top, bottom and inline-end edges. */
-  .about > .container { position: static; }
-  @media (max-width: 959px) { .about { padding-block-start: 0; } }
-  .about__plate { position: relative; display: grid; }
-  @media (min-width: 960px) {
-    .about__plate { position: static; grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); grid-template-rows: 1fr auto; min-height: 460px; }
-  }
+  .about__in { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .about__eyebrow { justify-content: center; }
+  .about__title { color: var(--blue-deep); margin-inline: auto; max-width: 20ch; margin-block: 0.5em 0; }
 
-  /* Copy */
-  .about__copy { position: relative; z-index: 2; padding-block: 8px clamp(20px, 3vw, 32px); }
-  @media (min-width: 960px) { .about__copy { grid-area: 1 / 1 / 2 / 2; padding-inline-end: clamp(24px, 4vw, 56px); align-self: center; } }
-  .about__title { color: var(--blue-deep); font-size: clamp(1.7rem, 3.3vw, 2.6rem); margin-block: 0.5em 0.6em; max-width: 16ch; }
-  :lang(ar) .about__title { max-width: 20ch; }
+  /* Animated brand mark */
+  .about__logo { position: relative; width: clamp(200px, 26vw, 280px); aspect-ratio: 1; margin-block: clamp(20px, 3vw, 32px); display: grid; place-items: center; color: var(--blue); }
+  .about__rings { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-strong); overflow: visible; }
+  .ring, .orbit { transform-origin: 200px 200px; transform-box: view-box; }
+  .ring--a { animation: aboutSpin 60s linear infinite; }
+  .ring--b { animation: aboutSpin 38s linear infinite reverse; color: var(--blue); opacity: 0.35; }
+  .orbit--a { animation: aboutSpin 14s linear infinite; fill: var(--orange); }
+  .orbit--b { animation: aboutSpin 22s linear infinite reverse; fill: var(--blue); }
+  .about__glow { position: absolute; inset: 22%; border-radius: 50%; background: radial-gradient(circle, rgba(0, 94, 138, 0.16), rgba(0, 94, 138, 0) 70%); animation: aboutBreathe 5s ease-in-out infinite; }
+  .about__mark { position: relative; width: 42%; overflow: visible; }
+  [dir='rtl'] .about__mark { transform: scaleX(-1); }
+  .mark__stroke { fill: none; stroke: currentColor; stroke-width: 0.3; stroke-dasharray: 1; stroke-dashoffset: 0; }
+  .mark__fill { fill: currentColor; }
+  html.motion-ok .about__logo .mark__stroke { stroke-dashoffset: 1; }
+  html.motion-ok .about__logo .mark__fill { opacity: 0; }
+  html.motion-ok .about__logo.is-in .mark__stroke { animation: aboutDraw 1.8s var(--ease-out) 0.2s forwards; }
+  html.motion-ok .about__logo.is-in .mark__fill { animation: aboutFill 0.9s var(--ease-out) 1.4s forwards; }
+  @keyframes aboutSpin { to { transform: rotate(360deg); } }
+  @keyframes aboutDraw { to { stroke-dashoffset: 0; } }
+  @keyframes aboutFill { to { opacity: 1; } }
+  @keyframes aboutBreathe { 0%, 100% { scale: 1; opacity: 0.8; } 50% { scale: 1.12; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .ring, .orbit, .about__glow { animation: none; } }
 
-  .about__facts { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-block-end: clamp(22px, 2.6vw, 30px); }
-  .about__fact { display: grid; grid-template-columns: 40px auto; grid-template-rows: auto auto; column-gap: 12px; align-items: center; }
-  .about__fact-icon { grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; background: var(--blue-tint); color: var(--blue); }
+  /* Facts */
+  .about__facts { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px clamp(20px, 4vw, 44px); }
+  .about__fact { display: inline-flex; align-items: center; gap: 12px; text-align: start; }
+  .about__fact-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; background: var(--blue-tint); color: var(--blue); flex: none; }
   .about__fact-icon .icon { width: 19px; height: 19px; }
-  .about__fact-icon img { width: 22px; height: 22px; border-radius: 50%; }
-  .about__fact-k { font-family: var(--font-display); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); line-height: 1.2; }
+  .about__fact-icon img { width: 22px; height: 22px; }
+  .about__fact-text { display: grid; }
+  .about__fact-k { font-family: var(--font-display); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); line-height: 1.3; }
   :lang(ar) .about__fact-k { letter-spacing: 0; font-size: 0.8rem; }
   .about__fact-v { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--blue-deep); line-height: 1.25; white-space: nowrap; }
 
-  .about__ledger { margin: 0; border-inline-start: 2px solid var(--orange); padding-inline-start: clamp(14px, 2vw, 22px); display: grid; gap: 12px; }
-  .about__line { display: grid; gap: 2px 14px; align-items: baseline; }
-  @media (min-width: 560px) { .about__line { grid-template-columns: 6.5rem 1fr; } :lang(ar) .about__line { grid-template-columns: 5rem 1fr; } }
-  .about__line-k { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
-  :lang(ar) .about__line-k { letter-spacing: 0; font-size: 0.85rem; }
-  .about__line-k .icon { width: 15px; height: 15px; color: var(--orange); }
-  .about__line-v { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.3; color: var(--ink); text-wrap: balance; }
+  /* Vision / mission */
+  .about__vm { display: grid; gap: 18px; margin: clamp(28px, 4vw, 40px) 0 0; width: min(100%, 760px); }
+  @media (min-width: 700px) { .about__vm { grid-template-columns: 1fr 1fr; gap: 0; } .about__vm-item + .about__vm-item { border-inline-start: 1px solid var(--line); } }
+  .about__vm-item { padding-inline: clamp(12px, 3vw, 32px); }
+  .about__vm dt { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
+  :lang(ar) .about__vm dt { letter-spacing: 0; font-size: 0.85rem; }
+  .about__vm dt .icon { width: 15px; height: 15px; color: var(--orange); }
+  .about__vm dd { margin: 6px 0 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.05rem, 1.5vw, 1.2rem); line-height: 1.35; color: var(--ink); text-wrap: balance; }
 
-  /* Photo: full-bleed on phones, bleeding off the inline-end edge on desktop, slanted orange seam */
-  .about__photo {
-    position: relative; z-index: 0; margin: 0 calc(-1 * var(--gutter)) 20px; overflow: hidden; order: -1;
-    background: var(--orange); aspect-ratio: 16 / 10;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), 0 100%);
-  }
-  .about__photo img {
-    width: 100%; height: 100%; object-fit: cover; object-position: 58% 32%;
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut) - var(--seam)), 0 calc(100% - var(--seam)));
-    transition: scale 1.4s var(--ease-out);
-  }
-  [dir='rtl'] .about__photo { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--cut))); }
-  [dir='rtl'] .about__photo img { clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--seam)), 0 calc(100% - var(--cut) - var(--seam))); }
-  .about__photo:hover img { scale: 1.035; }
-  .about__photo :global(picture) { display: contents; }
-  .about__mark { position: absolute; z-index: 1; inset-inline-end: -6%; inset-block-end: 14%; width: 34%; color: #fff; opacity: 0.35; pointer-events: none; }
-  [dir='rtl'] .about__mark { transform: scaleX(-1); }
-  @media (min-width: 960px) {
-    .about__photo {
-      position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 47%; aspect-ratio: auto; margin: 0; order: 0;
-      clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%);
-    }
-    .about__photo img { clip-path: polygon(calc(var(--cut) + var(--seam)) 0, 100% 0, 100% 100%, var(--seam) 100%); object-position: 62% 30%; }
-    [dir='rtl'] .about__photo { clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% 100%, 0 100%); }
-    [dir='rtl'] .about__photo img { clip-path: polygon(0 0, calc(100% - var(--cut) - var(--seam)) 0, calc(100% - var(--seam)) 100%, 0 100%); }
-    .about__mark { inset-inline-end: -4%; inset-block-end: 8%; width: 40%; }
-  }
-
-  /* Values: a ruled strip under the copy */
-  .about__values { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr; border-block-start: 1px solid var(--line); }
-  @media (min-width: 960px) { .about__values { grid-area: 2 / 1 / 3 / 2; margin-inline-end: clamp(24px, 4vw, 56px); } }
-  .about__values-t { padding-block: 14px 2px; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); }
-  :lang(ar) .about__values-t { letter-spacing: 0; font-size: 0.85rem; }
-  .about__values-list { display: grid; grid-template-columns: repeat(2, 1fr); }
-  @media (min-width: 640px) { .about__values-list { grid-template-columns: repeat(4, auto); justify-content: start; column-gap: clamp(18px, 2.4vw, 32px); } }
-  .about__value { display: flex; align-items: center; gap: 9px; padding-block: 10px; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: var(--blue-deep); letter-spacing: 0.02em; white-space: nowrap; }
-  :lang(ar) .about__value { letter-spacing: 0; font-size: 1rem; }
-  .about__value .icon { width: 18px; height: 18px; color: var(--orange); transition: translate 0.35s var(--ease-out); }
-  .about__value:hover .icon { translate: 0 -2px; }
+  /* Values */
+  .about__values { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-block-start: clamp(28px, 4vw, 40px); }
+  .about__values li { display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-display); font-weight: 600; font-size: 0.88rem; color: var(--blue-deep); transition: border-color 0.3s, translate 0.3s var(--ease-out); }
+  :lang(ar) .about__values li { font-size: 0.98rem; }
+  .about__values li:hover { border-color: var(--orange); translate: 0 -2px; }
+  .about__values .icon { width: 17px; height: 17px; color: var(--orange); }
 </style>
