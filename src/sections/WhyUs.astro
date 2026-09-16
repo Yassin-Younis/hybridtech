@@ -42,7 +42,7 @@ const d = t(Astro.props.lang);
   .why__body h3 { font-size: 1.15rem; color: #fff; margin-block-end: 6px; }
   .why__body p { color: var(--on-dark-muted); max-width: 48ch; }
   .why__arrow { color: var(--orange); opacity: 0; translate: -8px 0; transition: opacity 0.3s, translate 0.4s var(--ease-out); margin-top: 4px; }
-  [dir='rtl'] .why__arrow { translate: 8px 0; }
+  :global([dir='rtl']) .why__arrow { translate: 8px 0; }
   .why__row:hover .why__arrow { opacity: 1; translate: 0 0; }
   @media (max-width: 600px) { .why__arrow { display: none; } .why__row { grid-template-columns: auto 1fr; } }
 </style>

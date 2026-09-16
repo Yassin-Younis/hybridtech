@@ -53,7 +53,7 @@ const year = new Date().getFullYear();
   .ftr__bar { padding: 14px clamp(20px, 5vw, 64px); display: flex; align-items: center; white-space: nowrap; }
   .ftr__bar--orange { background: var(--orange); color: #fff; font-style: italic; font-size: 1.05rem; padding-inline-end: calc(clamp(20px, 5vw, 64px) + 28px); clip-path: polygon(0 0, 100% 0, calc(100% - 28px) 100%, 0 100%); flex: none; }
   .ftr__bar--blue { background: var(--blue-deep); flex: 1; margin-inline-start: -28px; padding-inline-start: 48px; color: var(--on-dark); overflow: hidden; text-overflow: ellipsis; }
-  [dir='rtl'] .ftr__bar--orange { clip-path: polygon(28px 0, 100% 0, 100% 100%, 0 100%); }
+  :global([dir='rtl']) .ftr__bar--orange { clip-path: polygon(28px 0, 100% 0, 100% 100%, 0 100%); }
   @media (max-width: 640px) { .ftr__bar--blue { display: none; } .ftr__bar--orange { flex: 1; clip-path: none; padding-inline-end: 20px; } }
   .ftr__in { display: grid; gap: 40px; padding-block: clamp(48px, 6vw, 80px) 32px; }
   @media (min-width: 800px) { .ftr__in { grid-template-columns: 1.4fr 1fr 1.2fr; } }
