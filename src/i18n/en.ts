@@ -62,10 +62,6 @@ export const en = {
       { t: 'Competitive pricing', d: 'Competitive pricing on every solution we deliver, with transparent quotations.' },
       { t: 'Responsive service', d: 'Responsive customer service whenever you need us, not only at sale time.' },
       { t: 'Corporate experience', d: 'Proven experience serving corporate clients in banking, construction, pharma and real estate.' },
-      { t: 'Customised solutions', d: 'Business solutions tailored to your specific requirements and budget.' },
-      { t: 'Trusted since 2020', d: 'A trusted IT supplier serving organisations since 2020.' },
-      { t: 'Reliable products', d: 'Reliable products backed by professional installation and service.' },
-      { t: 'Multi-sector support', d: 'Supporting organisations across multiple industry sectors.' },
     ],
   },
   products: {

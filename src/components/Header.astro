@@ -60,14 +60,14 @@ const alt = path(otherLang(lang), page);
   .hdr__lang:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
   .hdr__lang .icon { width: 18px; height: 18px; }
   .hdr__burger { display: none; width: 44px; height: 44px; place-items: center; cursor: pointer; border-radius: 10px; }
-  .hdr__burger .icon { width: 26px; height: 26px; grid-area: 1 / 1; }
-  .i-close { display: none; }
+  .hdr__burger :global(.icon) { width: 26px; height: 26px; grid-area: 1 / 1; }
+  .hdr__burger :global(.i-close) { display: none; }
   @media (max-width: 960px) {
     .hdr__burger { display: grid; }
     .hdr__nav { position: fixed; inset: 76px 0 0 0; background: var(--blue-ink); flex-direction: column; align-items: stretch; justify-content: flex-start; padding: 32px var(--gutter); gap: 32px; translate: 0 -8px; opacity: 0; visibility: hidden; transition: opacity 0.35s var(--ease-out), translate 0.35s var(--ease-out), visibility 0.35s; overflow: auto; }
     .hdr:has(.nav-toggle:checked) .hdr__nav { opacity: 1; visibility: visible; translate: 0 0; }
-    .hdr:has(.nav-toggle:checked) .i-menu { display: none; }
-    .hdr:has(.nav-toggle:checked) .i-close { display: block; }
+    .hdr:has(.nav-toggle:checked) .hdr__burger :global(.i-menu) { display: none; }
+    .hdr:has(.nav-toggle:checked) .hdr__burger :global(.i-close) { display: block; }
     .hdr__links { flex-direction: column; gap: 4px; font-size: 1.5rem; }
     .hdr__links a { display: block; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.08); }
     .hdr__links a::after { display: none; }
