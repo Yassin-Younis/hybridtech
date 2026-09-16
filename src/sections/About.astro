@@ -12,104 +12,170 @@ const d = t(lang);
 const markVB = markSvg.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
 const markPaths = Array.from(markSvg.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
 const values = d.about.values.items;
+const lines = [
+  { icon: 'eye', ...d.about.vision },
+  { icon: 'target', ...d.about.mission },
+];
 ---
-<section class="section about" id="about">
+<section class="section section--tight about" id="about">
   <CircuitLayer />
-  <div class="container about__grid">
-    <div class="about__copy" data-reveal>
-      <p class="eyebrow">{d.about.eyebrow}</p>
-      <h2 class="title">{d.about.title}</h2>
-      <p class="lead">{d.about.body}</p>
-      <ul class="about__facts">
-        {d.about.facts.map((f) => (
-          <li>
-            <span class="about__fact-icon"><Icon name={f.icon} /></span>
-            <span class="about__fact-k">{f.k}</span>
-            <span class="about__fact-v">{f.icon === 'handshake' ? <img src={asset('logos/partners/hp.svg')} alt="HP" width="28" height="28" /> : null}{f.v}</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+  <div class="container">
+    <div class="about__plate">
+      <div class="about__copy">
+        <p class="eyebrow" data-reveal>{d.about.eyebrow}</p>
+        <h2 class="title about__title" data-reveal>{d.about.title}</h2>
 
-    <div class="about__bento">
-      <div class="about__orbit card" data-reveal aria-label={d.about.values.t}>
-        <p class="about__orbit-title">{d.about.values.t}</p>
-        <div class="orbit">
-          <svg class="orbit__mark" viewBox={markVB} aria-hidden="true">{markPaths.map((p) => <path d={p} fill="currentColor" />)}</svg>
-          <svg class="orbit__rings" viewBox="0 0 400 400" aria-hidden="true" fill="none" stroke="currentColor">
-            <circle cx="200" cy="200" r="150" stroke-width="1.5" stroke-dasharray="3 9" />
-            <circle cx="200" cy="200" r="110" stroke-width="1" opacity="0.5" />
-            <circle cx="200" cy="200" r="190" stroke-width="1" opacity="0.25" />
-          </svg>
-          <ul class="orbit__ring">
-            {values.map((v, i) => (
-              <li class="orbit__node" style={`--a:${i * 90}deg`}>
-                <span class="orbit__chip"><Icon name={v.icon} /><span>{v.label}</span></span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul class="about__facts" data-reveal>
+          {d.about.facts.map((f) => (
+            <li class="about__fact">
+              <span class="about__fact-icon">
+                {f.icon === 'handshake' ? <img src={asset('logos/partners/hp.svg')} alt="HP" width="22" height="22" /> : <Icon name={f.icon} />}
+              </span>
+              <span class="about__fact-k">{f.k}</span>
+              <span class="about__fact-v">{f.v}</span>
+            </li>
+          ))}
+        </ul>
+
+        <dl class="about__ledger" data-reveal>
+          {lines.map((l) => (
+            <div class="about__line">
+              <dt class="about__line-k"><Icon name={l.icon} />{l.t}</dt>
+              <dd class="about__line-v">{l.d}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
-      <div class="card about__tile about__tile--vision" data-reveal>
-        <span class="about__tile-icon"><Icon name="eye" /></span>
-        <p class="about__tile-k">{d.about.vision.t}</p>
-        <p class="about__tile-v">{d.about.vision.d}</p>
-      </div>
-      <div class="card about__tile about__tile--mission" data-reveal>
-        <span class="about__tile-icon"><Icon name="target" /></span>
-        <p class="about__tile-k">{d.about.mission.t}</p>
-        <p class="about__tile-v">{d.about.mission.d}</p>
-      </div>
-      <div class="about__photo" data-reveal>
-        <Image src={team} alt="Hybrid Technology team in Cairo" widths={[600, 900, 1264]} sizes="(max-width: 1000px) 100vw, 55vw" loading="lazy" />
+
+      <figure class="about__photo" data-reveal="fade">
+        <Image
+          src={team}
+          alt="Hybrid Technology team in Cairo"
+          widths={[480, 760, 1000, 1264]}
+          sizes="(max-width: 959px) 100vw, (max-width: 1280px) 56vw, 680px"
+          loading="lazy"
+        />
+        <svg class="about__mark" viewBox={markVB} aria-hidden="true">{markPaths.map((p) => <path d={p} fill="currentColor" />)}</svg>
+      </figure>
+
+      <div class="about__values" data-reveal>
+        <p class="about__values-t">{d.about.values.t}</p>
+        <ul class="about__values-list">
+          {values.map((v) => (
+            <li class="about__value"><Icon name={v.icon} /><span>{v.label}</span></li>
+          ))}
+        </ul>
       </div>
     </div>
   </div>
 </section>
+
 <style>
-  .about__grid { display: grid; gap: 48px; align-items: center; }
-  @media (min-width: 1000px) { .about__grid { grid-template-columns: 0.85fr 1.15fr; gap: 72px; } }
-  .about__facts { display: grid; gap: 14px; margin-block-start: 36px; }
-  .about__facts li { display: grid; grid-template-columns: 44px 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; }
-  .about__fact-icon { grid-row: span 2; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--blue-tint); color: var(--blue); }
-  .about__fact-icon .icon { width: 22px; height: 22px; }
-  .about__fact-k { font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
-  :lang(ar) .about__fact-k { letter-spacing: 0; font-size: 0.85rem; }
-  .about__fact-v { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; color: var(--blue-deep); display: inline-flex; align-items: center; gap: 8px; }
-  .about__fact-v img { width: 26px; height: 26px; border-radius: 50%; }
+  /* One plate: ink ground, the team photo bleeding in from the inline end behind a
+     slanted orange seam (the letterhead bar), copy on the start side, values as a
+     frosted ledger strip along the bottom. */
+  .about { --cut: clamp(40px, 7vw, 96px); --seam: 5px; }
+  .about__plate {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-rows: auto auto;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--blue-ink);
+    color: var(--on-dark);
+    box-shadow: 0 30px 70px -40px rgba(0, 38, 61, 0.6);
+  }
+  @media (min-width: 960px) {
+    .about__plate { grid-template-columns: minmax(0, 11fr) minmax(0, 10fr); grid-template-rows: 1fr auto; min-height: 480px; }
+  }
 
-  .about__bento { display: grid; gap: 16px; grid-template-columns: 1fr 1fr; }
-  .about__photo { grid-column: span 2; border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 16 / 7; }
-  .about__photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; transition: scale 1.2s var(--ease-out); }
-  .about__photo:hover img { scale: 1.04; }
-  .about__orbit { grid-column: span 2; padding: 20px 24px 8px; background: var(--paper); overflow: hidden; }
-  .about__orbit-title { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
-  :lang(ar) .about__orbit-title { letter-spacing: 0; font-size: 0.9rem; }
-  .orbit { position: relative; width: min(100%, 420px); aspect-ratio: 1; margin: -10px auto 0; display: grid; place-items: center; color: var(--blue); }
-  .orbit__mark { position: absolute; width: 26%; color: var(--blue); }
-  [dir='rtl'] .orbit__mark { transform: scaleX(-1); }
-  .orbit__rings { position: absolute; inset: 0; width: 100%; height: 100%; color: var(--line-strong); }
-  .orbit__ring { position: absolute; inset: 0; animation: spin 48s linear infinite; }
-  .orbit__node { position: absolute; inset: 0; display: grid; place-items: start center; rotate: var(--a); }
-  /* Chips sit on the r=150 ring (37.5% of the box); counter-rotate so labels stay upright. */
-  .orbit__node { padding-top: 12.5%; }
-  .orbit__chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); box-shadow: var(--shadow); font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; color: var(--blue-deep); white-space: nowrap; translate: 0 -50%; rotate: calc(-1 * var(--a)); animation: unspin 48s linear infinite; }
-  .orbit__chip .icon { width: 18px; height: 18px; color: var(--orange); }
-  @keyframes spin { to { rotate: 360deg; } }
-  @keyframes unspin { to { rotate: calc(-1 * var(--a) - 360deg); } }
-  .orbit__ring:hover, .orbit__ring:hover .orbit__chip { animation-play-state: paused; }
-  @media (prefers-reduced-motion: reduce) { .orbit__ring, .orbit__chip { animation: none; } }
-  :lang(ar) .orbit__chip { font-size: 0.95rem; padding-inline: 12px 14px; }
+  /* Copy */
+  .about__copy { position: relative; z-index: 2; padding: clamp(24px, 4vw, 48px) clamp(20px, 4vw, 52px) clamp(24px, 3vw, 36px); }
+  @media (min-width: 960px) { .about__copy { grid-area: 1 / 1 / 2 / 2; } }
+  .about__title { color: #fff; font-size: clamp(1.7rem, 3.3vw, 2.6rem); margin-block: 0.5em 0.6em; max-width: 16ch; }
+  :lang(ar) .about__title { max-width: 20ch; }
 
-  .about__tile { display: flex; flex-direction: column; gap: 10px; padding: 24px; }
-  .about__tile-icon { display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: var(--blue-tint); color: var(--blue); }
-  .about__tile-icon .icon { width: 24px; height: 24px; }
-  .about__tile-k { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); }
-  :lang(ar) .about__tile-k { letter-spacing: 0; font-size: 0.9rem; }
-  .about__tile-v { font-family: var(--font-display); font-weight: 700; font-size: 1.15rem; line-height: 1.3; color: var(--blue-deep); text-wrap: balance; }
-  .about__tile--mission { background: var(--blue-deep); border-color: var(--blue-deep); }
-  .about__tile--mission .about__tile-icon { background: rgba(255,255,255,0.1); color: var(--orange); }
-  .about__tile--mission .about__tile-k { color: var(--on-dark-muted); }
-  .about__tile--mission .about__tile-v { color: #fff; }
-  @media (max-width: 520px) { .about__bento { grid-template-columns: 1fr; } .about__orbit, .about__photo { grid-column: span 1; } .orbit__chip { font-size: 0.75rem; padding: 6px 10px 6px 8px; } }
+  .about__facts { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-block-end: clamp(20px, 2.5vw, 28px); }
+  .about__fact { display: grid; grid-template-columns: 38px auto; grid-template-rows: auto auto; column-gap: 12px; align-items: center; }
+  .about__fact-icon { grid-row: span 2; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.12); color: var(--on-dark); }
+  .about__fact-icon .icon { width: 19px; height: 19px; }
+  .about__fact-icon img { width: 22px; height: 22px; border-radius: 50%; }
+  .about__fact-k { font-family: var(--font-display); font-size: 0.62rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--on-dark-muted); line-height: 1.2; }
+  :lang(ar) .about__fact-k { letter-spacing: 0; font-size: 0.8rem; }
+  .about__fact-v { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: #fff; line-height: 1.25; white-space: nowrap; }
+
+  .about__ledger { margin: 0; border-inline-start: 2px solid var(--orange); padding-inline-start: clamp(14px, 2vw, 22px); display: grid; gap: 12px; }
+  .about__line { display: grid; gap: 2px 14px; align-items: baseline; }
+  @media (min-width: 560px) { .about__line { grid-template-columns: 6.5rem 1fr; } :lang(ar) .about__line { grid-template-columns: 5rem 1fr; } }
+  .about__line-k { display: inline-flex; align-items: center; gap: 7px; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--on-dark-muted); }
+  :lang(ar) .about__line-k { letter-spacing: 0; font-size: 0.85rem; }
+  .about__line-k .icon { width: 15px; height: 15px; color: var(--orange); }
+  .about__line-v { margin: 0; font-family: var(--font-display); font-weight: 700; font-size: clamp(1rem, 1.3vw, 1.15rem); line-height: 1.3; color: #fff; text-wrap: balance; }
+
+  /* Photo with the slanted seam */
+  .about__photo {
+    position: relative; z-index: 0; margin: 0; overflow: hidden;
+    background: var(--orange);
+    aspect-ratio: 16 / 10;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut)), 0 100%);
+  }
+  .about__photo img {
+    width: 100%; height: 100%; object-fit: cover; object-position: 58% 32%;
+    clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--cut) - var(--seam)), 0 calc(100% - var(--seam)));
+    transition: scale 1.4s var(--ease-out);
+  }
+  [dir='rtl'] .about__photo { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 calc(100% - var(--cut))); }
+  [dir='rtl'] .about__photo img { clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--seam)), 0 calc(100% - var(--cut) - var(--seam))); }
+  .about__plate:hover .about__photo img { scale: 1.035; }
+  .about__photo::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(to top, rgba(0, 38, 61, 0.7), rgba(0, 38, 61, 0) 50%);
+  }
+  .about__mark { position: absolute; z-index: 1; inset-inline-end: -6%; inset-block-end: 4%; width: 34%; color: #fff; opacity: 0.2; pointer-events: none; }
+  [dir='rtl'] .about__mark { transform: scaleX(-1); }
+  /* Stacked: photo first, copy climbs into the wedge under the slant. */
+  .about__photo { order: -1; }
+  .about__copy { margin-block-start: calc(-1 * var(--cut) + 12px); }
+  @media (min-width: 960px) {
+    .about__photo {
+      position: absolute; inset-block: 0; inset-inline-end: 0; inline-size: 56%; aspect-ratio: auto; order: 0;
+      clip-path: polygon(var(--cut) 0, 100% 0, 100% 100%, 0 100%);
+    }
+    .about__photo img { clip-path: polygon(calc(var(--cut) + var(--seam)) 0, 100% 0, 100% 100%, var(--seam) 100%); object-position: 62% 30%; }
+    [dir='rtl'] .about__photo { clip-path: polygon(0 0, calc(100% - var(--cut)) 0, 100% 100%, 0 100%); }
+    [dir='rtl'] .about__photo img { clip-path: polygon(0 0, calc(100% - var(--cut) - var(--seam)) 0, calc(100% - var(--seam)) 100%, 0 100%); }
+    .about__photo::after { background: linear-gradient(to right, rgba(0, 38, 61, 0.55), rgba(0, 38, 61, 0) 38%), linear-gradient(to top, rgba(0, 38, 61, 0.75), rgba(0, 38, 61, 0) 42%); }
+    [dir='rtl'] .about__photo::after { background: linear-gradient(to left, rgba(0, 38, 61, 0.55), rgba(0, 38, 61, 0) 38%), linear-gradient(to top, rgba(0, 38, 61, 0.75), rgba(0, 38, 61, 0) 42%); }
+    .about__mark { inset-inline-end: -4%; inset-block-end: 10%; width: 40%; }
+    .about__copy { margin-block-start: 0; }
+  }
+
+  /* Values ledger strip */
+  .about__values {
+    position: relative; z-index: 2;
+    display: grid; grid-template-columns: 1fr; align-items: stretch;
+    border-block-start: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(0, 38, 61, 0.62);
+    -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  }
+  @media (min-width: 960px) { .about__values { grid-area: 2 / 1 / 3 / 3; grid-template-columns: auto 1fr; } }
+  .about__values-t { display: flex; align-items: center; padding: 12px clamp(20px, 4vw, 52px) 0; font-family: var(--font-display); font-size: 0.66rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--on-dark-muted); }
+  :lang(ar) .about__values-t { letter-spacing: 0; font-size: 0.85rem; }
+  @media (min-width: 960px) { .about__values-t { padding: 0 clamp(20px, 3vw, 44px) 0 clamp(20px, 4vw, 52px); border-inline-end: 1px solid rgba(255, 255, 255, 0.12); } }
+  .about__values-list { display: grid; grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 640px) { .about__values-list { grid-template-columns: repeat(4, 1fr); } }
+  .about__value {
+    display: flex; align-items: center; gap: 10px; padding: 14px clamp(14px, 2vw, 24px);
+    font-family: var(--font-display); font-weight: 600; font-size: 0.86rem; color: #fff; letter-spacing: 0.02em;
+    border-inline-start: 1px solid rgba(255, 255, 255, 0.1);
+    transition: background 0.3s;
+  }
+  :lang(ar) .about__value { letter-spacing: 0; font-size: 0.98rem; }
+  .about__value:first-child { border-inline-start: 0; }
+  @media (max-width: 639px) { .about__value:nth-child(3) { border-inline-start: 0; } .about__value:nth-child(n + 3) { border-block-start: 1px solid rgba(255, 255, 255, 0.1); } }
+  .about__value .icon { width: 18px; height: 18px; color: var(--orange); transition: translate 0.35s var(--ease-out); }
+  .about__value:hover { background: rgba(255, 255, 255, 0.05); }
+  .about__value:hover .icon { translate: 0 -2px; }
+  @media (min-width: 960px) { .about__value:first-child { border-inline-start: 0; } }
 </style>

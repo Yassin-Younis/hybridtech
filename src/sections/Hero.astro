@@ -1,18 +1,38 @@
 ---
+import { Image } from 'astro:assets';
 import mark from '../../public/brand/mark.svg?raw';
 import type { Lang } from '../i18n';
-import { t, path } from '../i18n';
+import { t, path, asset } from '../i18n';
 import Icon from '../components/Icon.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
+import person1 from '../assets/hero/person-1.png';
+import person2 from '../assets/hero/person-2.png';
+import person3 from '../assets/hero/person-3.png';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
 const viewBox = mark.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
 const paths = Array.from(mark.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
 const home = path(lang, '/');
+// Client marks that read cleanly as white silhouettes on the navy hero.
+const logos = [
+  { file: 'qnb.svg', name: 'QNB' },
+  { file: 'mashreq.png', name: 'Mashreq' },
+  { file: 'hikma.svg', name: 'Hikma' },
+  { file: 'al-ahly-sabbour.svg', name: 'Al Ahly Sabbour' },
+  { file: 'redcon.png', name: 'Redcon Construction' },
+];
+// Depth per layer: 1 = closest to the viewer (follows the pointer most, stays with the page on
+// scroll); lower = further back (drifts slower than the page on scroll).
+const people = [
+  { src: person1, cls: 'hero__person--1', depth: 0.55, alt: '', eager: false },
+  { src: person3, cls: 'hero__person--3', depth: 0.7, alt: '', eager: false },
+  { src: person2, cls: 'hero__person--2', depth: 1, alt: d.hero.team, eager: true },
+];
 ---
 <section class="hero section--dark" id="top">
   <CircuitLayer draw />
+  <div class="hero__glow" aria-hidden="true"></div>
   <div class="container hero__in">
     <div class="hero__copy">
       <h1 class="hero__h1">
@@ -24,46 +44,108 @@ const home = path(lang, '/');
         <a class="btn" href={`${home}#solutions`} data-magnetic>{d.hero.primary}<Icon name="arrow" class="icon--dir" /></a>
         <a class="btn btn--ghost" href={`${home}#contact`}>{d.hero.secondary}</a>
       </div>
-      <ul class="hero__trust hero__fade" style="--i:2">
-        {d.hero.trust.map((s) => <li><Icon name="check" />{s}</li>)}
-      </ul>
+      <div class="hero__proof hero__fade" style="--i:2">
+        <p class="hero__stat"><strong class="num">{d.hero.projects.n}</strong><span>{d.hero.projects.label}</span></p>
+        <div class="hero__trusted">
+          <span class="hero__trusted-l">{d.hero.trusted}</span>
+          <ul class="hero__logos">
+            {logos.map((l) => <li><img src={asset(`logos/clients/${l.file}`)} alt={l.name} height="22" loading="lazy" decoding="async" /></li>)}
+          </ul>
+        </div>
+      </div>
     </div>
-    <div class="hero__visual" aria-hidden="true">
-      <svg class="hero__arc" viewBox={viewBox} fill="none">
-        {paths.map((p) => <path d={p} pathLength="1" stroke="currentColor" stroke-width="0.35" />)}
-        {paths.map((p) => <path d={p} class="hero__arc-fill" fill="currentColor" />)}
-      </svg>
+    <div class="hero__stage">
+      <div class="hero__arc-wrap hero__layer" style="--d:0.3" aria-hidden="true">
+        <svg class="hero__arc" viewBox={viewBox} fill="none">
+          {paths.map((p) => <path d={p} pathLength="1" stroke="currentColor" stroke-width="0.35" />)}
+          {paths.map((p) => <path d={p} class="hero__arc-fill" fill="currentColor" />)}
+        </svg>
+      </div>
+      {people.map((p, i) => (
+        <div class={`hero__person hero__layer ${p.cls}`} style={`--d:${p.depth}; --i:${i}`}>
+          <Image src={p.src} alt={p.alt} widths={[480, 720, 900]} sizes="(min-width: 1000px) 26vw, 58vw" loading={p.eager ? 'eager' : 'lazy'} fetchpriority={p.eager ? 'high' : 'auto'} decoding="async" />
+        </div>
+      ))}
+      {d.hero.trust.map((s, i) => (
+        <p class={`hero__pill hero__layer hero__pill--${i + 1}`} style={`--d:${1.25 - i * 0.12}; --i:${i}`}><Icon name="check" />{s}</p>
+      ))}
     </div>
   </div>
   <a class="hero__scroll hero__fade" style="--i:4" href={`${home}#partners`} aria-label={d.hero.scroll}><span>{d.hero.scroll}</span><Icon name="chevron" /></a>
 </section>
+<script>import '../scripts/hero';</script>
 <style>
-  .hero { position: relative; min-height: 100svh; display: grid; align-items: center; padding-block: 140px 96px; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; }
-  .hero__in { display: grid; gap: 40px; align-items: center; }
-  @media (min-width: 1000px) { .hero__in { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); } }
-  .hero__h1 { font-size: clamp(2.6rem, 7vw, 5.4rem); line-height: 1; letter-spacing: -0.025em; }
-  :lang(ar) .hero__h1 { font-size: clamp(2.4rem, 6.5vw, 4.8rem); line-height: 1.25; }
-  .hero__h1 .eyebrow { display: inline-flex; font-size: 0.8rem; margin-block-end: 28px; color: var(--orange); letter-spacing: 0.3em; }
+  .hero { --hero-pb: 56px; position: relative; min-height: 100svh; display: grid; align-items: stretch; padding-block: 120px 0; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; isolation: isolate; }
+  .hero__glow { position: absolute; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(42% 46% at 76% 62%, rgba(16, 132, 186, 0.55) 0%, rgba(16, 132, 186, 0) 100%),
+      radial-gradient(22% 26% at 90% 92%, rgba(241, 81, 27, 0.28) 0%, rgba(241, 81, 27, 0) 100%);
+  }
+  [dir='rtl'] .hero__glow { transform: scaleX(-1); }
+  .hero__in { position: relative; z-index: 1; display: grid; gap: 24px; align-items: end; }
+  .hero__copy { align-self: center; padding-block-end: 8px; }
+  @media (min-width: 1000px) {
+    .hero { --hero-pb: 96px; padding-block-start: 132px; }
+    .hero__in { grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr); gap: 0; }
+    .hero__copy { padding-block-end: var(--hero-pb); }
+  }
+
+  /* Copy */
+  .hero__h1 { font-size: clamp(2.5rem, 5.6vw, 4.7rem); line-height: 0.98; letter-spacing: -0.03em; }
+  :lang(ar) .hero__h1 { font-size: clamp(2.3rem, 5.6vw, 4.4rem); line-height: 1.25; letter-spacing: 0; }
+  .hero__h1 .eyebrow { display: inline-flex; font-size: 0.78rem; margin-block-end: 26px; color: var(--orange); letter-spacing: 0.3em; }
   :lang(ar) .hero__h1 .eyebrow { font-size: 1rem; letter-spacing: 0; }
   .hero__line-wrap { display: block; overflow: hidden; padding-block-end: 0.08em; }
   .hero__line { display: block; }
-  .hero__line-wrap:last-child .hero__line { color: #fff; }
   .hero__line-wrap:last-child .hero__line { background: linear-gradient(90deg, #fff 30%, #9fd3ec); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .hero__sub { margin-block: 28px 36px; max-width: 54ch; font-size: 1.15rem; }
+  .hero__sub { margin-block: 24px 32px; max-width: 44ch; font-size: 1.1rem; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; }
-  .hero__trust { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-block-start: 40px; font-family: var(--font-display); font-size: 0.85rem; letter-spacing: 0.04em; color: var(--on-dark-muted); }
-  :lang(ar) .hero__trust { letter-spacing: 0; font-size: 0.95rem; }
-  .hero__trust li { display: inline-flex; align-items: center; gap: 8px; }
-  .hero__trust .icon { width: 16px; height: 16px; color: var(--orange); }
-  .hero__visual { position: relative; display: none; }
-  @media (min-width: 1000px) { .hero__visual { display: block; } }
-  .hero__arc { width: 100%; max-width: 520px; margin-inline-start: auto; color: #fff; filter: drop-shadow(0 30px 60px rgba(0,0,0,0.35)); }
-  [dir='rtl'] .hero__arc { transform: scaleX(-1); margin-inline-start: auto; }
-  .hero__arc-fill { opacity: 0.12; }
+
+  /* Social proof */
+  .hero__proof { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 36px; margin-block-start: 44px; padding-block-start: 22px; border-block-start: 1px solid rgba(255, 255, 255, 0.12); }
+  .hero__stat { display: flex; align-items: baseline; gap: 10px; white-space: nowrap; }
+  .hero__stat strong { font-family: var(--font-num); font-size: 1.7rem; font-weight: 600; line-height: 1; letter-spacing: -0.02em; color: #fff; }
+  .hero__stat span { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--on-dark-muted); }
+  :lang(ar) .hero__stat span { letter-spacing: 0; text-transform: none; font-size: 0.9rem; }
+  .hero__trusted { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 20px; }
+  .hero__trusted-l { font-family: var(--font-display); font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--on-dark-muted); }
+  :lang(ar) .hero__trusted-l { letter-spacing: 0; text-transform: none; font-size: 0.9rem; }
+  .hero__logos { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 22px; }
+  .hero__logos img { display: block; height: 20px; width: auto; filter: brightness(0) invert(1); opacity: 0.62; transition: opacity 0.3s; }
+  .hero__logos li:nth-child(4) img { height: 30px; }
+  .hero__logos li:nth-child(5) img { height: 24px; }
+  .hero__logos li:hover img { opacity: 1; }
+
+  /* Stage: a fixed-height box so the absolutely positioned layers never shift layout */
+  .hero__stage { --px: 0px; --py: 0px; --sx: 0px; --sy: 0px; position: relative; height: clamp(300px, 88vw, 440px); margin-inline: -8vw; pointer-events: none; }
+  @media (min-width: 1000px) { .hero__stage { height: min(46vw, 680px, 100svh - 180px); margin-inline: -40px -6vw; } }
+  .hero__layer { position: absolute; --d: 1; }
+  html.motion-ok .hero__layer { transform: translate3d(calc(var(--px) * var(--d) + var(--sx) * (1 - var(--d))), calc(var(--py) * var(--d) + var(--sy) * (1 - var(--d))), 0); will-change: transform; }
+
+  .hero__arc-wrap { inset-inline-start: 6%; bottom: 8%; width: 92%; z-index: 0; }
+  .hero__arc { display: block; width: 100%; color: #fff; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35)); }
+  [dir='rtl'] .hero__arc { transform: scaleX(-1); }
+  .hero__arc-fill { opacity: 0.1; }
   html.motion-ok .hero__arc-fill { opacity: 0; animation: arcFill 1.2s var(--ease-out) 1.9s forwards; }
-  @keyframes arcFill { to { opacity: 0.12; } }
-  .hero__scroll { position: absolute; bottom: 28px; inset-inline-start: 50%; translate: -50% 0; display: inline-flex; flex-direction: column; align-items: center; gap: 2px; font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); }
-  [dir='rtl'] .hero__scroll { translate: 50% 0; }
+  @keyframes arcFill { to { opacity: 0.1; } }
+
+  .hero__person { bottom: 0; }
+  .hero__person img { display: block; height: 100%; width: auto; max-width: none; mask-image: linear-gradient(to top, transparent 0, #000 16%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 16%); }
+  .hero__person--1 { inset-inline-start: 0; height: 84%; z-index: 1; filter: brightness(0.86) saturate(0.92); }
+  .hero__person--3 { inset-inline-end: 0; height: 64%; z-index: 2; filter: brightness(0.9) saturate(0.95); }
+  .hero__person--2 { inset-inline-start: 26%; height: 90%; z-index: 3; filter: drop-shadow(0 24px 40px rgba(0, 20, 35, 0.55)); }
+
+  /* Floating trust pills */
+  .hero__pill { display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; z-index: 4; font-family: var(--font-display); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.06em; white-space: nowrap; color: #fff; background: rgba(0, 38, 61, 0.55); border: 1px solid rgba(255, 255, 255, 0.18); box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  :lang(ar) .hero__pill { letter-spacing: 0; font-size: 0.9rem; }
+  .hero__pill .icon { width: 14px; height: 14px; color: var(--orange); }
+  .hero__pill--1 { inset-inline-start: 4%; top: 36%; }
+  .hero__pill--2 { inset-inline-end: 4%; top: 22%; }
+  @media (min-width: 1000px) { .hero__pill--1 { inset-inline-start: 2%; top: 44%; } .hero__pill--2 { inset-inline-end: 10%; top: 20%; } }
+
+  /* Scroll cue */
+  .hero__scroll { position: absolute; bottom: 26px; inset-inline-start: max(var(--gutter), calc((100% - var(--container)) / 2)); display: none; flex-direction: column; align-items: flex-start; gap: 2px; font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); z-index: 2; }
+  @media (min-width: 1000px) { .hero__scroll { display: inline-flex; } }
   :lang(ar) .hero__scroll { letter-spacing: 0; font-size: 0.85rem; }
   .hero__scroll .icon { width: 18px; height: 18px; animation: bob 2s ease-in-out infinite; }
   @keyframes bob { 50% { translate: 0 5px; } }
