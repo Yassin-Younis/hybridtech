@@ -45,13 +45,14 @@ const pulses = flow ? circuit.paths.map((d, i) => ({ d, dur: 3.2 + rand(i) * 4.2
   html.motion-ok .circuit--flow .circuit__flow { display: inline; }
   html.motion-ok .circuit--flow .circuit__drift { animation: boardDrift 26s ease-in-out infinite alternate; }
 
-  .circuit__pulse path { stroke-dasharray: 0.09 1; stroke-dashoffset: 0.09; animation: current var(--dur) cubic-bezier(0.45, 0, 0.55, 1) var(--delay) infinite; }
+  /* The dash starts and ends fully off the path (with a gap longer than the path) so the loop seam is invisible. */
+  .circuit__pulse path { stroke-dasharray: 0.09 2; stroke-dashoffset: 0.1; animation: current var(--dur) cubic-bezier(0.45, 0, 0.55, 1) var(--delay) infinite; }
   .circuit__pulse.is-rev path { animation-direction: reverse; }
   .circuit__halo { stroke: #38b6ff; stroke-width: 12; opacity: 0.18; }
   .circuit__spark { stroke: #d9f3ff; stroke-width: 2.6; opacity: 0.85; }
   .circuit__pulse.is-hot .circuit__halo { stroke: var(--orange); opacity: 0.28; }
   .circuit__pulse.is-hot .circuit__spark { stroke: #ffc2a8; }
-  .circuit__pulse.is-hot path { stroke-dasharray: 0.05 1; stroke-dashoffset: 0.05; }
+  .circuit__pulse.is-hot path { stroke-dasharray: 0.05 2; stroke-dashoffset: 0.06; }
 
   .circuit__ping { stroke: #8fd3f4; stroke-width: 2; opacity: 0; transform-box: fill-box; transform-origin: center; animation: ping var(--dur) ease-out var(--delay) infinite; }
 
@@ -59,7 +60,7 @@ const pulses = flow ? circuit.paths.map((d, i) => ({ d, dur: 3.2 + rand(i) * 4.2
   .circuit--flow.is-paused * { animation-play-state: paused !important; }
   @media (max-width: 640px) { .circuit__pulse:nth-child(3n), .circuit__ping:nth-child(2n) { display: none; } }
 
-  @keyframes current { to { stroke-dashoffset: -1; } }
+  @keyframes current { to { stroke-dashoffset: -1.01; } }
   @keyframes ping { 0%, 62% { opacity: 0; scale: 0.6; } 70% { opacity: 0.7; } 100% { opacity: 0; scale: 2.4; } }
   @keyframes boardDrift { from { translate: 0 0; } to { translate: -40px 18px; } }
 </style>
