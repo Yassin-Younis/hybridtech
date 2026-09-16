@@ -7,7 +7,7 @@ interface Props { lang: Lang }
 const d = t(Astro.props.lang);
 const list = partners.filter((p) => p.featured);
 ---
-<section class="mq section--surface" aria-label={d.marquee.title}>
+<section class="mq section--surface" id="partners" aria-label={d.marquee.title}>
   <div class="container"><p class="mq__title">{d.marquee.title}</p></div>
   <div class="marquee">
     <div class="marquee__track">
