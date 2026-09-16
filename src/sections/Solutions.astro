@@ -61,7 +61,11 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
   .panel:hover .panel__more, .panel:focus .panel__more, .panel:focus-within .panel__more { opacity: 1; }
   /* Desktop: expanding strip. The hovered panel grows, the others shrink. */
   @media (min-width: 900px) {
-    .strip { display: flex; height: clamp(440px, 52vw, 560px); }
+    /* Fixed text widths (from the strip's container width) so copy never re-wraps while a panel animates. */
+    .strip { display: flex; height: clamp(440px, 52vw, 560px); container-type: inline-size; --gaps: 4 * 14px; --pad: 40px; --units: 6.6; --grow: 2.6; }
+    .panel__body, .panel__top { width: calc((100cqw - var(--gaps)) * var(--grow) / var(--units) - var(--pad)); max-width: none; }
+    .panel__title { width: calc((100cqw - var(--gaps)) / var(--units) - var(--pad)); }
+    .panel__top { width: calc((100cqw - var(--gaps)) / var(--units) - var(--pad)); }
     .panel { flex: 1 1 0; min-height: 0; transition: flex 0.7s var(--ease-out); }
     .panel:hover, .panel:focus, .panel:focus-within { flex: 2.6 1 0; }
     .panel__more { grid-template-rows: 0fr; }
@@ -70,6 +74,8 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
     .panel__list li { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; padding-inline-start: 22px; position: relative; }
     .panel__list li :global(.icon) { position: absolute; inset-inline-start: 0; top: 3px; }
     .panel__title { font-size: clamp(1.1rem, 1.5vw, 1.4rem); }
+    .panel__more { transition: grid-template-rows 0.6s var(--ease-out), opacity 0.35s; }
+    .panel:hover .panel__more, .panel:focus .panel__more, .panel:focus-within .panel__more { transition-delay: 0s, 0.25s; }
   }
   @media (max-width: 899px) {
     .panel { min-height: 300px; }
