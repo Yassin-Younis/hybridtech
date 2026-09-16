@@ -26,7 +26,11 @@ const people = [
     <div class="hero__copy">
       <h1 class="hero__h1">
         <span class="eyebrow hero__fade" style="--i:-4">{d.hero.eyebrow}</span>{' '}
-        {d.hero.lines.map((line, i) => <span class="hero__line-wrap"><span class="hero__line" style={`--i:${i}`}>{line}</span>{' '}</span>)}
+        {d.hero.lines.map((line, i) => (
+          <span class="hero__line-wrap"><span class="hero__line" style={`--i:${i}`}>
+            {line.split(/\*(.+?)\*/).map((part, j) => (j % 2 ? <span class="hero__hl">{part}</span> : part))}
+          </span>{' '}</span>
+        ))}
       </h1>
       <p class="lead hero__sub hero__fade" style="--i:0">{d.hero.sub}</p>
       <div class="hero__cta hero__fade" style="--i:1">
@@ -81,6 +85,12 @@ const people = [
   :lang(ar) .hero__h1 .eyebrow { font-size: 1rem; letter-spacing: 0; }
   .hero__line-wrap { display: block; overflow: hidden; padding-block-end: 0.08em; }
   .hero__line { display: block; }
+  /* Highlighted word (wrapped in *asterisks* in the copy): an orange block that sweeps in behind it. */
+  .hero__hl { display: inline-block; padding-inline: 0.14em; color: #fff; border-radius: 0.08em; background: linear-gradient(var(--orange), var(--orange)) no-repeat 0 0 / 100% 100%; }
+  :global([dir='rtl']) .hero__hl { background-position: 100% 0; }
+  :global(html.motion-ok) .hero__hl { background-size: 0% 100%; animation: hlSweep 0.8s var(--ease-out) calc(0.35s + 0.6s) forwards; }
+  :global(html.hy-intro:not(.hy-intro-go)) .hero__hl { animation-play-state: paused; }
+  @keyframes hlSweep { to { background-size: 100% 100%; } }
   .hero__line-wrap:last-child .hero__line { background: linear-gradient(90deg, #fff 30%, #9fd3ec); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero__sub { margin-block: 24px 32px; max-width: 44ch; font-size: 1.1rem; }
   .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; }
