@@ -55,8 +55,8 @@ const tag = logoParts.filter((p) => p.row === 'tag');
 
   /* The hero sits in its final state under the overlay (so it paints, and counts for LCP),
      then replays its own entrance once the logo starts to leave. */
-  html.hy-intro:not(.hy-intro-go) :is(.hero__line, .hero__fade, .hero__person, .circuit--draw path) { animation: none; }
+  html.hy-intro:not(.hy-intro-go) :is(.hero__line, .hero__fade, .hero__person, .circuit__trace) { animation: none; }
   html.hy-intro:not(.hy-intro-go) .hero__line { clip-path: none; }
   html.hy-intro:not(.hy-intro-go) :is(.hero__fade, .hero__person) { opacity: 1; translate: none; }
-  html.hy-intro:not(.hy-intro-go) .circuit--draw path { stroke-dashoffset: 0; }
+  html.hy-intro:not(.hy-intro-go) .circuit__trace { stroke-dashoffset: 0; }
 </style>
