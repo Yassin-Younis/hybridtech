@@ -1,6 +1,6 @@
 // Logo intro (first page view per session). The head script in Base.astro decides whether it plays
 // and adds html.hy-intro; CSS runs the draw-in, this measures the header logo and hands off to it.
-// If this never runs, CSS failsafes in Intro.astro clear the overlay after ~3s.
+// If this never runs, CSS failsafes in Intro.astro clear the overlay after ~4s.
 
 const html = document.documentElement;
 const intro = document.getElementById('intro');
@@ -30,8 +30,8 @@ if (!html.classList.contains('hy-intro') || !intro || !logo || !target) {
     setTimeout(() => {
       html.classList.remove('hy-intro');
       intro.remove();
-      setTimeout(end, 300);
-    }, 640);
+      setTimeout(end, 400);
+    }, 870);
   };
   // Any early input skips straight to the flight.
   const skip = () => {
@@ -42,5 +42,5 @@ if (!html.classList.contains('hy-intro') || !intro || !logo || !target) {
   addEventListener('keydown', skip);
   const hold = logo.getAnimations?.()[0];
   if (hold) hold.finished.then(fly, fly);
-  else setTimeout(fly, 1150);
+  else setTimeout(fly, 1600);
 }
