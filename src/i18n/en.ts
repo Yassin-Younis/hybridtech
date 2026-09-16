@@ -6,7 +6,7 @@ export const en = {
   nav: { primary: 'Primary', home: 'Home', about: 'About', solutions: 'Solutions', products: 'Products', partners: 'Partners', clients: 'Clients', contact: 'Contact', cta: 'Get a quote', menu: 'Menu', close: 'Close', skip: 'Skip to content' },
   hero: {
     eyebrow: 'IT Solutions Provider · Cairo, Egypt',
-    lines: ['Empowering business', 'through technology.'],
+    lines: ['Empowering business', 'technology.'],
     sub: 'Enterprise hardware, networks and managed IT. One partner, since 2020.',
     primary: 'Explore solutions',
     secondary: 'Request a quote',
