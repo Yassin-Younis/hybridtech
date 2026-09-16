@@ -29,5 +29,9 @@
     "sharp": "^0.35.4",
     "simple-icons": "^16.31.0",
     "svgo": "^4.1.0"
-  }
+  },
+  "pnpm": {
+    "minimumReleaseAge": 0
+  },
+  "packageManager": "pnpm@10.13.1"
 }
