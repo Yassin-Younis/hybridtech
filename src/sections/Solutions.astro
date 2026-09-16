@@ -13,13 +13,12 @@ const d = t(Astro.props.lang);
     </div>
     <div class="sol__grid">
       {d.solutions.items.map((s, i) => (
-        <article class="card sol__card" id={`sol-${s.id}`} data-reveal style={`--n:${i + 1}`}>
+        <article class="card sol__card sol__card--compact" id={`sol-${s.id}`} data-reveal style={`--n:${i + 1}`}>
           <div class="sol__head">
             <span class="sol__icon"><Icon name={s.icon} /></span>
             <span class="sol__idx num">0{i + 1}</span>
           </div>
           <h3>{s.title}</h3>
-          <p class="sol__blurb">{s.blurb}</p>
           <ul class="sol__list">{s.bullets.map((b) => <li><Icon name="check" />{b}</li>)}</ul>
           <p class="sol__vendors"><span>{d.solutions.vendorsLabel}</span>{s.vendors.map((v) => <span class="chip">{v}</span>)}</p>
         </article>
@@ -28,23 +27,24 @@ const d = t(Astro.props.lang);
   </div>
 </section>
 <style>
-  .sol__grid { display: grid; gap: 20px; }
+  .sol__grid { display: grid; gap: 14px; }
   @media (min-width: 760px) { .sol__grid { grid-template-columns: repeat(6, 1fr); } .sol__card { grid-column: span 3; } .sol__card:nth-child(n + 3) { grid-column: span 2; } }
-  .sol__card { display: flex; flex-direction: column; gap: 14px; transition: translate 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s; }
-  .sol__card::before { content: ''; position: absolute; inset-inline: 0; top: 0; height: 4px; background: var(--orange); scale: 0 1; transform-origin: 0 0; transition: scale 0.45s var(--ease-out); }
+  .sol__card { display: flex; flex-direction: column; gap: 10px; padding: 18px 20px 16px; transition: translate 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out), border-color 0.3s; }
+  .sol__card::before { content: ''; position: absolute; inset-inline: 0; top: 0; height: 3px; background: var(--orange); scale: 0 1; transform-origin: 0 0; transition: scale 0.45s var(--ease-out); }
   [dir='rtl'] .sol__card::before { transform-origin: 100% 0; }
-  .sol__card:hover { translate: 0 -4px; box-shadow: var(--shadow); border-color: var(--line-strong); }
+  .sol__card:hover { translate: 0 -3px; box-shadow: var(--shadow); border-color: var(--line-strong); }
   .sol__card:hover::before { scale: 1 1; }
   .sol__head { display: flex; justify-content: space-between; align-items: center; }
-  .sol__icon { display: grid; place-items: center; width: 52px; height: 52px; border-radius: 14px; background: var(--blue-tint); color: var(--blue); }
-  .sol__icon .icon { width: 26px; height: 26px; }
-  .sol__idx { font-family: var(--font-display); font-weight: 600; color: var(--line-strong); font-size: 1.1rem; }
-  .sol__card h3 { font-size: 1.35rem; color: var(--blue-deep); }
-  .sol__blurb { color: var(--muted); }
-  .sol__list { display: grid; gap: 8px; margin-block-start: 4px; }
-  .sol__list li { display: flex; gap: 10px; align-items: flex-start; font-size: 0.95rem; }
-  .sol__list .icon { width: 18px; height: 18px; color: var(--orange); margin-top: 3px; }
-  .sol__vendors { margin-block-start: auto; padding-block-start: 16px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border-top: 1px dashed var(--line); }
-  .sol__vendors > span:first-child { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); font-family: var(--font-display); margin-inline-end: 4px; }
-  :lang(ar) .sol__vendors > span:first-child { letter-spacing: 0; font-size: 0.9rem; }
+  .sol__icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 11px; background: var(--blue-tint); color: var(--blue); }
+  .sol__icon .icon { width: 21px; height: 21px; }
+  .sol__idx { font-family: var(--font-display); font-weight: 600; color: var(--line-strong); font-size: 0.95rem; }
+  .sol__card h3 { font-size: 1.1rem; color: var(--blue-deep); }
+  .sol__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 5px 14px; }
+  .sol__list li { display: flex; gap: 7px; align-items: flex-start; font-size: 0.86rem; line-height: 1.4; color: var(--ink); }
+  .sol__list .icon { width: 14px; height: 14px; color: var(--orange); margin-top: 3px; }
+  .sol__vendors { margin-block-start: auto; padding-block-start: 10px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; border-top: 1px dashed var(--line); }
+  .sol__vendors > span:first-child { display: none; }
+  .sol__vendors .chip { font-size: 0.7rem; padding: 0.22em 0.6em; }
+  :lang(ar) .sol__list li { font-size: 0.95rem; }
+  :lang(ar) .sol__vendors .chip { font-size: 0.8rem; }
 </style>
