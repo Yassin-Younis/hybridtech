@@ -123,9 +123,9 @@ const people = [
   @media (max-width: 999px) {
     .hero__stage { align-self: stretch; container-type: size; margin-inline: calc(-1 * var(--gutter)); }
     .hero__person--2 { height: 90cqh; inset-inline-start: auto; left: calc(50% - 28.9cqh); }
-    /* Side figures are placed from the centre in the same unit as their height, so the group keeps
-       its spacing at every width instead of drifting to the edges. */
-    .hero__person--1 { height: 76cqh; inset-inline: auto; left: max(calc(50% - 85cqh), -10%); }
-    .hero__person--3 { height: 76cqh; inset-inline: auto; left: min(calc(50% + 44cqh), calc(100% - 30cqh)); }
+    /* Same grouping as desktop (overlap and height ratio), placed from the centre in the unit of their
+       height so it holds at every width. */
+    .hero__person--1 { height: 84cqh; inset-inline: auto; left: max(calc(50% - 58.6cqh), -12%); }
+    .hero__person--3 { height: 84cqh; inset-inline: auto; left: min(calc(50% + 16.7cqh), calc(100% - 34cqh)); }
   }
 </style>
