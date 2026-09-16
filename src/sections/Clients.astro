@@ -28,6 +28,7 @@ const list = clients.filter((c) => c.logo);
   .cl { padding-block-end: calc(var(--section) * 0.8); }
   .cl__head { text-align: center; display: grid; justify-items: center; margin-block-end: clamp(28px, 4vw, 44px); }
   .cl__track { animation-duration: 56s; gap: clamp(48px, 7vw, 96px); padding-inline-end: clamp(48px, 7vw, 96px); align-items: center; }
+  @media (max-width: 640px) { .cl__track { animation-duration: 26s; } }
   .cl__logo { display: inline-flex; align-items: center; justify-content: center; height: 56px; }
   .cl__logo img { height: 44px; width: auto; max-width: 190px; object-fit: contain; filter: grayscale(1) opacity(0.75); transition: filter 0.35s; }
   .cl__logo:hover img { filter: none; }
