@@ -25,7 +25,7 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
           <span class="panel__icon"><Icon name={s.icon} /></span>
           <div class="panel__body">
             <h3 class="panel__title">{s.title}</h3>
-            <div class="panel__more"><p class="panel__vendors">{s.vendors.map((v) => <span class="chip">{v}</span>)}</p></div>
+            <div class="panel__more"><p class="panel__desc">{s.short}</p></div>
           </div>
         </li>
       ))}
@@ -44,8 +44,7 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
   .panel__title { font-size: 1.35rem; color: #fff; text-wrap: balance; }
   .panel__more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.6s var(--ease-out), opacity 0.5s; opacity: 0; }
   .panel__more > * { min-height: 0; overflow: hidden; }
-  .panel__vendors { display: flex; flex-wrap: wrap; gap: 6px; padding-block-start: 12px; }
-  .panel__vendors .chip { background: rgba(255,255,255,0.14); color: #fff; font-size: 0.72rem; }
+  .panel__desc { padding-block-start: 10px; color: var(--on-dark); font-size: 0.95rem; line-height: 1.5; max-width: 34ch; }
   .panel:hover .panel__img, .panel:focus-within .panel__img, .panel:focus .panel__img { scale: 1.06; filter: saturate(1); }
   .panel:hover .panel__more, .panel:focus .panel__more, .panel:focus-within .panel__more { opacity: 1; }
   /* Desktop: expanding strip. The hovered panel grows, the others shrink. */
