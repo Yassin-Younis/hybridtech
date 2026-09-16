@@ -1,13 +1,5 @@
 ---
-import '@fontsource/chakra-petch/500.css';
-import '@fontsource/chakra-petch/600.css';
-import '@fontsource/chakra-petch/700.css';
-import '@fontsource/instrument-sans/400.css';
-import '@fontsource/instrument-sans/500.css';
-import '@fontsource/instrument-sans/600.css';
-import '@fontsource/el-messiri/400.css';
-import '@fontsource/el-messiri/600.css';
-import '@fontsource/el-messiri/700.css';
+import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 import '../styles/motion.css';
@@ -17,9 +9,16 @@ import SEO from '../components/SEO.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFab from '../components/WhatsAppFab.astro';
-interface Props { lang: Lang; title: string; description: string; page: string }
-const { lang, title, description, page } = Astro.props;
+// Above-the-fold faces per language (same hashed assets fonts.css points at), preloaded so the
+// hero heading and first paragraph don't wait for style/layout to discover them.
+import chakra700 from '@fontsource/chakra-petch/files/chakra-petch-latin-700-normal.woff2?url';
+import instrument400 from '@fontsource/instrument-sans/files/instrument-sans-latin-400-normal.woff2?url';
+import messiri700 from '@fontsource/el-messiri/files/el-messiri-arabic-700-normal.woff2?url';
+import messiri400 from '@fontsource/el-messiri/files/el-messiri-arabic-400-normal.woff2?url';
+interface Props { lang: Lang; title: string; description: string; page: string; jsonLd?: Record<string, unknown>[] }
+const { lang, title, description, page, jsonLd } = Astro.props;
 const alt = path(otherLang(lang), page);
+const preloadFonts = lang === 'ar' ? [messiri700, messiri400] : [chakra700, instrument400];
 ---
 <!doctype html>
 <html lang={lang} dir={dirOf(lang)} data-alt={alt}>
@@ -37,11 +36,12 @@ const alt = path(otherLang(lang), page);
         } catch (e) {}
       })();
     </script>
+    {preloadFonts.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
     <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
     <link rel="icon" href={asset('favicon-32.png')} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={asset('apple-touch-icon.png')} />
     <link rel="manifest" href={asset('site.webmanifest')} />
-    <SEO {lang} {title} {description} {page} />
+    <SEO {lang} {title} {description} {page} {jsonLd} />
     <meta name="generator" content={Astro.generator} />
   </head>
   <body>

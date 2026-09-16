@@ -16,7 +16,17 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'en', locales: { en: 'en', ar: 'ar' } },
+      filter: (page) => !/\/404\/?$/.test(page),
+      serialize: (item) => {
+        // Add an x-default alternate (pointing at the English URL) next to the en/ar pairs.
+        const en = item.links?.find((l) => l.lang === 'en');
+        if (en && !item.links?.some((l) => l.lang === 'x-default')) item.links = [...(item.links ?? []), { url: en.url, lang: 'x-default' }];
+        item.lastmod = new Date().toISOString();
+        return item;
+      },
     }),
   ],
-  build: { inlineStylesheets: 'auto' },
+  // All page CSS is small (~10 KB gz across base + page styles); inlining it removes three
+  // render-blocking requests and the extra round-trips on GitHub Pages.
+  build: { inlineStylesheets: 'always' },
 });

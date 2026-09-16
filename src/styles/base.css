@@ -1,5 +1,5 @@
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+html { scroll-behavior: smooth; scroll-padding-block-start: 76px; -webkit-text-size-adjust: 100%; }
 html.lenis, html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto; }
 body {

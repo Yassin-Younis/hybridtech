@@ -14,8 +14,34 @@ const items = await getCollection('products');
 const brands = [...new Set(items.map((p) => p.data.brand))].sort();
 const counts = Object.fromEntries(categories.map((c) => [c.id, items.filter((p) => p.data.category === c.id).length]));
 const home = path(lang, '/');
+const origin = Astro.site?.origin ?? '';
+const productsUrl = origin + path(lang, '/products');
+const jsonLd = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${productsUrl}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: d.nav.home, item: origin + home },
+      { '@type': 'ListItem', position: 2, name: d.products.pageTitle, item: productsUrl },
+    ],
+  },
+  {
+    '@type': 'ItemList',
+    '@id': `${productsUrl}#catalog`,
+    name: d.products.catalogHeading,
+    url: productsUrl,
+    numberOfItems: items.length,
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    itemListElement: items.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: pick(lang, p.data.name),
+      description: pick(lang, p.data.blurb),
+    })),
+  },
+];
 ---
-<Base lang={lang} title={d.seo.productsTitle} description={d.seo.productsDescription} page="/products">
+<Base lang={lang} title={d.seo.productsTitle} description={d.seo.productsDescription} page="/products" {jsonLd}>
   <section class="ph section--dark">
     <CircuitLayer />
     <div class="container">
@@ -24,8 +50,9 @@ const home = path(lang, '/');
       <p class="lead">{d.products.pageIntro}</p>
     </div>
   </section>
-  <section class="section section--surface cat">
+  <section class="section section--surface cat" aria-labelledby="catalog-heading">
     <div class="container">
+      <h2 id="catalog-heading" class="sr-only">{d.products.catalogHeading}</h2>
       <div class="cat__bar">
         <nav class="cat__chips" aria-label={d.products.filterCat}>
           <a href={path(lang, '/products')} class="cat__chip is-active" data-cat="all">{d.products.all}<span class="num">{items.length}</span></a>

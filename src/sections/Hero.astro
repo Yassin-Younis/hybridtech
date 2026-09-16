@@ -16,8 +16,8 @@ const home = path(lang, '/');
   <div class="container hero__in">
     <div class="hero__copy">
       <h1 class="hero__h1">
-        <span class="eyebrow hero__fade" style="--i:-4">{d.hero.eyebrow}</span>
-        {d.hero.lines.map((line, i) => <span class="hero__line-wrap"><span class="hero__line" style={`--i:${i}`}>{line}</span></span>)}
+        <span class="eyebrow hero__fade" style="--i:-4">{d.hero.eyebrow}</span>{' '}
+        {d.hero.lines.map((line, i) => <span class="hero__line-wrap"><span class="hero__line" style={`--i:${i}`}>{line}</span>{' '}</span>)}
       </h1>
       <p class="lead hero__sub hero__fade" style="--i:0">{d.hero.sub}</p>
       <div class="hero__cta hero__fade" style="--i:1">

@@ -2,9 +2,7 @@
 import { en } from '../i18n/en';
 import { ar } from '../i18n/ar';
 import { path, asset } from '../i18n';
-import '@fontsource/chakra-petch/700.css';
-import '@fontsource/el-messiri/700.css';
-import '@fontsource/instrument-sans/400.css';
+import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
 ---
@@ -13,8 +11,9 @@ import '../styles/base.css';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>404 · Hybrid Technology</title>
-    <meta name="robots" content="noindex" />
+    <title>{en.notFound.pageTitle}</title>
+    <meta name="description" content={en.notFound.description} />
+    <meta name="robots" content="noindex, follow" />
     <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
     <script is:inline>
       try { var l = localStorage.getItem('hy_lang') || (/^ar\b/i.test(navigator.language || '') ? 'ar' : 'en'); document.documentElement.lang = l; document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr'; } catch (e) {}

@@ -24,7 +24,7 @@ const alt = path(otherLang(lang), page);
       <img class="hdr__logo-color" src={asset('brand/logo.svg')} alt="" width="200" height="15" />
     </a>
     <input type="checkbox" id="nav-toggle" class="sr-only nav-toggle" />
-    <nav class="hdr__nav" aria-label="Primary">
+    <nav class="hdr__nav" aria-label={d.nav.primary}>
       <ul class="hdr__links">
         {links.map((l) => <li><a href={l.href} class:list={{ 'is-active': l.active }}>{l.label}</a></li>)}
       </ul>

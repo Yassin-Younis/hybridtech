@@ -2,33 +2,100 @@
 import type { Lang } from '../i18n';
 import { path, asset, t } from '../i18n';
 import { site } from '../data/site';
-interface Props { lang: Lang; title: string; description: string; page: string }
-const { lang, title, description, page } = Astro.props;
+interface Props { lang: Lang; title: string; description: string; page: string; jsonLd?: Record<string, unknown>[] }
+const { lang, title, description, page, jsonLd: extra = [] } = Astro.props;
+const d = t(lang);
 const origin = Astro.site?.origin ?? '';
 const url = (l: Lang) => origin + path(l, page);
+const home = origin + path('en', '/');
+const canonical = url(lang);
 const og = origin + asset(`og/og-${lang}.png`);
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'LocalBusiness',
-  '@id': url('en'),
+const inLanguage = lang === 'ar' ? 'ar-EG' : 'en';
+
+// Stable node ids (absolute, anchored on the default-locale home URL so every page references the same entities).
+const orgId = `${home}#organization`;
+const bizId = `${home}#localbusiness`;
+const siteId = `${home}#website`;
+const logoId = `${home}#logo`;
+const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsQuery)}`;
+
+const address = {
+  '@type': 'PostalAddress',
+  streetAddress: `${site.address.street}, ${site.address.area}`,
+  addressLocality: site.address.city,
+  addressRegion: 'Cairo Governorate',
+  postalCode: site.address.postal,
+  addressCountry: site.address.country,
+};
+const logo = { '@type': 'ImageObject', '@id': logoId, url: origin + asset('icon-512.png'), contentUrl: origin + asset('icon-512.png'), width: 512, height: 512, caption: site.name };
+const ogImage = { '@type': 'ImageObject', url: og, contentUrl: og, width: 1200, height: 630, caption: d.seo.ogAlt };
+const sameAs = site.socials.length ? { sameAs: site.socials.map((s) => s.url) } : {};
+
+const organization = {
+  '@type': 'Organization',
+  '@id': orgId,
   name: site.name,
   alternateName: site.nameAr,
-  url: origin + path('en', '/'),
-  logo: origin + asset('brand/logo.svg'),
+  url: home,
+  logo,
+  image: ogImage,
+  email: site.email,
+  telephone: site.phoneE164,
+  foundingDate: site.founded,
+  address,
+  areaServed: { '@type': 'Country', name: 'Egypt' },
+  contactPoint: [{ '@type': 'ContactPoint', contactType: 'sales', telephone: site.phoneE164, email: site.email, availableLanguage: ['en', 'ar'], areaServed: 'EG' }],
+  knowsAbout: ['IT solutions', 'IT infrastructure', 'Enterprise networking', 'Network security', 'Firewalls', 'Servers', 'Business laptops', 'Managed print services', 'Managed IT services', 'Microsoft 365', 'HP', 'Dell Technologies', 'Lenovo', 'Cisco', 'Fortinet'],
+  ...sameAs,
+};
+
+const localBusiness = {
+  '@type': 'LocalBusiness',
+  '@id': bizId,
+  name: site.name,
+  alternateName: site.nameAr,
+  url: home,
+  logo: { '@id': logoId },
   image: og,
   telephone: site.phoneE164,
   email: site.email,
-  foundingDate: site.founded,
-  address: { '@type': 'PostalAddress', streetAddress: site.address.street, addressLocality: `${site.address.area}, ${site.address.city}`, postalCode: site.address.postal, addressCountry: site.address.country },
-  areaServed: 'Egypt',
+  address,
+  hasMap: mapsLink,
+  areaServed: { '@type': 'Country', name: 'Egypt' },
   openingHoursSpecification: [{ '@type': 'OpeningHoursSpecification', dayOfWeek: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: '09:00', closes: '18:00' }],
-  knowsAbout: ['IT infrastructure', 'Enterprise networking', 'Network security', 'Managed print services', 'Managed IT services', 'Microsoft 365', 'HP', 'Dell', 'Cisco', 'Fortinet'],
-  ...(site.socials.length ? { sameAs: site.socials.map((s) => s.url) } : {}),
+  parentOrganization: { '@id': orgId },
 };
+
+const webSite = {
+  '@type': 'WebSite',
+  '@id': siteId,
+  url: home,
+  name: site.name,
+  alternateName: site.nameAr,
+  inLanguage: ['en', 'ar-EG'],
+  publisher: { '@id': orgId },
+};
+
+const breadcrumb = extra.find((n) => n['@type'] === 'BreadcrumbList') as { '@id'?: string } | undefined;
+const webPage = {
+  '@type': 'WebPage',
+  '@id': canonical,
+  url: canonical,
+  name: title,
+  description,
+  inLanguage,
+  isPartOf: { '@id': siteId },
+  about: { '@id': orgId },
+  primaryImageOfPage: ogImage,
+  ...(breadcrumb?.['@id'] ? { breadcrumb: { '@id': breadcrumb['@id'] } } : {}),
+};
+
+const jsonLd = { '@context': 'https://schema.org', '@graph': [organization, localBusiness, webSite, webPage, ...extra] };
 ---
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={url(lang)} />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href={canonical} />
 <link rel="alternate" hreflang="en" href={url('en')} />
 <link rel="alternate" hreflang="ar" href={url('ar')} />
 <link rel="alternate" hreflang="x-default" href={url('en')} />
@@ -36,15 +103,18 @@ const jsonLd = {
 <meta property="og:site_name" content={lang === 'ar' ? site.nameAr : site.name} />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
-<meta property="og:url" content={url(lang)} />
+<meta property="og:url" content={canonical} />
 <meta property="og:image" content={og} />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={d.seo.ogAlt} />
 <meta property="og:locale" content={lang === 'ar' ? 'ar_EG' : 'en_US'} />
 <meta property="og:locale:alternate" content={lang === 'ar' ? 'en_US' : 'ar_EG'} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={og} />
+<meta name="twitter:image:alt" content={d.seo.ogAlt} />
 <meta name="theme-color" content="#00466b" />
 <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -1,27 +1,26 @@
 ---
 import * as si from 'simple-icons';
 import type { Partner } from '../data/partners';
-interface Props { partner: Pick<Partner, 'name' | 'slug' | 'hex'>; variant?: 'marquee' | 'grid' }
+import { asset } from '../i18n';
+interface Props { partner: Pick<Partner, 'name' | 'slug' | 'hex' | 'logo'>; variant?: 'marquee' | 'grid' }
 const { partner, variant = 'grid' } = Astro.props;
-const icon = partner.slug ? (si as unknown as Record<string, { path: string; title: string }>)[partner.slug] : undefined;
-const initials = partner.name.split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+const icon = !partner.logo && partner.slug ? (si as unknown as Record<string, { path: string }>)[partner.slug] : undefined;
 ---
 <div class={`brand brand--${variant}`} style={`--brand:#${partner.hex}`} title={partner.name}>
-  {icon ? (
+  {partner.logo ? (
+    <img class="brand__img" src={asset(`logos/partners/${partner.logo}`)} alt={partner.name} loading={variant === 'marquee' ? 'eager' : 'lazy'} decoding="async" height="36" />
+  ) : icon ? (
     <svg class="brand__icon" viewBox="0 0 24 24" role="img" aria-label={partner.name}><path d={icon.path} fill="currentColor" /></svg>
   ) : (
-    <span class="brand__word" role="img" aria-label={partner.name}><span class="brand__mono" aria-hidden="true">{initials}</span>{partner.name}</span>
+    <span class="brand__word" role="img" aria-label={partner.name}>{partner.name}</span>
   )}
 </div>
 <style>
   .brand { display: inline-flex; align-items: center; justify-content: center; color: var(--muted); transition: color 0.3s; }
   .brand:hover { color: var(--brand); }
+  .brand__img { height: 36px; width: auto; max-width: 150px; object-fit: contain; mix-blend-mode: multiply; }
+  .brand--marquee .brand__img { height: 34px; max-width: 140px; filter: grayscale(1) opacity(0.7); transition: filter 0.3s; }
+  .brand--marquee:hover .brand__img { filter: none; }
   .brand__icon { height: 34px; width: auto; aspect-ratio: 1; }
-  .brand--marquee .brand__icon { height: 30px; }
-  .brand__word { display: inline-flex; align-items: center; gap: 0.5em; font-family: 'Chakra Petch', var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em; white-space: nowrap; }
-  .brand--marquee .brand__word { font-size: 1.15rem; }
-  .brand__mono { display: inline-grid; place-items: center; width: 2em; height: 2em; border-radius: 6px; background: currentColor; color: #fff; font-size: 0.6em; letter-spacing: 0.05em; }
-  .brand__mono::after { content: ''; }
-  .section--dark .brand { color: var(--on-dark-muted); }
-  .section--dark .brand:hover { color: #fff; }
+  .brand__word { font-family: 'Chakra Petch', var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: -0.02em; white-space: nowrap; }
 </style>

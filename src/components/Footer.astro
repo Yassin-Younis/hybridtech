@@ -18,10 +18,11 @@ const year = new Date().getFullYear();
     <div class="ftr__brand">
       <img src={asset('brand/logo-white.svg')} alt="Hybrid Technology" width="240" height="18" />
       <p class="ftr__tag">{d.footer.tagline}</p>
+      <p class="ftr__tag">{d.footer.about}</p>
       <a class="ftr__site" href={site.url} rel="noopener"><bdi dir="ltr">{d.footer.site}</bdi><Icon name="external" /></a>
     </div>
     <div class="ftr__col">
-      <h3 class="ftr__h">{d.footer.explore}</h3>
+      <h2 class="ftr__h">{d.footer.explore}</h2>
       <ul>
         <li><a href={`${home}#about`}>{d.nav.about}</a></li>
         <li><a href={`${home}#solutions`}>{d.nav.solutions}</a></li>
@@ -32,7 +33,7 @@ const year = new Date().getFullYear();
       </ul>
     </div>
     <div class="ftr__col">
-      <h3 class="ftr__h">{d.footer.reach}</h3>
+      <h2 class="ftr__h">{d.footer.reach}</h2>
       <ul>
         <li><a href={`tel:${site.phoneE164}`}><Icon name="phone" /><bdi dir="ltr">{site.phoneDisplay}</bdi></a></li>
         <li><a href={`https://wa.me/${site.whatsapp}`} rel="noopener" target="_blank"><Icon name="whatsapp" />WhatsApp</a></li>

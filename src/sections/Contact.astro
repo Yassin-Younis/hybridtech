@@ -52,7 +52,7 @@ const areas = [...d.solutions.items.map((s) => ({ id: s.id, label: s.title })), 
           <a class="btn btn--ghost btn--sm ct__dir" href={mapsLink} target="_blank" rel="noopener">{d.contact.directions}<Icon name="external" /></a>
         </div>
         <div class="ct__map">
-          <iframe src={maps} title="Hybrid Technology, El Mokattam, Cairo" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <iframe src={maps} title={d.contact.mapTitle} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
         </div>
       </aside>
     </div>

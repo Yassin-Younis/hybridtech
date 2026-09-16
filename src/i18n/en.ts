@@ -3,7 +3,7 @@ export const en = {
   dir: 'ltr',
   name: 'English',
   otherName: 'العربية',
-  nav: { home: 'Home', about: 'About', solutions: 'Solutions', products: 'Products', partners: 'Partners', clients: 'Clients', contact: 'Contact', cta: 'Get a quote', menu: 'Menu', close: 'Close', skip: 'Skip to content' },
+  nav: { primary: 'Primary', home: 'Home', about: 'About', solutions: 'Solutions', products: 'Products', partners: 'Partners', clients: 'Clients', contact: 'Contact', cta: 'Get a quote', menu: 'Menu', close: 'Close', skip: 'Skip to content' },
   hero: {
     eyebrow: 'Hybrid Technology · IT Solutions Provider in Cairo, Egypt',
     lines: ['Empowering business', 'through technology.'],
@@ -16,18 +16,24 @@ export const en = {
   marquee: { title: 'Authorised partner of the brands your business runs on' },
   about: {
     eyebrow: 'About us',
-    title: "A trusted IT supplier for Egypt's most demanding organisations",
-    body: 'Established in 2020, Hybrid Technology is a trusted supplier of IT products, networking solutions and technology infrastructure. We support organisations across multiple sectors with reliable products, professional service and cost-effective solutions tailored to real business requirements.',
-    vision: { t: 'Our vision', d: "To become one of Egypt's most trusted and preferred technology solution providers." },
-    mission: { t: 'Our mission', d: 'To deliver reliable IT products, networking solutions and professional services that enhance business productivity and growth.' },
-    values: { t: 'Our values', items: ['Reliability', 'Professionalism', 'Cost-effectiveness', 'Customer focus'] },
+    title: "Egypt's trusted IT supplier since 2020",
+    body: 'Enterprise hardware, networks and services for organisations that cannot afford downtime.',
+    vision: { t: 'Vision', d: "Egypt's most trusted technology partner." },
+    mission: { t: 'Mission', d: 'Reliable products. Professional service. Real growth.' },
+    values: { t: 'Our values', items: [
+      { icon: 'shield', label: 'Reliability' },
+      { icon: 'award', label: 'Professionalism' },
+      { icon: 'coins', label: 'Cost-effectiveness' },
+      { icon: 'users', label: 'Customer focus' },
+    ] },
     facts: [
-      { k: 'Founded', v: '2020' },
-      { k: 'Head office', v: 'El Mokattam, Cairo' },
-      { k: 'Partner status', v: 'HP Amplify' },
+      { icon: 'calendar', k: 'Founded', v: '2020' },
+      { icon: 'pin', k: 'Head office', v: 'El Mokattam, Cairo' },
+      { icon: 'handshake', k: 'Partner status', v: 'HP Amplify' },
     ],
   },
   stats: {
+    label: 'Key figures',
     items: [
       { n: 25, suffix: '+', label: 'Years of complex field experience' },
       { n: 500, suffix: '+', label: 'Successful enterprise projects' },
@@ -75,7 +81,8 @@ export const en = {
     filterCat: 'Category',
     filterBrand: 'Brand',
     allBrands: 'All brands',
-    pageTitle: 'Products',
+    pageTitle: 'Enterprise IT Products & Hardware',
+    catalogHeading: 'Product catalogue',
     pageIntro: "Laptops, desktops, servers, networking, security, storage, power, printing and software from the brands we're authorised to supply. Prices and stock on request.",
     stockNote: "Can't see what you need? We source to specification.",
   },
@@ -103,12 +110,14 @@ export const en = {
     hoursLabel: 'Working hours', hours: 'Sunday to Thursday, 9:00 to 18:00',
     directions: 'Get directions',
     whatsappFab: 'Chat on WhatsApp',
+    mapTitle: 'Map: Hybrid Technology head office, El Mokattam, Cairo',
     template: 'Hello Hybrid Technology,\nName: {name}\nCompany: {company}\nPhone: {phone}\nEmail: {email}\nInterested in: {interest}\n\n{message}',
     emailSubject: 'Enquiry from {name} ({company})',
   },
   quote: { template: "Hello Hybrid Technology, I'd like a quote for: {name} ({model}). Quantity: ", subject: 'Quote request: {name}' },
   footer: {
     tagline: 'IT Solutions Provider. Empowering Business Through Technology.',
+    about: 'Hybrid Technology (هيبرد تكنولوجي) is an IT solutions provider in El Mokattam, Cairo, Egypt and an official HP Amplify Partner, supplying laptops, servers, networking, firewalls, printers and managed IT services to organisations across Egypt.',
     rights: '© {year} Hybrid Technology. All rights reserved.',
     trademarks: 'All product names, logos and brands are property of their respective owners and are used for identification only.',
     site: 'hybridtech-eg.com',
@@ -116,11 +125,12 @@ export const en = {
   },
   seo: {
     title: 'Hybrid Technology | IT Solutions Provider in Cairo, Egypt',
-    description: 'Hybrid Technology Egypt: official HP Amplify Partner supplying enterprise laptops, servers, networking, security, printing and managed IT services in Cairo since 2020.',
-    productsTitle: 'Products | Hybrid Technology Egypt',
-    productsDescription: 'Enterprise laptops, desktops, servers, switches, firewalls, storage, UPS, printers and software from HP, Dell, Lenovo, Cisco, Fortinet and more. Quoted on request in Cairo, Egypt.',
+    description: 'Hybrid Technology Egypt: official HP Amplify Partner supplying laptops, servers, networking, firewalls, printers and managed IT services in Cairo since 2020.',
+    productsTitle: 'Enterprise IT Products in Cairo, Egypt | Hybrid Technology',
+    productsDescription: 'Enterprise laptops, desktops, servers, switches, firewalls, storage, UPS and printers from HP, Dell, Lenovo, Cisco and Fortinet. Quoted on request, Cairo, Egypt.',
+    ogAlt: 'Hybrid Technology, IT Solutions Provider in Cairo, Egypt',
   },
-  notFound: { title: 'Page not found', body: "The page you're looking for doesn't exist or has moved.", home: 'Back to home' },
+  notFound: { pageTitle: 'Page not found | Hybrid Technology', description: 'This page does not exist on the Hybrid Technology website. Return to the home page for IT solutions, products and contact details.', title: 'Page not found', body: "The page you're looking for doesn't exist or has moved.", home: 'Back to home' },
 } as const;
 
 export type Dictionary = typeof en;
