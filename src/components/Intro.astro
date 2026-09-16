@@ -1,0 +1,63 @@
+---
+// First-view logo intro: the mark's traces draw, nodes spark, fills flood in left to right, the
+// TECHNOLOGY letters rise, then the logo flies into the header (scripts/intro.ts).
+// Only rendered visible when the inline head script in Base.astro adds html.hy-intro.
+import { logoParts, logoNodes, logoViewBox } from '../data/logo-parts';
+const drawn = logoParts.filter((p) => p.row !== 'tag');
+const tag = logoParts.filter((p) => p.row === 'tag');
+---
+<div class="intro" id="intro" aria-hidden="true">
+  <svg class="intro__logo" viewBox={logoViewBox}>
+    {drawn.map((p) => <path class="intro__trace" d={p.d} pathLength="1" style={`--x:${p.x}`} />)}
+    {drawn.map((p) => <path class="intro__fill" d={p.d} style={`--x:${p.x}`} />)}
+    {logoNodes.map((n) => <circle class="intro__spark" cx={n.cx} cy={n.cy} r="2.2" style={`--x:${n.x}`} />)}
+    {tag.map((p) => <path class="intro__tag" d={p.d} style={`--x:${p.x}`} />)}
+  </svg>
+</div>
+<style>
+  .intro { display: none; }
+  :global(html.hy-intro) .intro { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; direction: ltr; animation: introFailsafe 0.5s ease 2.8s forwards; }
+  .intro::before { content: ''; position: absolute; inset: 0; background: radial-gradient(90% 70% at 50% 45%, var(--blue-deep) 0%, var(--blue-ink) 100%); }
+  .intro__logo { position: relative; width: min(520px, 76vw); height: auto; overflow: visible; transform-origin: 0 0; animation: introHold 1.15s linear; }
+
+  .intro__trace { fill: none; stroke: #fff; stroke-width: 0.26; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: introDraw 0.8s cubic-bezier(0.55, 0.1, 0.25, 1) calc(var(--x) * 0.28s) forwards; }
+  .intro__fill { fill: #fff; fill-opacity: 0; animation: introFill 0.45s var(--ease-out) calc(0.32s + var(--x) * 0.28s) forwards; }
+  .intro__spark { fill: none; stroke: var(--orange); stroke-width: 0.45; opacity: 0; transform-box: fill-box; transform-origin: center; animation: introSpark 0.7s cubic-bezier(0.25, 0.6, 0.35, 1) calc(0.24s + var(--x) * 0.28s); }
+  .intro__tag { fill: var(--orange); opacity: 0; translate: 0 2.6px; animation: introTag 0.4s var(--ease-out) calc(0.48s + var(--x) * 0.24s) forwards; transition: fill 0.6s ease 0.1s; }
+
+  @keyframes introHold { to { visibility: visible; } }
+  @keyframes introDraw { 60% { stroke-dashoffset: 0; stroke-opacity: 1; } 100% { stroke-dashoffset: 0; stroke-opacity: 0; } }
+  @keyframes introFill { to { fill-opacity: 1; } }
+  @keyframes introSpark { 0% { opacity: 0; scale: 0.3; } 25% { opacity: 1; } 100% { opacity: 0; scale: 1.6; } }
+  @keyframes introTag { to { opacity: 1; translate: 0 0; } }
+  @keyframes introFailsafe { to { opacity: 0; visibility: hidden; } }
+
+  /* Flight: scripts/intro.ts sets --fx/--fy/--fs from the header logo's rect */
+  :global(html.hy-intro-go) .intro { pointer-events: none; animation: none; }
+  :global(html.hy-intro-go) .intro::before { opacity: 0; transition: opacity 0.5s ease 0.06s; }
+  :global(html.hy-intro-go) .intro__logo { transform: translate(var(--fx, 0px), var(--fy, 0px)) scale(var(--fs, 1)); transition: transform 0.62s cubic-bezier(0.65, 0, 0.2, 1); }
+  :global(html.hy-intro-go) .intro__tag { fill: #fff; }
+</style>
+<style is:global>
+  /* While the intro plays the header waits, then its contents settle in behind the flying logo. */
+  html.hy-intro .hdr__logo { opacity: 0; animation: introFailsafeIn 0.4s ease 3.2s forwards; }
+  html.hy-intro:not(.hy-intro-go) :is(.hdr__links > li, .hdr__lang, .hdr__actions .btn, .hdr__burger) { opacity: 0; animation: introFailsafeIn 0.4s ease 2.8s forwards; }
+  html.hy-intro-go :is(.hdr__links > li, .hdr__lang, .hdr__actions .btn, .hdr__burger) { animation: introNav 0.4s var(--ease-out) calc(0.22s + var(--n, 0) * 0.03s) both; }
+  html.hy-intro-go .hdr__links > li:nth-child(2) { --n: 1; }
+  html.hy-intro-go .hdr__links > li:nth-child(3) { --n: 2; }
+  html.hy-intro-go .hdr__links > li:nth-child(4) { --n: 3; }
+  html.hy-intro-go .hdr__links > li:nth-child(5) { --n: 4; }
+  html.hy-intro-go .hdr__links > li:nth-child(6) { --n: 5; }
+  html.hy-intro-go .hdr__lang { --n: 6; }
+  html.hy-intro-go :is(.hdr__actions .btn, .hdr__burger) { --n: 7; }
+  @keyframes introNav { from { opacity: 0; translate: 0 -8px; } }
+  @keyframes introFailsafeIn { to { opacity: 1; } }
+
+  /* The hero sits in its final state under the overlay (so it paints, and counts for LCP),
+     then replays its own entrance once the logo starts to leave. */
+  html.hy-intro:not(.hy-intro-go) :is(.hero__line, .hero__fade, .hero__person, .hero__arc path, .hero__arc-fill, .circuit--draw path) { animation: none; }
+  html.hy-intro:not(.hy-intro-go) .hero__line { clip-path: none; }
+  html.hy-intro:not(.hy-intro-go) :is(.hero__fade, .hero__person) { opacity: 1; translate: none; }
+  html.hy-intro:not(.hy-intro-go) :is(.hero__arc path, .circuit--draw path) { stroke-dashoffset: 0; }
+  html.hy-intro:not(.hy-intro-go) .hero__arc-fill { opacity: 0.1; }
+</style>

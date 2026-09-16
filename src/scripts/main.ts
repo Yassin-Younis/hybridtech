@@ -1,3 +1,4 @@
+import './intro';
 import './nav';
 import './motion';
 import './magnetic';
