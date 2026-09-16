@@ -105,6 +105,8 @@ const people = [
   html.motion-ok .hero__arc-fill { opacity: 0; animation: arcFill 1.2s var(--ease-out) 1.9s forwards; }
   @keyframes arcFill { to { opacity: 0.1; } }
 
+  /* The photo composition keeps one fixed layout in both languages; inline insets on the layers would mirror it in RTL and stack the people. */
+  .hero__stage > * { direction: ltr; }
   .hero__person { bottom: 0; }
   .hero__person :global(picture) { display: contents; }
   .hero__person img { display: block; height: 100%; width: auto; max-width: none; mask-image: linear-gradient(to top, transparent 0, #000 16%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 16%); }
