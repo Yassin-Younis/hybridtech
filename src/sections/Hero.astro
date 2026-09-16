@@ -95,14 +95,14 @@ const people = [
   .hero__person { bottom: 0; }
   .hero__person :global(picture) { display: contents; }
   .hero__person img { display: block; height: 100%; width: auto; max-width: none; mask-image: linear-gradient(to top, transparent 0, #000 16%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 16%); }
-  .hero__person--1 { inset-inline-start: -6%; height: 90%; z-index: 1; filter: brightness(0.86) saturate(0.92); }
-  .hero__person--3 { inset-inline-end: 2%; height: 76%; z-index: 2; filter: brightness(0.9) saturate(0.95); }
-  .hero__person--2 { inset-inline-start: 23%; height: 100%; z-index: 3; filter: drop-shadow(0 24px 40px rgba(0, 20, 35, 0.55)); }
+  .hero__person--1 { inset-inline-start: -10%; height: 84%; z-index: 1; filter: brightness(0.86) saturate(0.92); }
+  .hero__person--3 { inset-inline-end: -6%; height: 78%; z-index: 2; filter: brightness(0.9) saturate(0.95); }
+  .hero__person--2 { inset-inline-start: 18%; height: 90%; z-index: 3; filter: drop-shadow(0 24px 40px rgba(0, 20, 35, 0.55)); }
   /* In RTL the stage sits against the start edge, so the group shifts toward the copy */
   @media (min-width: 1000px) {
-    :global([dir='rtl']) .hero__person--1 { inset-inline-start: 0%; }
-    :global([dir='rtl']) .hero__person--2 { inset-inline-start: 29%; }
-    :global([dir='rtl']) .hero__person--3 { inset-inline-end: -4%; }
+    :global([dir='rtl']) .hero__person--1 { inset-inline-start: -4%; }
+    :global([dir='rtl']) .hero__person--2 { inset-inline-start: 24%; }
+    :global([dir='rtl']) .hero__person--3 { inset-inline-end: -12%; }
   }
 
 
@@ -119,9 +119,9 @@ const people = [
      so the figures scale with the screen. */
   @media (max-width: 999px) {
     .hero__stage { align-self: stretch; container-type: size; margin-inline: calc(-1 * var(--gutter)); }
-    .hero__person--2 { height: 100cqh; inset-inline-start: auto; left: calc(50% - 24.3cqh); }
-    .hero__person--1 { height: 82cqh; inset-inline-start: max(-10cqh, -7%); }
-    .hero__person--3 { height: 74cqh; inset-inline-end: max(-8cqh, -6%); }
+    .hero__person--2 { height: 90cqh; inset-inline-start: auto; left: calc(50% - 28.9cqh); }
+    .hero__person--1 { height: 76cqh; inset-inline-start: max(-14cqh, -10%); }
+    .hero__person--3 { height: 70cqh; inset-inline-end: max(-12cqh, -9%); }
     .hero__person img { mask-image: linear-gradient(to top, transparent 0, #000 10%); -webkit-mask-image: linear-gradient(to top, transparent 0, #000 10%); }
   }
 </style>
