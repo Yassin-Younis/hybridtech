@@ -42,27 +42,47 @@ const markPaths = Array.from(markSvg.matchAll(/ d="([^"]+)"/g)).map((m) => m[1])
 </section>
 
 <script>
-  // Scroll-linked brand mark. Writes one custom property on the section, --p (0 -> 1 as the section
+  // Scroll-linked brand mark. Writes --p (plus eased --draw/--fill) on the section, --p (0 -> 1 as the section
   // travels from "top at viewport bottom" to "bottom at viewport top"); CSS derives the stroke draw-on
   // and the parallax from it. Only runs with motion allowed, and only listens while the section is on
   // screen. Without JS or with reduced motion the mark stays fully drawn and static.
   const section = document.getElementById('about');
   const mq = matchMedia('(prefers-reduced-motion: no-preference)');
   if (section && 'IntersectionObserver' in window) {
-    let raf = 0, last = -1, active = false;
-    const frame = () => {
-      raf = 0;
+    // The scroll position sets a target; the rendered value eases toward it every frame, so wheel
+    // steps and flicks glide instead of jumping.
+    const TAU = 0.32; // seconds for the glide to cover ~63% of the remaining distance
+    const clamp = (v: number) => Math.min(1, Math.max(0, v));
+    const smooth = (a: number, b: number, v: number) => { const x = clamp((v - a) / (b - a)); return x * x * x * (x * (x * 6 - 15) + 10); };
+    let raf = 0, cur = -1, then = 0, active = false;
+    const target = () => {
       const r = section.getBoundingClientRect();
       const vh = innerHeight;
-      const p = Math.round(Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height))) * 1000) / 1000;
-      if (p !== last) { last = p; section.style.setProperty('--p', String(p)); }
+      return clamp((vh - r.top) / (vh + r.height));
+    };
+    const paint = (p: number) => {
+      section.style.setProperty('--p', p.toFixed(4));
+      section.style.setProperty('--draw', smooth(0.04, 0.62, p).toFixed(4));
+      section.style.setProperty('--fill', smooth(0.34, 0.72, p).toFixed(4));
+    };
+    const frame = (now = performance.now()) => {
+      raf = 0;
+      const t = target();
+      const dt = then ? Math.min(0.1, (now - then) / 1000) : 0;
+      then = now;
+      if (cur < 0) cur = t;
+      cur += (t - cur) * (1 - Math.exp(-dt / TAU));
+      if (Math.abs(t - cur) < 0.0004) cur = t;
+      paint(cur);
+      if (cur !== t) raf = requestAnimationFrame(frame);
+      else then = 0;
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(frame); };
     const listen = (on: boolean) => {
       if (on === active) return;
       active = on;
       if (on) { addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll, { passive: true }); onScroll(); }
-      else { removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); cancelAnimationFrame(raf); raf = 0; }
+      else { removeEventListener('scroll', onScroll); removeEventListener('resize', onScroll); cancelAnimationFrame(raf); raf = 0; then = 0; }
     };
     const io = new IntersectionObserver((entries) => listen(entries[entries.length - 1].isIntersecting));
     const apply = () => {
@@ -71,9 +91,9 @@ const markPaths = Array.from(markSvg.matchAll(/ d="([^"]+)"/g)).map((m) => m[1])
         section.classList.add('about--scroll');
         io.observe(section);
       } else {
-        io.disconnect(); listen(false); last = -1;
+        io.disconnect(); listen(false); cur = -1;
         section.classList.remove('about--scroll');
-        section.style.removeProperty('--p');
+        ['--p', '--draw', '--fill'].forEach((k) => section.style.removeProperty(k));
       }
     };
     apply();
@@ -112,8 +132,8 @@ const markPaths = Array.from(markSvg.matchAll(/ d="([^"]+)"/g)).map((m) => m[1])
     transform: translate3d(0, calc(var(--k) * 12%), 0) rotate(calc(var(--k) * -8deg * var(--dir))) scale(calc(1 + var(--k) * 0.06));
     will-change: transform;
   }
-  .about--scroll .about__stroke { stroke-dashoffset: calc((1 - clamp(0, (var(--p, 0.5) - 0.08) * 2.4, 1)) * 1px); }
-  .about--scroll .about__fill { opacity: calc(clamp(0, (var(--p, 0.5) - 0.3) * 4, 1) * 0.12); }
+  .about--scroll .about__stroke { stroke-dashoffset: calc((1 - var(--draw, 1)) * 1px); }
+  .about--scroll .about__fill { opacity: calc(var(--fill, 1) * 0.12); }
 
   /* Content, flat on top */
   .about__in { position: relative; z-index: 1; }
