@@ -1,6 +1,5 @@
 ---
 import { Image } from 'astro:assets';
-import mark from '../../public/brand/mark.svg?raw';
 import type { Lang } from '../i18n';
 import { t, path } from '../i18n';
 import Icon from '../components/Icon.astro';
@@ -11,8 +10,6 @@ import person3 from '../assets/hero/person-3.png';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
-const viewBox = mark.match(/viewBox="([^"]+)"/)?.[1] ?? '0 0 24 24';
-const paths = Array.from(mark.matchAll(/ d="([^"]+)"/g)).map((m) => m[1]);
 const home = path(lang, '/');
 // Depth per layer: 1 = closest to the viewer (follows the pointer most, stays with the page on
 // scroll); lower = further back (drifts slower than the page on scroll).
@@ -38,12 +35,6 @@ const people = [
       </div>
     </div>
     <div class="hero__stage">
-      <div class="hero__arc-wrap hero__layer" style="--d:0.3" aria-hidden="true">
-        <svg class="hero__arc" viewBox={viewBox} fill="none">
-          {paths.map((p) => <path d={p} pathLength="1" stroke="currentColor" stroke-width="0.35" />)}
-          {paths.map((p) => <path d={p} class="hero__arc-fill" fill="currentColor" />)}
-        </svg>
-      </div>
       {people.map((p, i) => (
         <div class={`hero__person hero__layer ${p.cls}`} style={`--d:${p.depth}; --i:${i}`}>
           <Image src={p.src} alt={p.alt} format="webp" quality={68} widths={[320, 480, 640, 900]} sizes="(min-width: 1000px) 30vw, 64vw" loading="eager" fetchpriority={p.depth === 1 ? 'high' : 'auto'} decoding="async" />
@@ -98,11 +89,6 @@ const people = [
   .hero__layer { position: absolute; --d: 1; }
   html.motion-ok .hero__layer { transform: translate3d(calc(var(--px) * var(--d) + var(--sx) * (1 - var(--d))), calc(var(--py) * var(--d) + var(--sy) * (1 - var(--d))), 0); will-change: transform; }
 
-  .hero__arc-wrap { inset-inline-start: 6%; bottom: 8%; width: 92%; z-index: 0; }
-  .hero__arc { display: block; width: 100%; color: #fff; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.35)); }
-  .hero__arc-fill { opacity: 0.1; }
-  html.motion-ok .hero__arc-fill { opacity: 0; animation: arcFill 1.2s var(--ease-out) 1.9s forwards; }
-  @keyframes arcFill { to { opacity: 0.1; } }
 
   /* The photo composition keeps one fixed layout in both languages; inline insets on the layers would mirror it in RTL and stack the people. */
   .hero__stage > * { direction: ltr; }
@@ -130,10 +116,9 @@ const people = [
   @keyframes bob { 50% { translate: 0 5px; } }
   @media (prefers-reduced-motion: reduce) { .hero__scroll .icon { animation: none; } }
   /* Phones/tablets: the stage fills the space under the copy; layers are sized from its height (cqh)
-     so the figures scale with the screen and the arc never outgrows them. */
+     so the figures scale with the screen. */
   @media (max-width: 999px) {
     .hero__stage { align-self: stretch; container-type: size; margin-inline: calc(-1 * var(--gutter)); }
-    .hero__arc-wrap { width: 86cqh; max-width: 110%; inset-inline-start: auto; left: calc(50% - 43cqh); bottom: 6%; opacity: 0.45; }
     .hero__person--2 { height: 100cqh; inset-inline-start: auto; left: calc(50% - 30.6cqh); }
     .hero__person--1 { height: 84cqh; inset-inline-start: max(-18cqh, -12%); }
     .hero__person--3 { height: 80cqh; inset-inline-end: max(-20cqh, -14%); }
