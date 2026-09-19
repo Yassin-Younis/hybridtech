@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
+Disallow: /hybridtech/admin/
 Sitemap: https://yassin-younis.github.io/hybridtech/sitemap-index.xml

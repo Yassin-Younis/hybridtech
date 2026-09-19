@@ -16,7 +16,7 @@ export default defineConfig({
   integrations: [
     sitemap({
       i18n: { defaultLocale: 'en', locales: { en: 'en', ar: 'ar' } },
-      filter: (page) => !/\/404\/?$/.test(page),
+      filter: (page) => !/\/(404|admin)\/?$/.test(page),
       serialize: (item) => {
         // Add an x-default alternate (pointing at the English URL) next to the en/ar pairs.
         const en = item.links?.find((l) => l.lang === 'en');

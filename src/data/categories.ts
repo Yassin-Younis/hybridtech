@@ -1,13 +1,6 @@
-export const categories = [
-  { id: 'laptops', icon: 'laptop', label: { en: 'Laptops', ar: 'أجهزة لابتوب' } },
-  { id: 'desktops', icon: 'desktop', label: { en: 'Desktops & Workstations', ar: 'أجهزة مكتبية ومحطات عمل' } },
-  { id: 'servers', icon: 'server', label: { en: 'Servers', ar: 'خوادم' } },
-  { id: 'networking', icon: 'network', label: { en: 'Networking', ar: 'الشبكات' } },
-  { id: 'security', icon: 'shield', label: { en: 'Security', ar: 'الأمن' } },
-  { id: 'storage', icon: 'storage', label: { en: 'Storage & Backup', ar: 'التخزين والنسخ الاحتياطي' } },
-  { id: 'ups', icon: 'power', label: { en: 'Power & UPS', ar: 'الطاقة وUPS' } },
-  { id: 'printers', icon: 'printer', label: { en: 'Printing & Imaging', ar: 'الطباعة والتصوير' } },
-  { id: 'surveillance', icon: 'camera', label: { en: 'Surveillance', ar: 'المراقبة' } },
-  { id: 'software', icon: 'cloud', label: { en: 'Software & Cloud', ar: 'البرمجيات والسحابة' } },
-] as const;
-export type CategoryId = (typeof categories)[number]['id'];
+// Product categories. Edited from the admin panel (/admin/), which commits categories.json.
+import raw from './categories.json';
+
+export interface Category { id: string; icon: string; label: { en: string; ar: string } }
+export const categories: Category[] = raw;
+export type CategoryId = string;

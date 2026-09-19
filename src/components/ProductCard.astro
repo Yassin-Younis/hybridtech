@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import type { Lang } from '../i18n';
-import { t, pick, fill } from '../i18n';
+import { t, pick, fill, asset } from '../i18n';
 import { categories } from '../data/categories';
 import { site } from '../data/site';
 import Icon from './Icon.astro';
@@ -14,8 +14,8 @@ const name = pick(lang, p.name);
 const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(fill(d.quote.template, { name, model: p.model }))}`;
 ---
 <article class="pc" data-category={p.category} data-brand={p.brand}>
-  <div class="pc__visual" aria-hidden="true">
-    <Icon name={cat.icon} />
+  <div class:list={['pc__visual', { 'pc__visual--img': !!p.image }]} aria-hidden="true">
+    {p.image ? <img src={asset(p.image)} alt="" loading="lazy" decoding="async" width="480" height="270" /> : <Icon name={cat.icon} />}
     <span class="pc__brand">{p.brand}</span>
     {p.deal && <span class="pc__deal">{pick(lang, p.deal.label)}</span>}
   </div>
@@ -33,6 +33,8 @@ const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(fill(d.quot
   .pc:hover { translate: 0 -4px; box-shadow: var(--shadow); }
   .pc__visual { position: relative; aspect-ratio: 16 / 9; display: grid; place-items: center; background: linear-gradient(135deg, var(--blue-tint), #fff 60%); color: var(--blue); border-bottom: 1px solid var(--line); }
   .pc__visual .icon { width: 56px; height: 56px; stroke-width: 1.25; }
+  .pc__visual--img { background: #fff; }
+  .pc__visual--img img { width: 100%; height: 100%; object-fit: contain; padding: 12px 16px 8px; }
   .pc__brand { position: absolute; inset-inline-start: 14px; top: 12px; font-family: var(--font-display); font-weight: 700; font-size: 0.8rem; letter-spacing: 0.06em; color: var(--blue-deep); }
   .pc__deal { position: absolute; inset-inline-end: 0; top: 14px; background: var(--orange); color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-start-start-radius: 999px; border-end-start-radius: 999px; }
   .pc__body { display: flex; flex-direction: column; gap: 8px; padding: 20px; flex: 1; }

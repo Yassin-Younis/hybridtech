@@ -1,0 +1,187 @@
+---
+// Catalogue admin: a static page that edits src/data/products.json + categories.json straight in
+// the GitHub repo (one commit per publish) and lets the Pages workflow deploy. No server involved.
+// Not linked from the site, excluded from the sitemap and robots; the GitHub token is the gate.
+import '../../styles/fonts.css';
+import '../../styles/tokens.css';
+import '../../styles/base.css';
+import '../../styles/admin.css';
+import Icon from '../../components/Icon.astro';
+import { categoryIcons } from '../../data/product-schema';
+import { asset } from '../../i18n';
+const uiIcons = ['close', 'check', 'chevron', 'refresh', 'alert', 'external', 'key', 'menu', 'eye', 'globe'];
+const icons = [...new Set([...categoryIcons, ...uiIcons])];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="theme-color" content="#00466b" />
+    <title>Catalogue admin · Hybrid Technology</title>
+    <link rel="icon" href={asset('favicon.svg')} type="image/svg+xml" />
+  </head>
+  <body class="ad" data-base={asset('')}>
+    {icons.map((n) => <template data-icon={n}><Icon name={n} /></template>)}
+
+    <header class="ad__top">
+      <a class="ad__brand" href={asset('')} target="_blank" rel="noopener"><img src={asset('brand/logo-white.svg')} alt="Hybrid Technology" width="150" height="40" /></a>
+      <span class="ad__title">Catalogue admin</span>
+      <div class="ad__who" id="who" hidden><span class="ad__who-name" id="who-name"></span><button class="ad__link" id="signout" type="button">Sign out</button></div>
+    </header>
+
+    <main class="ad__main">
+      <section class="ad__connect" id="connect" hidden>
+        <div class="ad__card">
+          <h1>Connect to the catalogue</h1>
+          <p>Paste the access token you were given. It is saved on this device only, so you only do this once per phone or computer.</p>
+          <form id="connect-form">
+            <label class="ad__field"><span>Access token</span><input name="token" type="password" autocomplete="off" required placeholder="github_pat_…" /></label>
+            <p class="ad__error" id="connect-error" hidden></p>
+            <button class="btn btn--blue" type="submit" id="connect-btn">Connect</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="ad__loading" id="loading" hidden><span class="ad__spinner"></span> Loading catalogue…</section>
+
+      <section id="panel" hidden>
+        <nav class="ad__tabs" aria-label="Sections">
+          <button type="button" class="ad__tab is-on" data-tab="products">Products <span class="ad__count" id="count-products">0</span></button>
+          <button type="button" class="ad__tab" data-tab="categories">Categories <span class="ad__count" id="count-categories">0</span></button>
+          <button type="button" class="ad__tab ad__tab--end" id="reload" title="Reload from GitHub"><span class="ic" data-ic="refresh"></span><span class="ad__tab-text">Reload</span></button>
+        </nav>
+
+        <div id="tab-products">
+          <div class="ad__toolbar">
+            <label class="ad__search"><input id="search" type="search" placeholder="Search products…" autocomplete="off" /></label>
+            <button class="btn btn--sm" type="button" id="add-product">+ Add product</button>
+          </div>
+          <div class="ad__chips" id="chips"></div>
+          <ul class="ad__list" id="plist"></ul>
+          <p class="ad__empty" id="pempty" hidden>No products match.</p>
+        </div>
+
+        <div id="tab-categories" hidden>
+          <div class="ad__toolbar">
+            <p class="ad__hint">Categories appear as filters on the products page and in the contact form. Order here is the order on the site.</p>
+            <button class="btn btn--sm" type="button" id="add-category">+ Add category</button>
+          </div>
+          <ul class="ad__list ad__list--cats" id="clist"></ul>
+        </div>
+      </section>
+    </main>
+
+    <div class="ad__bar" id="bar" hidden>
+      <div class="ad__bar-in">
+        <span class="ad__bar-text" id="bar-text"></span>
+        <div class="ad__bar-actions">
+          <button class="ad__link" type="button" id="discard">Discard</button>
+          <button class="btn btn--sm" type="button" id="publish">Publish</button>
+        </div>
+      </div>
+    </div>
+
+    <dialog class="ad__dlg" id="pdlg">
+      <form method="dialog" class="ad__dlg-form" id="pform" novalidate>
+        <header class="ad__dlg-head"><h2 id="pform-title">Edit product</h2><button class="ad__x" type="button" data-close aria-label="Close"><span class="ic" data-ic="close"></span></button></header>
+        <div class="ad__dlg-body">
+          <ul class="ad__errors" id="perrors" hidden></ul>
+
+          <div class="ad__row">
+            <label class="ad__field"><span>Brand</span><input name="brand" list="brands" required autocomplete="off" /></label>
+            <label class="ad__field"><span>Model</span><input name="model" required autocomplete="off" /></label>
+          </div>
+          <datalist id="brands"></datalist>
+          <div class="ad__row">
+            <label class="ad__field"><span>Category</span><select name="category" required></select></label>
+            <label class="ad__field"><span>ID <small>(web address name, auto)</small></span><input name="id" required autocomplete="off" pattern="[a-z0-9]+(-[a-z0-9]+)*" /></label>
+          </div>
+
+          <div class="ad__row">
+            <label class="ad__field"><span>Name (English)</span><input name="name.en" required /></label>
+            <label class="ad__field"><span>الاسم (عربي)</span><input name="name.ar" dir="rtl" lang="ar" required /></label>
+          </div>
+          <div class="ad__row">
+            <label class="ad__field"><span>Description (English)</span><textarea name="blurb.en" rows="3" required></textarea></label>
+            <label class="ad__field"><span>الوصف (عربي)</span><textarea name="blurb.ar" rows="3" dir="rtl" lang="ar" required></textarea></label>
+          </div>
+
+          <label class="ad__field"><span>Specs <small>(one per line, first four shown on the card)</small></span><textarea name="specs" rows="4" dir="ltr"></textarea></label>
+
+          <fieldset class="ad__fs">
+            <legend>Photo</legend>
+            <div class="ad__photo">
+              <div class="ad__photo-prev" id="photo-prev"><span class="ad__photo-none">No photo — the category icon is shown</span></div>
+              <div class="ad__photo-actions">
+                <label class="btn btn--blue btn--sm ad__file">Choose photo<input type="file" id="photo-file" accept="image/*" hidden /></label>
+                <button class="ad__link" type="button" id="photo-remove" hidden>Remove photo</button>
+                <p class="ad__hint">Product on a white background works best. Resized automatically.</p>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="ad__row ad__row--3">
+            <label class="ad__field"><span>Price <small>(optional, leave empty for "quote on request")</small></span><input name="price.amount" type="number" min="0" step="any" inputmode="decimal" dir="ltr" /></label>
+            <label class="ad__field"><span>Currency</span><select name="price.currency"><option value="EGP">EGP</option><option value="USD">USD</option></select></label>
+            <label class="ad__check"><input name="featured" type="checkbox" /><span>Featured <small>(shown first on solution pages)</small></span></label>
+          </div>
+
+          <details class="ad__more">
+            <summary>More options</summary>
+            <div class="ad__row">
+              <label class="ad__field"><span>Deal ribbon (English)</span><input name="deal.en" placeholder="e.g. Back to school" /></label>
+              <label class="ad__field"><span>شريط العرض (عربي)</span><input name="deal.ar" dir="rtl" lang="ar" /></label>
+            </div>
+            <div class="ad__row ad__row--3">
+              <label class="ad__field"><span>Tags <small>(comma separated)</small></span><input name="tags" dir="ltr" /></label>
+              <label class="ad__field"><span>SKU</span><input name="sku" dir="ltr" /></label>
+              <label class="ad__field"><span>Datasheet URL</span><input name="datasheet" type="url" dir="ltr" placeholder="https://" /></label>
+            </div>
+          </details>
+        </div>
+        <footer class="ad__dlg-foot">
+          <button class="ad__link ad__danger" type="button" id="pdelete">Delete product</button>
+          <button class="ad__link" type="button" id="pduplicate">Duplicate</button>
+          <span class="ad__grow"></span>
+          <button class="ad__link" type="button" data-close>Cancel</button>
+          <button class="btn btn--blue btn--sm" type="submit">Save</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog class="ad__dlg ad__dlg--sm" id="cdlg">
+      <form method="dialog" class="ad__dlg-form" id="cform" novalidate>
+        <header class="ad__dlg-head"><h2 id="cform-title">Edit category</h2><button class="ad__x" type="button" data-close aria-label="Close"><span class="ic" data-ic="close"></span></button></header>
+        <div class="ad__dlg-body">
+          <ul class="ad__errors" id="cerrors" hidden></ul>
+          <div class="ad__row">
+            <label class="ad__field"><span>Name (English)</span><input name="label.en" required /></label>
+            <label class="ad__field"><span>الاسم (عربي)</span><input name="label.ar" dir="rtl" lang="ar" required /></label>
+          </div>
+          <div class="ad__row">
+            <label class="ad__field"><span>Icon</span><div class="ad__iconpick"><span class="ad__iconprev" id="icon-prev"></span><select name="icon">{categoryIcons.map((i) => <option value={i}>{i}</option>)}</select></div></label>
+            <label class="ad__field"><span>ID <small>(auto)</small></span><input name="id" required autocomplete="off" pattern="[a-z0-9]+(-[a-z0-9]+)*" /></label>
+          </div>
+        </div>
+        <footer class="ad__dlg-foot">
+          <button class="ad__link ad__danger" type="button" id="cdelete">Delete category</button>
+          <span class="ad__grow"></span>
+          <button class="ad__link" type="button" data-close>Cancel</button>
+          <button class="btn btn--blue btn--sm" type="submit">Save</button>
+        </footer>
+      </form>
+    </dialog>
+
+    <dialog class="ad__dlg ad__dlg--sm" id="confirm">
+      <form method="dialog" class="ad__dlg-form">
+        <div class="ad__dlg-body"><p id="confirm-text"></p></div>
+        <footer class="ad__dlg-foot"><span class="ad__grow"></span><button class="ad__link" type="button" value="no" data-close>Cancel</button><button class="btn btn--sm" type="submit" value="yes" id="confirm-yes">Yes</button></footer>
+      </form>
+    </dialog>
+
+    <div class="ad__toast" id="toast" role="status" aria-live="polite" hidden></div>
+    <script>import '../../scripts/admin/main';</script>
+  </body>
+</html>
