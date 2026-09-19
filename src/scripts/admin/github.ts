@@ -87,8 +87,9 @@ export class GitHub {
       if (!run) return 'queued';
       if (run.status !== 'completed') return 'running';
       return run.conclusion === 'success' ? 'success' : 'failure';
-    } catch {
-      return 'unknown';
+    } catch (e) {
+      // No Actions permission on the token -> we cannot watch; anything else (offline, throttled) -> keep polling.
+      return e instanceof GhError && (e.status === 403 || e.status === 404) ? 'unknown' : 'queued';
     }
   }
 }
