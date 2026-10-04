@@ -118,7 +118,7 @@ const avif = await Promise.all(people.map((p) => getImage({ src: p.src, format: 
   .hero__person :global(picture) { display: contents; }
   .hero__person img { display: block; height: 100%; width: auto; max-width: none; }
   .hero__person--1 { inset-inline-start: -10%; height: 84%; z-index: 1; filter: brightness(0.92) saturate(0.97); }
-  .hero__person--3 { inset-inline-end: 0%; height: 78%; z-index: 2; filter: brightness(0.92) saturate(0.97); }
+  .hero__person--3 { inset-inline-end: 0%; height: 85%; z-index: 2; filter: brightness(0.92) saturate(0.97); }
   .hero__person--2 { inset-inline-start: 18%; height: 90%; z-index: 3; filter: drop-shadow(0 24px 40px rgba(0, 20, 35, 0.55)); }
   /* In RTL the stage sits against the start edge, so the group shifts toward the copy */
   @media (min-width: 1000px) {
@@ -145,6 +145,6 @@ const avif = await Promise.all(people.map((p) => getImage({ src: p.src, format: 
     /* Same grouping as desktop (overlap and height ratio), placed from the centre in the unit of their
        height so it holds at every width. */
     .hero__person--1 { height: 84cqh; inset-inline: auto; left: max(calc(50% - 58.6cqh), -12%); }
-    .hero__person--3 { height: 78cqh; inset-inline: auto; left: min(calc(50% + 13.5cqh), calc(100% - 34cqh)); }
+    .hero__person--3 { height: 85cqh; inset-inline: auto; left: min(calc(50% + 13.5cqh), calc(100% - 34cqh)); }
   }
 </style>
