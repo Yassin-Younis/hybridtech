@@ -1,12 +1,17 @@
 [
   { "id": "laptops", "icon": "laptop", "label": { "en": "Laptops", "ar": "أجهزة لابتوب" } },
   { "id": "desktops", "icon": "desktop", "label": { "en": "Desktops & Workstations", "ar": "أجهزة مكتبية ومحطات عمل" } },
-  { "id": "servers", "icon": "server", "label": { "en": "Servers", "ar": "خوادم" } },
+  { "id": "monitors", "icon": "eye", "label": { "en": "Monitors", "ar": "الشاشات" } },
+  { "id": "printers", "icon": "printer", "label": { "en": "Printers & Supplies", "ar": "الطابعات والمستلزمات" } },
+  { "id": "large-format", "icon": "printer", "label": { "en": "Large Format Printers", "ar": "طابعات المساحات الكبيرة" } },
+  { "id": "servers", "icon": "server", "label": { "en": "Servers & Storage", "ar": "الخوادم والتخزين" } },
   { "id": "networking", "icon": "network", "label": { "en": "Networking", "ar": "الشبكات" } },
-  { "id": "security", "icon": "shield", "label": { "en": "Security", "ar": "الأمن" } },
-  { "id": "storage", "icon": "storage", "label": { "en": "Storage & Backup", "ar": "التخزين والنسخ الاحتياطي" } },
+  { "id": "surveillance", "icon": "camera", "label": { "en": "Security & Surveillance", "ar": "الأمن والمراقبة" } },
   { "id": "ups", "icon": "power", "label": { "en": "Power & UPS", "ar": "الطاقة وUPS" } },
-  { "id": "printers", "icon": "printer", "label": { "en": "Printing & Imaging", "ar": "الطباعة والتصوير" } },
-  { "id": "surveillance", "icon": "camera", "label": { "en": "Surveillance", "ar": "المراقبة" } },
-  { "id": "software", "icon": "cloud", "label": { "en": "Software & Cloud", "ar": "البرمجيات والسحابة" } }
+  { "id": "conferencing", "icon": "headset", "label": { "en": "Meeting Room & Conferencing", "ar": "غرف الاجتماعات والمؤتمرات" } },
+  { "id": "displays", "icon": "layers", "label": { "en": "Projectors & Interactive Displays", "ar": "البروجكتورات والشاشات التفاعلية" } },
+  { "id": "storage", "icon": "storage", "label": { "en": "Storage & Upgrades", "ar": "وسائط التخزين والترقيات" } },
+  { "id": "accessories", "icon": "key", "label": { "en": "Accessories", "ar": "الملحقات" } },
+  { "id": "software", "icon": "cloud", "label": { "en": "Software", "ar": "البرمجيات" } },
+  { "id": "warranty", "icon": "award", "label": { "en": "Warranty & Care Packs", "ar": "الضمان وباقات الدعم" } }
 ]

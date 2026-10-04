@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import type { Lang } from '../i18n';
 import { t, pick, fill, path } from '../i18n';
 import { categories } from '../data/categories';
+import rawProducts from '../data/products.json';
 import Base from '../layouts/Base.astro';
 import ProductCard from '../components/ProductCard.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
@@ -10,7 +11,11 @@ import Icon from '../components/Icon.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
-const items = await getCollection('products');
+// Catalogue order = category order, then the order of products.json (both editable from /admin/).
+const fileOrder = new Map(rawProducts.map((p, i) => [p.id, i]));
+const catOrder = new Map(categories.map((c, i) => [c.id, i]));
+const items = (await getCollection('products')).sort((x, y) =>
+  (catOrder.get(x.data.category) ?? 99) - (catOrder.get(y.data.category) ?? 99) || (fileOrder.get(x.id) ?? 0) - (fileOrder.get(y.id) ?? 0));
 const brands = [...new Set(items.map((p) => p.data.brand))].sort();
 const counts = Object.fromEntries(categories.map((c) => [c.id, items.filter((p) => p.data.category === c.id).length]));
 const home = path(lang, '/');

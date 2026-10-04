@@ -47,7 +47,7 @@ export const solutions: Record<SolutionId, SolutionContent> = {
       { icon: 'check', label: { en: 'Fewer stoppages', ar: 'توقفات أقل' } },
       { icon: 'eye', label: { en: 'Clear usage visibility', ar: 'رؤية واضحة للاستهلاك' } },
     ],
-    categories: ['printers'],
+    categories: ['printers', 'large-format'],
     vendors: ['HP', 'Canon', 'Epson', 'Brother'],
   },
   infrastructure: {
@@ -80,7 +80,7 @@ export const solutions: Record<SolutionId, SolutionContent> = {
       { icon: 'lock', label: { en: 'Protected data', ar: 'بيانات محمية' } },
       { icon: 'layers', label: { en: 'Ready to scale', ar: 'جاهزية للتوسع' } },
     ],
-    categories: ['servers', 'storage', 'ups'],
+    categories: ['servers', 'ups', 'storage'],
     vendors: ['HPE', 'Dell Technologies', 'Lenovo', 'APC'],
   },
   networking: {
@@ -113,7 +113,7 @@ export const solutions: Record<SolutionId, SolutionContent> = {
       { icon: 'eye', label: { en: 'Full network visibility', ar: 'رؤية شاملة للشبكة' } },
       { icon: 'spark', label: { en: 'Fast, stable connectivity', ar: 'اتصال سريع ومستقر' } },
     ],
-    categories: ['networking', 'security', 'surveillance'],
+    categories: ['networking', 'surveillance'],
     vendors: ['Cisco', 'Fortinet', 'Ubiquiti', 'Hikvision'],
   },
   managed: {
@@ -146,7 +146,7 @@ export const solutions: Record<SolutionId, SolutionContent> = {
       { icon: 'handshake', label: { en: 'One SLA, one partner', ar: 'اتفاقية خدمة واحدة وشريك واحد' } },
       { icon: 'coins', label: { en: 'Predictable IT spend', ar: 'إنفاق متوقَّع' } },
     ],
-    categories: ['storage', 'ups', 'software'],
+    categories: ['warranty', 'software', 'ups'],
     // "Hybrid service desk" has no logo; show the platforms the service desk runs and supports.
     vendors: ['Microsoft', 'APC', 'QNAP', 'Synology'],
   },
@@ -180,7 +180,7 @@ export const solutions: Record<SolutionId, SolutionContent> = {
       { icon: 'lock', label: { en: 'Protected devices', ar: 'أجهزة محمية' } },
       { icon: 'coins', label: { en: 'No wasted seats', ar: 'لا هدر في التراخيص' } },
     ],
-    categories: ['software', 'security'],
+    categories: ['software'],
     vendors: ['Microsoft', 'Adobe', 'Kaspersky', 'Sophos'],
   },
 };
