@@ -66,7 +66,7 @@ export const en = {
     chapters: [
       {
         id: 'web', icon: 'code', nav: 'Website Design',
-        problem: 'Customers search online and find your competitors, not you.',
+        problem: 'People search Google and find your competitors, but not you?!',
         story: "Most buyers look you up on Google before they call. If you have no website, or an old one that looks untrustworthy on a phone, they quietly choose someone else, and you never find out you lost them.",
         fixTitle: 'A professional website that brings in customers',
         fix: 'A fast, modern website in Arabic and English that shows up on Google, looks great on any phone, and turns visitors into calls, WhatsApp messages and orders.',
@@ -75,7 +75,7 @@ export const en = {
       },
       {
         id: 'app', icon: 'smartphone', nav: 'Mobile App Design',
-        problem: 'Customers can only reach you by phone, and only during working hours.',
+        problem: 'Customers can only reach you by phone, and only during working hours?!',
         story: 'Orders, bookings and questions all arrive as calls and messages. Lines are busy, messages get missed, and every request waits for someone to be free to answer.',
         fixTitle: 'Your own app on iPhone and Android',
         fix: 'An app with your name and logo that customers download from the App Store or Google Play. They order, book, pay and track by themselves, any time, and you get notified instantly.',
@@ -84,7 +84,7 @@ export const en = {
       },
       {
         id: 'erp', icon: 'layers', nav: 'Custom Software',
-        problem: "Your business runs on Excel sheets, paper and people's memory.",
+        problem: "Your business still runs on Excel sheets, paper and people's memory?!",
         story: 'Stock lives in one spreadsheet, invoices in another, salaries on paper, and the real numbers in one person’s head. Simple questions like “how much stock do we have?” or “who hasn’t paid us?” take hours, and mistakes cost money.',
         fixTitle: 'One system that runs your whole business',
         fix: 'Sales, stock, purchases, staff and accounts in one program, built around the way you already work. This is what people call an ERP. You open one screen and see everything, live.',
@@ -93,7 +93,7 @@ export const en = {
       },
       {
         id: 'auto', icon: 'refresh', nav: 'Less Manual Work',
-        problem: 'Your team types the same information again and again.',
+        problem: 'Your team keeps typing the same information again and again?!',
         story: 'An order arrives by email. Someone copies it into Excel, retypes it into an invoice, then sends a WhatsApp update. Hours of copy-and-paste every day, and one wrong digit causes a real problem.',
         fixTitle: 'Software that does the repetitive work for you',
         fix: 'We connect the programs you already use (email, WhatsApp, Excel, your accounting software) so information moves between them by itself. This is what people call automation and integration. Your team stops copying and gets back to real work.',
