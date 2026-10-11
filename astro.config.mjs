@@ -4,10 +4,18 @@ import sitemap from '@astrojs/sitemap';
 
 // GitHub Pages: https://yassin-younis.github.io/hybridtech/
 // When the real domain is attached: site 'https://hybridtech-eg.com', base '/', add public/CNAME.
+const base = '/hybridtech';
+// Solutions merged on 2026-10-11: keep the old URLs working. Astro does not prefix redirect targets with `base`.
+const moved = { networking: 'infrastructure', software: 'managed' };
+const redirects = Object.fromEntries(
+  Object.entries(moved).flatMap(([from, to]) => ['', '/ar'].map((l) => [`${l}/solutions/${from}`, `${base}${l}/solutions/${to}/`])),
+);
+
 export default defineConfig({
   site: 'https://yassin-younis.github.io',
-  base: '/hybridtech',
+  base,
   trailingSlash: 'ignore',
+  redirects,
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'ar'],
