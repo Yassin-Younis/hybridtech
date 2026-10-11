@@ -46,6 +46,7 @@ export const en = {
     title: 'Everything your IT runs on, from one accountable partner',
     intro: 'Designed, supplied, implemented and supported by one team. No hand-offs, no finger-pointing.',
     vendorsLabel: 'Vendor ecosystem',
+    supply: { title: 'IT Hardware & Accessories', short: 'Laptops, desktops, monitors, keyboards, mice and accessories from the brands you trust, supplied and delivered.' },
     items: [
       { id: 'printing', icon: 'printer', title: 'Office Printing', short: 'Printers, managed print, toner and on-site repairs that keep the office printing.', blurb: 'Reliable office printing that keeps everyday work moving and keeps running costs under control.', bullets: ['Printers & multifunction copiers', 'Managed Print Services (MPS)', 'Toner & supplies delivered automatically', 'On-site maintenance & support'], vendors: ['HP', 'Canon', 'Epson', 'Brother'] },
       { id: 'infrastructure', icon: 'network', title: 'Networks, Servers & Security', short: 'Servers, Wi-Fi, firewalls, cameras and backup power, designed, installed and kept running.', blurb: 'We design and build the IT backbone your offices run on: servers and storage, wired and wireless networks, firewalls, surveillance and clean power, all from one team.', bullets: ['Servers, storage & backup', 'Structured cabling & enterprise Wi-Fi', 'Next-gen firewalls & network security', 'IP surveillance & access control', 'UPS, power & cooling', 'Data centre design & virtualisation'], vendors: ['HPE', 'Dell', 'Cisco', 'Fortinet'] },
@@ -56,7 +57,6 @@ export const en = {
     eyebrow: 'Software development',
     pageTitle: 'Custom Software in Cairo: Websites, Apps & ERP | Hybrid Technology',
     pageDescription: "Websites, iPhone and Android apps, ERP systems and automation built by Hybrid Technology's in-house software team in Cairo, Egypt. Tell us the problem; we quote the fix.",
-    panel: { title: 'Custom Software', short: 'Websites, mobile apps and business systems, built around the way you work.' },
     title: 'Tell us what slows your business down. We build the software that *fixes it*.',
     lead: 'No tech words needed. Here are four everyday business headaches, and what our in-house software team builds to make each one go away.',
     proof: "You're looking at our work: this website was designed and built in-house.",

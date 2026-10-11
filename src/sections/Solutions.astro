@@ -9,10 +9,10 @@ const { lang } = Astro.props;
 const d = t(lang);
 const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/solutions/*.png', { eager: true });
 const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
-// Hybrid's solutions, then the custom software service, which has its own page instead of /solutions/<id>/.
+// Hybrid's solutions, then IT supply, which leads to the product catalogue instead of /solutions/<id>/.
 const panels = [
   ...d.solutions.items.map((s) => ({ id: s.id, icon: s.icon, title: s.title, short: s.short, href: path(lang, `/solutions/${s.id}`) })),
-  { id: 'software', icon: 'code', title: d.software.panel.title, short: d.software.panel.short, href: path(lang, '/software') },
+  { id: 'supply', icon: 'laptop', title: d.solutions.supply.title, short: d.solutions.supply.short, href: path(lang, '/products') },
 ];
 ---
 <section class="section sol" id="solutions">
