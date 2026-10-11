@@ -1,4 +1,4 @@
-// Logo intro (every page load). The head script in Base.astro decides whether it plays
+// Logo intro (first page of a visit). The head script in Base.astro decides whether it plays
 // and adds html.hy-intro; CSS runs the draw-in, this measures the header logo and hands off to it.
 // If this never runs, CSS failsafes in Intro.astro clear the overlay after ~5.5s.
 
