@@ -8,7 +8,7 @@ const d = t(lang);
 const home = path(lang, '/');
 const links = [
   { href: `${home}#about`, label: d.nav.about },
-  { href: `${home}#solutions`, label: d.nav.solutions },
+  { href: path(lang, '/solutions'), label: d.nav.solutions, active: page === '/solutions' },
   { href: path(lang, '/software'), label: d.nav.software, active: page === '/software' },
   { href: path(lang, '/products'), label: d.nav.products, active: page === '/products' },
   { href: `${home}#partners`, label: d.nav.partners },

@@ -38,7 +38,7 @@ const products = [...featured, ...rr].slice(0, 8);
 const vendors = c.vendors.map((v) => partners.find((p) => p.name === v) ?? partners.find((p) => p.name.startsWith(v)) ?? { name: v, hex: '4c6272' });
 
 const home = path(lang, '/');
-const solutionsHref = `${home}#solutions`;
+const solutionsHref = path(lang, '/solutions');
 const contactHref = `${home}#contact`;
 const catalogueHref = `${path(lang, '/products')}?cat=${c.categories[0]}`;
 const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(fill(ui.waTemplate, { solution: item.title }))}`;

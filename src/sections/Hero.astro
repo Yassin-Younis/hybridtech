@@ -40,7 +40,7 @@ const avif = await Promise.all(people.map((p) => getImage({ src: p.src, format: 
       </h1>
       <p class="lead hero__sub hero__fade" style="--i:0">{d.hero.sub}</p>
       <div class="hero__cta hero__fade" style="--i:1">
-        <a class="btn" href={`${home}#solutions`} data-magnetic>{d.hero.primary}<Icon name="arrow" class="icon--dir" /></a>
+        <a class="btn" href={path(lang, '/solutions')} data-magnetic>{d.hero.primary}<Icon name="arrow" class="icon--dir" /></a>
         <a class="btn btn--ghost" href={`${home}#contact`}>{d.hero.secondary}</a>
       </div>
     </div>
