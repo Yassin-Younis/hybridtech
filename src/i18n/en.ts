@@ -41,6 +41,11 @@ export const en = {
       { n: 24, suffix: '/7', label: 'Mission-critical support availability' },
     ],
   },
+  explore: {
+    eyebrow: 'What we offer',
+    title: 'Everything your business needs, in three places',
+    label: 'Main sections',
+  },
   solutions: {
     eyebrow: 'Solutions',
     pageTitle: 'IT Solutions in Cairo: Printing, Networks, Support & Hardware | Hybrid Technology',

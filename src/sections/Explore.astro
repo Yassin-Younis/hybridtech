@@ -1,0 +1,61 @@
+---
+// Homepage hub: three picture tiles, one per main part of the site (Solutions, Software, Products).
+// Headline only, no detail; each tile opens its page.
+import { Image } from 'astro:assets';
+import type { Lang } from '../i18n';
+import { t, path } from '../i18n';
+import Icon from '../components/Icon.astro';
+import solutionsImg from '../assets/solutions/infrastructure.png';
+import softwareImg from '../assets/solutions/software.png';
+import productsImg from '../assets/solutions/supply.png';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const tiles = [
+  { href: path(lang, '/solutions'), label: d.nav.solutions, icon: 'network', img: solutionsImg },
+  { href: path(lang, '/software'), label: d.nav.software, icon: 'code', img: softwareImg },
+  { href: path(lang, '/products'), label: d.nav.products, icon: 'laptop', img: productsImg },
+];
+---
+<section class="section ex" id="explore">
+  <div class="container">
+    <div class="section-head ex__head" data-reveal>
+      <p class="eyebrow">{d.explore.eyebrow}</p>
+      <h2 class="title">{d.explore.title}</h2>
+    </div>
+    <ul class="ex__grid" aria-label={d.explore.label}>
+      {tiles.map((x, i) => (
+        <li data-reveal style={`--i:${i}`}>
+          <a class="ex__tile" href={x.href}>
+            <Image src={x.img} alt="" format="webp" quality={66} widths={[400, 640, 928]} sizes="(min-width: 900px) 33vw, 100vw" class="ex__img" loading="lazy" decoding="async" />
+            <span class="ex__shade" aria-hidden="true"></span>
+            <span class="ex__icon" aria-hidden="true"><Icon name={x.icon} /></span>
+            <span class="ex__label">{x.label}<span class="ex__go" aria-hidden="true"><Icon name="arrow" class="icon--dir" /></span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+<style>
+  .ex__head { text-align: center; display: grid; justify-items: center; }
+  .ex__grid { display: grid; gap: 16px; }
+  @media (min-width: 760px) { .ex__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; } }
+  .ex__tile { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 4 / 5; padding: clamp(18px, 2.4vw, 26px); border-radius: var(--radius-lg); background: var(--blue-ink); color: #fff; outline-offset: 4px; }
+  @media (max-width: 759px) { .ex__tile { aspect-ratio: 4 / 3; } }
+  .ex__tile :global(picture) { display: contents; }
+  .ex__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; transition: scale 1.2s var(--ease-out), filter 0.6s; filter: saturate(0.9); }
+  @media (max-width: 759px) { .ex__img { object-position: 50% 30%; } }
+  .ex__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 38, 61, 0.15) 0%, rgba(0, 38, 61, 0.05) 40%, rgba(0, 38, 61, 0.88) 82%, rgba(0, 38, 61, 0.96) 100%); }
+  .ex__icon { align-self: flex-start; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.3s; }
+  .ex__icon :global(.icon) { width: 24px; height: 24px; }
+  .ex__label { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.1; }
+  .ex__go { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: var(--orange); box-shadow: 0 10px 24px -10px rgba(241, 81, 27, 0.7); transition: translate 0.4s var(--ease-out); }
+  .ex__go :global(.icon) { width: 22px; height: 22px; }
+  .ex__tile:hover .ex__img, .ex__tile:focus-visible .ex__img { scale: 1.06; filter: saturate(1); }
+  .ex__tile:hover .ex__icon { background: var(--orange); }
+  .ex__tile:hover .ex__go { translate: 4px 0; }
+  :global([dir='rtl']) .ex__tile:hover .ex__go { translate: -4px 0; }
+  .ex__tile:focus-visible { outline: 2px solid var(--orange); }
+  @media (prefers-reduced-motion: reduce) { .ex__img, .ex__go { transition: none; } }
+</style>
