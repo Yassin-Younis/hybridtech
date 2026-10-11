@@ -1,0 +1,38 @@
+---
+import type { Lang } from '../i18n';
+import { t, path } from '../i18n';
+import { site } from '../data/site';
+import Base from '../layouts/Base.astro';
+import Software from '../sections/Software.astro';
+import Contact from '../sections/Contact.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const origin = Astro.site?.origin ?? '';
+const home = path(lang, '/');
+const pageUrl = origin + path(lang, '/software');
+const jsonLd = [
+  {
+    '@type': 'BreadcrumbList',
+    '@id': `${pageUrl}#breadcrumb`,
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: d.nav.home, item: origin + home },
+      { '@type': 'ListItem', position: 2, name: d.nav.software, item: pageUrl },
+    ],
+  },
+  {
+    '@type': 'Service',
+    '@id': `${pageUrl}#service`,
+    name: d.software.eyebrow,
+    description: d.software.pageDescription,
+    serviceType: d.software.chapters.map((c) => c.nav),
+    areaServed: { '@type': 'Country', name: 'Egypt' },
+    provider: { '@type': 'Organization', name: site.name, url: site.url },
+    url: pageUrl,
+  },
+];
+---
+<Base lang={lang} title={d.software.pageTitle} description={d.software.pageDescription} page="/software" jsonLd={jsonLd}>
+  <Software lang={lang} />
+  <Contact lang={lang} />
+</Base>
