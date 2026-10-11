@@ -45,6 +45,7 @@ export const en = {
     eyebrow: 'What we offer',
     title: 'Everything your business needs, in three places',
     label: 'Main sections',
+    lines: { solutions: 'Printing, networks, security and IT support', software: 'Websites, apps and systems built for you', products: 'Laptops, PCs, monitors and accessories' },
   },
   solutions: {
     eyebrow: 'Solutions',

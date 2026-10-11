@@ -1,6 +1,6 @@
 ---
 // Homepage hub: three picture tiles, one per main part of the site (Solutions, Software, Products).
-// Headline only, no detail; each tile opens its page.
+// A headline and one short line each; each tile opens its page.
 import { Image } from 'astro:assets';
 import type { Lang } from '../i18n';
 import { t, path } from '../i18n';
@@ -12,9 +12,9 @@ interface Props { lang: Lang }
 const { lang } = Astro.props;
 const d = t(lang);
 const tiles = [
-  { href: path(lang, '/solutions'), label: d.nav.solutions, icon: 'network', img: solutionsImg },
-  { href: path(lang, '/software'), label: d.nav.software, icon: 'code', img: softwareImg },
-  { href: path(lang, '/products'), label: d.nav.products, icon: 'laptop', img: productsImg },
+  { href: path(lang, '/solutions'), label: d.nav.solutions, line: d.explore.lines.solutions, icon: 'network', img: solutionsImg },
+  { href: path(lang, '/software'), label: d.nav.software, line: d.explore.lines.software, icon: 'code', img: softwareImg },
+  { href: path(lang, '/products'), label: d.nav.products, line: d.explore.lines.products, icon: 'laptop', img: productsImg },
 ];
 ---
 <section class="section ex" id="explore">
@@ -30,7 +30,10 @@ const tiles = [
             <Image src={x.img} alt="" format="webp" quality={66} widths={[400, 640, 928]} sizes="(min-width: 900px) 33vw, 100vw" class="ex__img" loading="lazy" decoding="async" />
             <span class="ex__shade" aria-hidden="true"></span>
             <span class="ex__icon" aria-hidden="true"><Icon name={x.icon} /></span>
-            <span class="ex__label">{x.label}<span class="ex__go" aria-hidden="true"><Icon name="arrow" class="icon--dir" /></span></span>
+            <span class="ex__foot">
+              <span class="ex__text"><span class="ex__label">{x.label}</span><span class="ex__line">{x.line}</span></span>
+              <span class="ex__go" aria-hidden="true"><Icon name="arrow" class="icon--dir" /></span>
+            </span>
           </a>
         </li>
       ))}
@@ -49,7 +52,10 @@ const tiles = [
   .ex__shade { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(0, 38, 61, 0.15) 0%, rgba(0, 38, 61, 0.05) 40%, rgba(0, 38, 61, 0.88) 82%, rgba(0, 38, 61, 0.96) 100%); }
   .ex__icon { align-self: flex-start; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: rgba(255, 255, 255, 0.14); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: background 0.3s; }
   .ex__icon :global(.icon) { width: 24px; height: 24px; }
-  .ex__label { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.1; }
+  .ex__foot { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; }
+  .ex__text { display: grid; gap: 8px; }
+  .ex__label { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.6rem, 2.6vw, 2.2rem); line-height: 1.1; }
+  .ex__line { color: var(--on-dark); font-size: clamp(0.92rem, 1.1vw, 1.02rem); line-height: 1.45; max-width: 26ch; }
   .ex__go { display: grid; place-items: center; width: 48px; height: 48px; flex: none; border-radius: 50%; background: var(--orange); box-shadow: 0 10px 24px -10px rgba(241, 81, 27, 0.7); transition: translate 0.4s var(--ease-out); }
   .ex__go :global(.icon) { width: 22px; height: 22px; }
   .ex__tile:hover .ex__img, .ex__tile:focus-visible .ex__img { scale: 1.06; filter: saturate(1); }
