@@ -42,7 +42,11 @@ const solutionsHref = `${home}#solutions`;
 const contactHref = `${home}#contact`;
 const catalogueHref = `${path(lang, '/products')}?cat=${c.categories[0]}`;
 const wa = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(fill(ui.waTemplate, { solution: item.title }))}`;
-const others = items.filter((s) => s.id !== id);
+// The other solutions, then the custom software service (its own page, not /solutions/<id>/).
+const others = [
+  ...items.filter((s) => s.id !== id).map((s) => ({ id: s.id, icon: s.icon, title: s.title, href: path(lang, `/solutions/${s.id}`) })),
+  { id: 'software', icon: 'code', title: d.software.panel.title, href: path(lang, '/software') },
+];
 
 const origin = Astro.site?.origin ?? '';
 const pageUrl = origin + path(lang, `/solutions/${id}`);
@@ -187,7 +191,7 @@ const jsonLd = [
       <ul class="os__grid">
         {others.map((s, i) => (
           <li data-reveal style={`--d:${i * 80}ms`}>
-            <a class="ot" href={path(lang, `/solutions/${s.id}`)}>
+            <a class="ot" href={s.href}>
               <Image src={img(s.id)} alt="" format="webp" quality={62} widths={[320, 480, 640]} sizes="(min-width: 900px) 280px, 50vw" loading="lazy" decoding="async" class="ot__img" />
               <span class="ot__shade" aria-hidden="true"></span>
               <span class="ot__ic" aria-hidden="true"><Icon name={s.icon} /></span>
@@ -329,7 +333,7 @@ const jsonLd = [
   .os__head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 12px 24px; margin-block-end: 24px; }
   .os__title { font-size: clamp(1.5rem, 2.6vw, 2rem); color: var(--blue-deep); }
   .os__grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-  @media (min-width: 700px) { .os__grid { grid-template-columns: repeat(4, 1fr); gap: 16px; } }
+  @media (min-width: 700px) { .os__grid { grid-template-columns: repeat(3, 1fr); gap: 16px; } }
   .ot { position: relative; isolation: isolate; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; aspect-ratio: 4 / 5; padding: 14px; border-radius: var(--radius); color: #fff; background: var(--blue-ink); }
   @media (min-width: 700px) { .ot { aspect-ratio: 3 / 4; } }
   @media (min-width: 900px) { .ot { padding: 18px; border-radius: var(--radius-lg); } }
