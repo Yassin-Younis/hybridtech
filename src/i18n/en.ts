@@ -8,7 +8,7 @@ export const en = {
     eyebrow: 'IT Solutions Provider',
     lines: ['Empowering *business*', 'technology.'],
     sub: 'Enterprise hardware, networks and managed IT. One partner, since 2020.',
-    primary: 'Explore solutions',
+    primary: 'What we offer',
     secondary: 'Request a quote',
     team: 'The Hybrid Technology team',
     scroll: 'Scroll',
