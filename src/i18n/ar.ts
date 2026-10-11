@@ -5,7 +5,7 @@ export const ar = {
   dir: 'rtl',
   name: 'العربية',
   otherName: 'English',
-  nav: { primary: 'التنقل الرئيسي', home: 'الرئيسية', about: 'من نحن', solutions: 'الحلول', products: 'المنتجات', partners: 'الشركاء', clients: 'عملاؤنا', contact: 'اتصل بنا', cta: 'اطلب عرض سعر', menu: 'القائمة', close: 'إغلاق', skip: 'انتقل إلى المحتوى' },
+  nav: { primary: 'التنقل الرئيسي', home: 'الرئيسية', about: 'من نحن', solutions: 'الحلول', software: 'البرمجيات', products: 'المنتجات', partners: 'الشركاء', clients: 'عملاؤنا', contact: 'اتصل بنا', cta: 'اطلب عرض سعر', menu: 'القائمة', close: 'إغلاق', skip: 'انتقل إلى المحتوى' },
   hero: {
     eyebrow: 'مزوّد حلول تكنولوجيا المعلومات',
     lines: ['نُمكّن *أعمالك*', 'بقوة التكنولوجيا.'],

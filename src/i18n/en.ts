@@ -3,7 +3,7 @@ export const en = {
   dir: 'ltr',
   name: 'English',
   otherName: 'العربية',
-  nav: { primary: 'Primary', home: 'Home', about: 'About', solutions: 'Solutions', products: 'Products', partners: 'Partners', clients: 'Clients', contact: 'Contact', cta: 'Get a quote', menu: 'Menu', close: 'Close', skip: 'Skip to content' },
+  nav: { primary: 'Primary', home: 'Home', about: 'About', solutions: 'Solutions', software: 'Software', products: 'Products', partners: 'Partners', clients: 'Clients', contact: 'Contact', cta: 'Get a quote', menu: 'Menu', close: 'Close', skip: 'Skip to content' },
   hero: {
     eyebrow: 'IT Solutions Provider',
     lines: ['Empowering *business*', 'technology.'],
