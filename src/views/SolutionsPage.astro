@@ -1,12 +1,10 @@
 ---
-// /solutions/: the solutions overview (moved off the homepage, which now only links here), plus
-// Why Hybrid Technology and the contact form.
+// /solutions/: the solutions overview (moved off the homepage, which now only links here) and the contact form.
 import type { Lang } from '../i18n';
 import { t, path } from '../i18n';
 import Base from '../layouts/Base.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
 import Solutions from '../sections/Solutions.astro';
-import WhyUs from '../sections/WhyUs.astro';
 import Contact from '../sections/Contact.astro';
 interface Props { lang: Lang }
 const { lang } = Astro.props;
@@ -45,7 +43,6 @@ const jsonLd = [
     </div>
   </section>
   <Solutions lang={lang} head={false} />
-  <WhyUs lang={lang} />
   <Contact lang={lang} />
 </Base>
 <style>
