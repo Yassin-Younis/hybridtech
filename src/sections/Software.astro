@@ -214,6 +214,8 @@ const bars = [38, 52, 44, 66, 58, 74, 70, 88];
   /* ---------- Section shell ---------- */
   .sw { --dir: 1; position: relative; overflow-x: clip; background: radial-gradient(120% 60% at 85% 0%, rgba(0, 94, 138, 0.55), transparent 60%), radial-gradient(90% 50% at 0% 100%, rgba(241, 81, 27, 0.12), transparent 60%), linear-gradient(180deg, #001a2a, var(--blue-ink) 30%, #001a2a); color: var(--on-dark); padding-block: var(--section); }
   :global([dir='rtl']) .sw { --dir: -1; }
+  /* The next section (Why us) is a slanted band; run our dark background under its slant so no white wedge shows. */
+  .sw { padding-block-end: calc(var(--section) + var(--slant)); margin-block-end: calc(-1 * var(--slant)); }
   .sw :global(.circuit) { color: #fff; }
   .sw :global(.circuit svg) { opacity: 0.05; }
   .sw__spot { position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(520px circle at var(--mx, 70%) var(--my, 20%), rgba(241, 81, 27, 0.1), transparent 70%); }
