@@ -9,6 +9,11 @@ const { lang } = Astro.props;
 const d = t(lang);
 const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/solutions/*.png', { eager: true });
 const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
+// Hybrid's solutions, then the custom software service, which has its own page instead of /solutions/<id>/.
+const panels = [
+  ...d.solutions.items.map((s) => ({ id: s.id, icon: s.icon, title: s.title, short: s.short, href: path(lang, `/solutions/${s.id}`) })),
+  { id: 'software', icon: 'code', title: d.software.panel.title, short: d.software.panel.short, href: path(lang, '/software') },
+];
 ---
 <section class="section sol" id="solutions">
   <div class="container">
@@ -18,10 +23,10 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
     </div>
   </div>
   <div class="container container--wide">
-    <ul class="strip" data-reveal>
-      {d.solutions.items.map((s, i) => (
+    <ul class="strip" data-reveal style={`--n:${panels.length}`}>
+      {panels.map((s, i) => (
         <li class="panel" id={`sol-${s.id}`} style={`--i:${i}`}>
-          <a class="panel__link" href={path(lang, `/solutions/${s.id}`)}>
+          <a class="panel__link" href={s.href}>
             <Image src={img(s.id)!} alt="" format="webp" quality={66} widths={[400, 640, 928]} sizes="(min-width: 900px) 36vw, 100vw" class="panel__img" loading="lazy" decoding="async" />
             <span class="panel__shade" aria-hidden="true"></span>
             <span class="panel__icon" aria-hidden="true"><Icon name={s.icon} /></span>
@@ -61,7 +66,7 @@ const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
   /* Desktop: expanding strip. The hovered panel grows, the others shrink. */
   @media (min-width: 900px) {
     /* Fixed text widths (from the strip's container width) so copy never re-wraps while a panel animates. */
-    .strip { display: flex; height: clamp(440px, 52vw, 560px); container-type: inline-size; --gaps: 4 * 14px; --pad: 40px; --units: 6.6; --grow: 2.6; }
+    .strip { display: flex; height: clamp(440px, 52vw, 560px); container-type: inline-size; --grow: 2.6; --gaps: (var(--n) - 1) * 14px; --pad: 40px; --units: (var(--n) - 1 + var(--grow)); }
     .panel__body { width: calc((100cqw - var(--gaps)) * var(--grow) / var(--units) - var(--pad)); max-width: none; }
     .panel__title { width: calc((100cqw - var(--gaps)) / var(--units) - var(--pad)); }
     .panel { flex: 1 1 0; min-height: 0; transition: flex 0.7s var(--ease-out); }
