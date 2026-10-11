@@ -58,6 +58,12 @@ export const en = {
     eyebrow: 'Software development',
     pageTitle: 'Custom Software in Cairo: Websites, Apps & ERP | Hybrid Technology',
     pageDescription: "Websites, iPhone and Android apps, ERP systems and automation built by Hybrid Technology's in-house software team in Cairo, Egypt. Tell us the problem; we quote the fix.",
+    teaser: {
+      title: 'Software that fixes everyday business problems',
+      lead: 'Websites, mobile apps and business systems, built by our in-house team. No tech words needed.',
+      familiar: 'Does any of this sound familiar?',
+      cta: 'See how we can help',
+    },
     title: 'Tell us what slows your business down. We build the software that *fixes it*.',
     lead: 'No tech words needed. Here are four everyday business headaches, and what our in-house software team builds to make each one go away.',
     proof: "You're looking at our work: this website was designed and built in-house.",

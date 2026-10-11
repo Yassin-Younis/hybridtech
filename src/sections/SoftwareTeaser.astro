@@ -1,0 +1,68 @@
+---
+// Homepage entry point for the software service: the four problems as links into their chapters
+// on /software/, plus one call to action. The full story lives on the detail page.
+import type { Lang } from '../i18n';
+import { t, path } from '../i18n';
+import Icon from '../components/Icon.astro';
+import CircuitLayer from '../components/CircuitLayer.astro';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const d = t(lang);
+const s = d.software;
+const page = path(lang, '/software');
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="section tz" id="software">
+  <div class="container">
+    <div class="tz__panel" data-reveal>
+      <CircuitLayer parallax={false} />
+      <div class="tz__copy">
+        <p class="eyebrow">{s.eyebrow}</p>
+        <h2 class="tz__title">{s.teaser.title}</h2>
+        <p class="tz__lead">{s.teaser.lead}</p>
+        <a class="btn" href={page} data-magnetic>{s.teaser.cta}<Icon name="arrow" class="icon--dir" /></a>
+      </div>
+      <div class="tz__list">
+        <p class="tz__ask">{s.teaser.familiar}</p>
+        <ul>
+          {s.chapters.map((c, i) => (
+            <li>
+              <a href={`${page}#sw-${c.id}`}>
+                <span class="tz__n num">{pad(i + 1)}</span>
+                <span class="tz__i"><Icon name={c.icon} /></span>
+                <span class="tz__p">{c.problem}</span>
+                <span class="tz__go"><Icon name="arrow" class="icon--dir" /></span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+<style>
+  .tz__panel { position: relative; overflow: hidden; isolation: isolate; display: grid; gap: 40px; padding: clamp(28px, 5vw, 64px); border-radius: calc(var(--radius-lg) * 1.4); color: var(--on-dark); background: radial-gradient(90% 80% at 100% 0%, rgba(0, 94, 138, 0.7), transparent 60%), radial-gradient(70% 70% at 0% 100%, rgba(241, 81, 27, 0.18), transparent 60%), linear-gradient(160deg, var(--blue-ink), #001a2a); box-shadow: var(--shadow); }
+  .tz__panel :global(.circuit) { color: #fff; }
+  .tz__panel :global(.circuit svg) { opacity: 0.06; }
+  @media (min-width: 960px) { .tz__panel { grid-template-columns: 0.95fr 1.05fr; gap: 64px; align-items: center; } }
+  .tz__copy { display: grid; gap: 18px; justify-items: start; }
+  .tz__title { font-size: clamp(1.8rem, 3.6vw, 2.8rem); line-height: 1.08; color: #fff; max-width: 16ch; text-wrap: balance; }
+  :lang(ar) .tz__title { line-height: 1.35; }
+  .tz__lead { color: var(--on-dark-muted); font-size: 1.08rem; max-width: 44ch; margin-block-end: 8px; }
+  .tz__ask { font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--orange); margin-block-end: 12px; }
+  :lang(ar) .tz__ask { letter-spacing: 0; font-size: 1rem; }
+  .tz__list ul { border-top: 1px solid rgba(255, 255, 255, 0.14); }
+  .tz__list a { display: grid; grid-template-columns: auto auto 1fr auto; align-items: center; gap: 14px; padding: 16px 8px; border-bottom: 1px solid rgba(255, 255, 255, 0.14); color: #fff; transition: background 0.3s, padding 0.4s var(--ease-out); }
+  .tz__list a:hover { background: linear-gradient(90deg, rgba(241, 81, 27, 0.14), transparent); padding-inline-start: 16px; }
+  :global([dir='rtl']) .tz__list a:hover { background: linear-gradient(-90deg, rgba(241, 81, 27, 0.14), transparent); }
+  .tz__n { font-family: var(--font-display); font-size: 0.8rem; color: var(--orange); min-width: 2ch; }
+  .tz__i { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.12); transition: background 0.3s, border-color 0.3s; }
+  .tz__i :global(.icon) { width: 20px; height: 20px; }
+  .tz__list a:hover .tz__i { background: var(--orange); border-color: var(--orange); }
+  .tz__p { font-weight: 600; line-height: 1.4; }
+  .tz__go { display: flex; color: var(--orange); opacity: 0.5; transition: opacity 0.3s, translate 0.4s var(--ease-out); }
+  .tz__go :global(.icon) { width: 20px; height: 20px; }
+  .tz__list a:hover .tz__go { opacity: 1; translate: 4px 0; }
+  :global([dir='rtl']) .tz__list a:hover .tz__go { translate: -4px 0; }
+  @media (max-width: 520px) { .tz__list a { grid-template-columns: auto 1fr auto; } .tz__n { display: none; } }
+</style>
