@@ -26,7 +26,7 @@ const year = new Date().getFullYear();
       <ul>
         <li><a href={`${home}#about`}>{d.nav.about}</a></li>
         <li><a href={`${home}#solutions`}>{d.nav.solutions}</a></li>
-        <li><a href={`${home}#software`}>{d.nav.software}</a></li>
+        <li><a href={path(lang, '/software')}>{d.nav.software}</a></li>
         <li><a href={path(lang, '/products')}>{d.nav.products}</a></li>
         <li><a href={`${home}#partners`}>{d.nav.partners}</a></li>
         <li><a href={`${home}#clients`}>{d.nav.clients}</a></li>
