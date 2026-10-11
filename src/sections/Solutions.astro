@@ -4,8 +4,9 @@ import type { ImageMetadata } from 'astro';
 import type { Lang } from '../i18n';
 import { t, path } from '../i18n';
 import Icon from '../components/Icon.astro';
-interface Props { lang: Lang }
-const { lang } = Astro.props;
+// head: show the section heading (off on /solutions/, where the page hero carries the title).
+interface Props { lang: Lang; head?: boolean }
+const { lang, head = true } = Astro.props;
 const d = t(lang);
 const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/solutions/*.png', { eager: true });
 const img = (id: string) => imgs[`../assets/solutions/${id}.png`]?.default;
@@ -16,12 +17,14 @@ const panels = [
 ];
 ---
 <section class="section sol" id="solutions">
-  <div class="container">
-    <div class="section-head sol__head" data-reveal>
-      <p class="eyebrow">{d.solutions.eyebrow}</p>
-      <h2 class="title">{d.solutions.title}</h2>
+  {head && (
+    <div class="container">
+      <div class="section-head sol__head" data-reveal>
+        <p class="eyebrow">{d.solutions.eyebrow}</p>
+        <h2 class="title">{d.solutions.title}</h2>
+      </div>
     </div>
-  </div>
+  )}
   <div class="container container--wide">
     <ul class="strip" data-reveal style={`--n:${panels.length}`}>
       {panels.map((s, i) => (

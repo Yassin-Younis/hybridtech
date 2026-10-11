@@ -43,6 +43,8 @@ export const en = {
   },
   solutions: {
     eyebrow: 'Solutions',
+    pageTitle: 'IT Solutions in Cairo: Printing, Networks, Support & Hardware | Hybrid Technology',
+    pageDescription: 'Office printing, networks, servers and security, IT support and Microsoft 365, and IT hardware supply for businesses across Egypt, from Hybrid Technology in Cairo.',
     title: 'Everything your IT runs on, from one accountable partner',
     intro: 'Designed, supplied, implemented and supported by one team. No hand-offs, no finger-pointing.',
     vendorsLabel: 'Vendor ecosystem',
