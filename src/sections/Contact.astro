@@ -9,7 +9,7 @@ const { lang } = Astro.props;
 const d = t(lang);
 const maps = `https://www.google.com/maps?q=${encodeURIComponent(site.mapsQuery)}&output=embed&hl=${lang}`;
 const mapsLink = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsQuery)}`;
-const areas = [...d.solutions.items.map((s) => ({ id: s.id, label: s.title })), ...categories.map((c) => ({ id: c.id, label: pick(lang, c.label) }))];
+const areas = [...d.solutions.items.map((s) => ({ id: s.id, label: s.title })), { id: 'custom-software', label: d.software.interest }, ...categories.map((c) => ({ id: c.id, label: pick(lang, c.label) }))];
 ---
 <section class="section ct" id="contact">
   <div class="container">

@@ -8,6 +8,12 @@ if (form) {
   const val = (n: string) => (form.elements.namedItem(n) as HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement | null)?.value?.trim() || '-';
   const interestText = () => { const s = form.elements.namedItem('interest') as HTMLSelectElement | null; return s?.selectedOptions[0]?.text?.trim() || '-'; };
   const compose = () => tpl.replace(/\{(\w+)\}/g, (_, k) => (k === 'interest' ? interestText() : val(k)));
+  // Section CTAs (data-interest="<option value>") jump to the form with that area preselected.
+  document.addEventListener('click', (e) => {
+    const link = (e.target as Element | null)?.closest<HTMLElement>('[data-interest]');
+    const select = form.elements.namedItem('interest') as HTMLSelectElement | null;
+    if (link && select) select.value = link.dataset.interest || '';
+  });
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!form.reportValidity()) return;
