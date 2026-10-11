@@ -16,6 +16,13 @@ if (grid) {
       c.hidden = !show; if (show) n++;
     });
     chips.forEach((ch) => ch.classList.toggle('is-active', (ch.dataset.cat || 'all') === cat));
+    // In the phone row, centre the active chip (e.g. when arriving with ?cat=). Horizontal only.
+    const active = chips.find((ch) => ch.classList.contains('is-active'));
+    const row = active?.parentElement;
+    if (active && row && row.scrollWidth > row.clientWidth) {
+      const r = active.getBoundingClientRect(), rr = row.getBoundingClientRect();
+      row.scrollBy({ left: r.left + r.width / 2 - (rr.left + rr.width / 2) });
+    }
     if (count) count.textContent = countTpl.replace('{n}', String(n));
     if (empty) empty.hidden = n > 0;
     const url = new URL(location.href);

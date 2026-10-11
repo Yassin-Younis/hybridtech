@@ -87,6 +87,12 @@ const jsonLd = [
   .ph__title { color: #fff; }
   .cat__bar { display: grid; gap: 18px; margin-block-end: 32px; }
   .cat__chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* Phones: one swipeable row, so picking a category keeps the results in view. */
+  @media (max-width: 700px) {
+    .cat__chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: calc(-1 * var(--gutter)); padding-inline: var(--gutter); padding-block: 2px; scroll-padding-inline: var(--gutter); }
+    .cat__chips::-webkit-scrollbar { display: none; }
+    .cat__chip { flex: none; }
+  }
   .cat__chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); font-family: var(--font-display); font-weight: 600; font-size: 0.85rem; transition: background 0.25s, color 0.25s, border-color 0.25s; }
   .cat__chip .icon { width: 16px; height: 16px; }
   .cat__chip .num { font-size: 0.75rem; color: var(--muted); }
