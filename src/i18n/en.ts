@@ -65,7 +65,7 @@ export const en = {
     fixLabel: 'What we build for you',
     chapters: [
       {
-        id: 'web', icon: 'code', nav: 'Website',
+        id: 'web', icon: 'code', nav: 'Website Design',
         problem: 'Customers search online and find your competitors, not you.',
         story: "Most buyers look you up on Google before they call. If you have no website, or an old one that looks untrustworthy on a phone, they quietly choose someone else, and you never find out you lost them.",
         fixTitle: 'A professional website that brings in customers',
@@ -74,7 +74,7 @@ export const en = {
         scene: { query: 'IT supplier in Cairo', competitor: 'Competitor', you: 'Your business: page 5', url: 'yourbusiness.com', site: 'Your business', toast1: 'New enquiry: 3 laptops', toast2: 'New WhatsApp message', rank: 'Top result' },
       },
       {
-        id: 'app', icon: 'smartphone', nav: 'Mobile app',
+        id: 'app', icon: 'smartphone', nav: 'Mobile App Design',
         problem: 'Customers can only reach you by phone, and only during working hours.',
         story: 'Orders, bookings and questions all arrive as calls and messages. Lines are busy, messages get missed, and every request waits for someone to be free to answer.',
         fixTitle: 'Your own app on iPhone and Android',
@@ -83,7 +83,7 @@ export const en = {
         scene: { calling: 'Calling…', busy: 'Line busy', b1: 'Are you open?', b2: 'Can I order for tomorrow?', b3: 'Hello??', app: 'Your app', items: ['Laptop', 'Printer', 'Router'], placed: 'Order placed' },
       },
       {
-        id: 'erp', icon: 'layers', nav: 'Business system',
+        id: 'erp', icon: 'layers', nav: 'Custom Software',
         problem: "Your business runs on Excel sheets, paper and people's memory.",
         story: 'Stock lives in one spreadsheet, invoices in another, salaries on paper, and the real numbers in one person’s head. Simple questions like “how much stock do we have?” or “who hasn’t paid us?” take hours, and mistakes cost money.',
         fixTitle: 'One system that runs your whole business',
@@ -92,7 +92,7 @@ export const en = {
         scene: { sheet: 'stock_FINAL_v3.xlsx', note: 'Who paid?? Ask Ahmed', msg: 'How many left in stock?', receipt: 'Invoice #??', menu: ['Sales', 'Stock', 'Purchases', 'Staff', 'Accounts'], k1: 'In stock', k2: 'Invoices today', k3: 'Unpaid', chart: 'Sales this month', low: 'Low stock: toner' },
       },
       {
-        id: 'auto', icon: 'refresh', nav: 'Automation',
+        id: 'auto', icon: 'refresh', nav: 'Less Manual Work',
         problem: 'Your team types the same information again and again.',
         story: 'An order arrives by email. Someone copies it into Excel, retypes it into an invoice, then sends a WhatsApp update. Hours of copy-and-paste every day, and one wrong digit causes a real problem.',
         fixTitle: 'Software that does the repetitive work for you',
