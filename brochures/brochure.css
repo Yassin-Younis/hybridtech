@@ -73,3 +73,15 @@ h4 { font-family: var(--display); font-size: 8pt; font-weight: 600; letter-spaci
 .logo-wall { display: grid; gap: 3mm; }
 .logo-wall li { display: grid; place-items: center; height: 15mm; padding: 3mm 4mm; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
 .logo-wall img { max-height: 8mm; max-width: 100%; width: auto; object-fit: contain; }
+
+/* Arabic (dir=rtl): El Messiri like the site; no letter-spacing or capitals, which break Arabic joining */
+[dir='rtl'] { --display: 'El Messiri', 'Chakra Petch', system-ui, sans-serif; --body: 'El Messiri', 'Instrument Sans', system-ui, sans-serif; }
+[dir='rtl'] body { line-height: 1.65; }
+[dir='rtl'] * { letter-spacing: 0 !important; text-transform: none !important; }
+[dir='rtl'] h1, [dir='rtl'] h2, [dir='rtl'] h3 { line-height: 1.32; }
+[dir='rtl'] .icon--dir, [dir='rtl'] .bars { transform: scaleX(-1); }
+/* Numbers and Latin values keep their own order inside Arabic lines */
+.num, .n { font-family: 'Chakra Petch', system-ui, sans-serif; direction: ltr; unicode-bidi: isolate; }
+bdi { unicode-bidi: isolate; }
+/* Arabic headings run longer and El Messiri sits taller: a notch smaller so pages keep their fit */
+[dir='rtl'] h2 { font-size: 24pt; }
