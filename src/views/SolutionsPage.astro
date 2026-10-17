@@ -1,9 +1,11 @@
 ---
 // /solutions/: the solutions overview (moved off the homepage, which now only links here) and the contact form.
 import type { Lang } from '../i18n';
-import { t, path } from '../i18n';
+import { t, path, asset } from '../i18n';
+import { brochures } from '../data/brochures';
 import Base from '../layouts/Base.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
+import Icon from '../components/Icon.astro';
 import Solutions from '../sections/Solutions.astro';
 import Contact from '../sections/Contact.astro';
 interface Props { lang: Lang }
@@ -40,6 +42,7 @@ const jsonLd = [
       <p class="eyebrow">{d.solutions.eyebrow}</p>
       <h1 class="title sh__title">{d.solutions.title}</h1>
       <p class="lead">{d.solutions.intro}</p>
+      <a class="btn btn--ghost sh__pdf" href={asset(brochures.company.file)} download={brochures.company.name}><Icon name="file" />{d.brochures.downloadCompany}<small>{d.brochures.pdf}</small></a>
     </div>
   </section>
   <Solutions lang={lang} head={false} />
@@ -48,6 +51,8 @@ const jsonLd = [
 <style>
   .sh { position: relative; padding-block: 150px 72px; background: radial-gradient(120% 90% at 85% 10%, #0a6a97 0%, var(--blue-deep) 42%, var(--blue-ink) 100%); overflow: hidden; }
   .sh__title { color: #fff; }
+  .sh__pdf { color: #fff; margin-block-start: 28px; }
+  .sh__pdf small { font-size: 0.72em; opacity: 0.7; }
   .sh__crumbs { display: flex; flex-wrap: wrap; gap: 10px; margin-block-end: 22px; font-family: var(--font-display); font-size: 0.85rem; color: var(--on-dark-muted); }
   .sh__crumbs a { color: #fff; opacity: 0.85; }
   .sh__crumbs a:hover { color: var(--orange); opacity: 1; }

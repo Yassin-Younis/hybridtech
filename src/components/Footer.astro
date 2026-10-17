@@ -2,6 +2,7 @@
 import type { Lang } from '../i18n';
 import { t, path, asset, fill, otherLang } from '../i18n';
 import { site } from '../data/site';
+import { brochures } from '../data/brochures';
 import Icon from './Icon.astro';
 interface Props { lang: Lang; page: string }
 const { lang, page } = Astro.props;
@@ -41,6 +42,11 @@ const year = new Date().getFullYear();
         <li><a href={`mailto:${site.email}`}><Icon name="mail" /><bdi dir="ltr">{site.email}</bdi></a></li>
         <li><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsQuery)}`} rel="noopener" target="_blank"><Icon name="pin" />{d.contact.address}</a></li>
       </ul>
+      <h2 class="ftr__h ftr__h--next">{d.brochures.title}</h2>
+      <ul>
+        <li><a href={asset(brochures.company.file)} download={brochures.company.name}><Icon name="file" />{d.brochures.company}<small>{d.brochures.pdf}</small></a></li>
+        <li><a href={asset(brochures.software.file)} download={brochures.software.name}><Icon name="file" />{d.brochures.software}<small>{d.brochures.pdf}</small></a></li>
+      </ul>
     </div>
   </div>
   <div class="container ftr__legal">
@@ -64,7 +70,9 @@ const year = new Date().getFullYear();
   .ftr__site .icon { width: 16px; height: 16px; }
   .ftr__h { font-size: 0.8rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--on-dark-muted); margin-block-end: 18px; }
   :lang(ar) .ftr__h { letter-spacing: 0; font-size: 1rem; }
+  .ftr__h--next { margin-block-start: 32px; }
   .ftr__col li { margin-block: 10px; }
+  .ftr__col small { font-family: var(--font-display); font-size: 0.7rem; letter-spacing: 0.08em; padding: 2px 7px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); color: var(--on-dark-muted); }
   .ftr__col a { display: inline-flex; align-items: center; gap: 10px; transition: color 0.25s; }
   .ftr__col a:hover { color: var(--orange); }
   .ftr__col .icon { width: 18px; height: 18px; color: var(--on-dark-muted); }

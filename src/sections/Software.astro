@@ -5,8 +5,9 @@
 // fixes it. One custom property per chapter (--p, 0..1, written by scripts/software.ts) drives all
 // of it through calc(); with no JS or reduced motion --p stays 1 and the finished state shows.
 import type { Lang } from '../i18n';
-import { t, path } from '../i18n';
+import { t, path, asset } from '../i18n';
 import { site } from '../data/site';
+import { brochures } from '../data/brochures';
 import Icon from '../components/Icon.astro';
 import CircuitLayer from '../components/CircuitLayer.astro';
 import SoftwareScene from '../components/SoftwareScene.astro';
@@ -41,6 +42,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <div class="sw__intro" data-reveal>
         <p class="sw__lead">{s.lead}</p>
         <p class="sw__proof"><Icon name="eye" />{s.proof}</p>
+        <a class="sw__proof sw__pdf" href={asset(brochures.software.file)} download={brochures.software.name}><Icon name="file" />{d.brochures.downloadSoftware}<small>{d.brochures.pdf}</small></a>
       </div>
     </div>
   </div>
@@ -80,6 +82,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <div class="sw__cta">
         <a class="btn" href="#contact" data-interest="custom-software" data-magnetic>{s.cta}<Icon name="arrow" class="icon--dir" /></a>
         <a class="btn btn--ghost" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" />{s.ctaAlt}</a>
+        <a class="btn btn--ghost" href={asset(brochures.software.file)} download={brochures.software.name}><Icon name="file" />{d.brochures.downloadSoftware}</a>
       </div>
     </div>
     <div class="sw__steps-wrap" data-reveal>
@@ -135,6 +138,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
   .sw__lead { font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: var(--on-dark); }
   .sw__proof { display: inline-flex; align-items: center; gap: 10px; justify-self: start; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; color: #fff; padding: 9px 16px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.16); backdrop-filter: blur(8px); }
   .sw__proof :global(.icon) { width: 18px; height: 18px; color: var(--orange); }
+  .sw__pdf { transition: border-color 0.25s, background 0.25s; }
+  .sw__pdf:hover { border-color: var(--orange); background: rgba(241, 81, 27, 0.12); }
+  .sw__pdf small { font-size: 0.72em; letter-spacing: 0.06em; color: var(--on-dark-muted); }
 
   /* ---------- Chapters ---------- */
   .sw__story { display: grid; gap: clamp(72px, 10vw, 120px); }
