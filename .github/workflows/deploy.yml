@@ -1,29 +1,37 @@
-name: Deploy to GitHub Pages
+name: Deploy to hybridtech-eg.com
+# Builds the site and uploads dist/ to the client's cPanel host (data4host) over FTPS.
+# Only changed files are sent: the action keeps .ftp-deploy-sync-state.json next to the site.
+# Needs repo secrets FTP_USERNAME and FTP_PASSWORD (the cPanel/FTP login).
 on:
   push:
     branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  # never cancel an upload half way; queue the next one instead
+  group: ftp-deploy
+  cancel-in-progress: false
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: withastro/action@v3
-        with:
-          node-version: 22
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      name: production
+      url: https://hybridtech-eg.com/
     steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: server.data4host.com
+          protocol: ftps
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ./public_html/

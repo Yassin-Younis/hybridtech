@@ -37,3 +37,8 @@ ErrorDocument 404 /404.html
   ExpiresByType application/xml "access plus 0 seconds"
   ExpiresByType text/xml "access plus 0 seconds"
 </IfModule>
+
+# FTP-Deploy-Action's bookkeeping file (see .github/workflows/deploy.yml) is not for visitors.
+<Files ".ftp-deploy-sync-state.json">
+  Require all denied
+</Files>
