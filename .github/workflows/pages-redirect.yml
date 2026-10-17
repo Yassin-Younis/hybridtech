@@ -2,10 +2,8 @@ name: Redirect old GitHub Pages URL
 # The site moved from https://yassin-younis.github.io/hybridtech/ to https://hybridtech-eg.com/.
 # This replaces the Pages copy with a page that forwards every old link (path, query and #hash)
 # to the same place on the new domain, so shared links and the /admin/#token=... links keep working.
+# Run by hand (gh workflow run pages-redirect.yml) only once hybridtech-eg.com is serving the site.
 on:
-  push:
-    branches: [main]
-    paths: ['.github/workflows/pages-redirect.yml']
   workflow_dispatch:
 permissions:
   contents: read
