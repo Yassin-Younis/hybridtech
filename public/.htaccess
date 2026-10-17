@@ -42,3 +42,10 @@ ErrorDocument 404 /404.html
 <Files ".ftp-deploy-sync-state.json">
   Require all denied
 </Files>
+
+# Brochure links download the PDF instead of opening it in the tab.
+<IfModule mod_headers.c>
+  <FilesMatch "\.pdf$">
+    Header set Content-Disposition "attachment"
+  </FilesMatch>
+</IfModule>
