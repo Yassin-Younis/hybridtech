@@ -1,0 +1,75 @@
+/* Shared print styles for both brochures. A4 portrait, no printer margins: every .page is one sheet.
+   Brand tokens mirror src/styles/tokens.css; fonts come from the same Fontsource files as the site
+   (the @font-face block is prepended by build.mjs with absolute file URLs). */
+@page { size: A4; margin: 0; }
+:root {
+  --blue: #005e8a; --blue-deep: #00466b; --blue-ink: #00263d; --blue-tint: #e6f0f5;
+  --orange: #f1511b; --orange-soft: #fde9e2;
+  --paper: #fff; --surface: #f5f7fa; --ink: #0b1b27; --muted: #4c6272; --line: #d9e3ea;
+  --on-dark: #eaf3f8; --on-dark-muted: #9fbccb;
+  --display: 'Chakra Petch', system-ui, sans-serif;
+  --body: 'Instrument Sans', system-ui, sans-serif;
+  --pad: 20mm;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { font-family: var(--body); color: var(--ink); font-size: 10.5pt; line-height: 1.5; background: #888; }
+img { display: block; max-width: 100%; }
+ul, ol { list-style: none; }
+.icon { width: 1em; height: 1em; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+.page { position: relative; width: 210mm; height: 297mm; overflow: hidden; background: var(--paper); break-after: page; display: flex; flex-direction: column; }
+.page:last-child { break-after: auto; }
+.page--dark { background: radial-gradient(130% 70% at 90% 0%, #0a6a97 0%, var(--blue-deep) 38%, var(--blue-ink) 78%); color: var(--on-dark); }
+.page--night { background: radial-gradient(120% 60% at 85% 0%, rgba(0, 94, 138, 0.6), transparent 60%), radial-gradient(90% 50% at 0% 100%, rgba(241, 81, 27, 0.14), transparent 60%), linear-gradient(180deg, #001a2a, var(--blue-ink) 35%, #001a2a); color: var(--on-dark); }
+.inner { padding: 18mm var(--pad) 0; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+
+/* Circuit board traces (same drawing as the site hero) */
+.circuit { position: absolute; pointer-events: none; color: #8fd3f4; }
+.circuit svg { width: 100%; height: auto; display: block; }
+.circuit .trace { fill: none; stroke: currentColor; stroke-width: 2; }
+.circuit--cover { width: 260mm; right: -60mm; top: -10mm; opacity: 0.13; }
+.circuit--back { width: 240mm; left: -70mm; bottom: -30mm; opacity: 0.1; transform: scaleX(-1); }
+
+/* Letterhead bars: orange then blue, slanted, along the bottom edge */
+.bars { position: absolute; left: 0; right: 0; bottom: 0; height: 7mm; }
+.bars::before, .bars::after { content: ''; position: absolute; top: 0; bottom: 0; }
+.bars::before { left: 0; width: 66mm; background: var(--orange); clip-path: polygon(0 0, 100% 0, calc(100% - 4.5mm) 100%, 0 100%); z-index: 1; }
+.bars::after { left: 61.5mm; right: 0; background: var(--blue); clip-path: polygon(4.5mm 0, 100% 0, 100% 100%, 0 100%); }
+
+/* Running footer on inner pages */
+.foot { display: flex; align-items: center; gap: 10px; padding: 0 var(--pad) 12mm; font-family: var(--display); font-size: 7.5pt; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.foot img { height: 4.2mm; width: auto; }
+.foot span { margin-inline-start: auto; }
+.foot b { color: var(--orange); font-weight: 600; margin-inline-start: 14px; }
+.page--dark .foot, .page--night .foot { color: var(--on-dark-muted); }
+
+/* Type */
+.eyebrow { display: flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 600; font-size: 8.5pt; letter-spacing: 0.16em; text-transform: uppercase; color: var(--orange); }
+.eyebrow::before { content: ''; width: 9mm; height: 1.5px; background: currentColor; }
+.eyebrow .n { color: var(--blue); }
+.page--dark .eyebrow .n, .page--night .eyebrow .n { color: #fff; }
+h1, h2, h3, h4 { font-family: var(--display); font-weight: 700; line-height: 1.08; letter-spacing: -0.01em; }
+h2 { font-size: 27pt; margin-top: 5mm; color: var(--blue-ink); }
+.page--dark h2, .page--night h2 { color: #fff; }
+h3 { font-size: 13.5pt; color: var(--blue-ink); }
+h4 { font-family: var(--display); font-size: 8pt; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.lead { font-size: 12.5pt; line-height: 1.5; color: var(--muted); margin-top: 4mm; max-width: 150mm; }
+.page--dark .lead, .page--night .lead { color: var(--on-dark-muted); }
+.hl { font-style: normal; color: #fff; background: var(--orange); padding: 0 0.16em; border-radius: 4px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.num { font-family: var(--display); font-weight: 600; }
+
+/* Bits */
+.chip { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; background: var(--blue-tint); color: var(--blue-deep); font-family: var(--display); font-weight: 600; font-size: 8.5pt; }
+.chip .icon { color: var(--orange); }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 6mm; }
+.ico { display: grid; place-items: center; width: 10mm; height: 10mm; border-radius: 10px; background: var(--blue-tint); color: var(--blue); font-size: 5.4mm; flex: none; }
+.ico--orange { background: var(--orange-soft); color: var(--orange); }
+.ico--dark { background: rgba(255, 255, 255, 0.08); color: #fff; border: 1px solid rgba(255, 255, 255, 0.14); }
+.photo { border-radius: 16px; overflow: hidden; background: var(--surface); }
+.photo img { width: 100%; height: 100%; object-fit: cover; }
+.qr { background: #fff; border-radius: 12px; padding: 3mm; width: 30mm; height: 30mm; }
+.qr svg { width: 100%; height: 100%; display: block; }
+.logo-wall { display: grid; gap: 3mm; }
+.logo-wall li { display: grid; place-items: center; height: 15mm; padding: 3mm 4mm; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+.logo-wall img { max-height: 8mm; max-width: 100%; width: auto; object-fit: contain; }
