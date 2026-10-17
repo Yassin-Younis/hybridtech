@@ -22,13 +22,13 @@ The old address `https://yassin-younis.github.io/hybridtech/` forwards every lin
 
 ## Brochures (PDF)
 
-Two English A4 brochures are served from `public/brochures/` and linked from the footer, the Solutions page and the Software page (they download, see `public/.htaccess`): the company profile and the software brochure. They are HTML pages in `brochures/` rendered with Chrome; the copy comes from `src/i18n/en.ts` and `src/data/`, so regenerate after changing it:
+Two A4 brochures, each in English and Arabic (`-ar`, right-to-left), are served from `public/brochures/` and linked from the footer, the Solutions page and the Software page in the page's language (they download, see `public/.htaccess`): the company profile and the software brochure. They are HTML pages in `brochures/` rendered with Chrome; the copy comes from `src/i18n/` and `src/data/` (plus a few print-only lines in each template's `T`), so regenerate after changing it:
 
 ```sh
 node --experimental-strip-types brochures/build.mjs   # needs `brew install qrencode`
 ```
 
-`brochures/img/` holds the software scenes and website screenshots, captured from a local preview with `node brochures/capture.mjs` (run `pnpm build && pnpm preview --port 4329` first). Re-capture when the software scenes or the homepage hero change.
+`brochures/img/` holds the software scenes and website screenshots in both languages, captured from a local preview with `node brochures/capture.mjs` (run `pnpm build && pnpm preview --port 4329` first). Re-capture when the software scenes or the homepage hero change.
 
 ## Catalogue admin (`/admin/`)
 
