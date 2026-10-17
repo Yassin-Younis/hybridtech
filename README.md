@@ -1,6 +1,6 @@
 # Hybrid Technology — website
 
-Bilingual (EN/AR) marketing site for Hybrid Technology, Cairo. Astro + Lenis, static, hosted on the client's cPanel account (data4host). The product catalogue is edited from a built-in admin page that commits straight to this repo.
+Bilingual (EN/AR) marketing site for Hybrid Technology, Cairo. Astro + Lenis, static, hosted on the client's data4host account (CWP, Control WebPanel). The product catalogue is edited from a built-in admin page that commits straight to this repo.
 
 - Live: https://hybridtech-eg.com/ (Arabic: `/ar/`)
 - Copy: `src/i18n/en.ts` and `src/i18n/ar.ts`
@@ -16,7 +16,7 @@ pnpm build
 
 ## Deploy
 
-Every push to `main` runs `.github/workflows/deploy.yml`: it builds the site and uploads `dist/` to `public_html/` on `server.data4host.com` over FTPS (only changed files). It needs two repository secrets, `FTP_USERNAME` and `FTP_PASSWORD` (the cPanel login, or a cPanel FTP account whose folder is `public_html`). Apache settings (https/www redirect, 404 page, caching) are in `public/.htaccess`.
+Every push to `main` runs `.github/workflows/deploy.yml`: it builds the site and uploads `dist/` to `public_html/` on `server.data4host.com` over FTPS (only changed files). It needs two repository secrets, `FTP_USERNAME` and `FTP_PASSWORD` (the CWP panel login, or a CWP FTP account whose folder is `public_html`). Apache settings (https/www redirect, 404 page, caching) are in `public/.htaccess`.
 
 The old address `https://yassin-younis.github.io/hybridtech/` forwards every link to the same page on the new domain (`.github/workflows/pages-redirect.yml`).
 

@@ -2,7 +2,7 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
-// Hosted on the client's cPanel (data4host) at the domain root, deployed over FTPS by .github/workflows/deploy.yml.
+// Hosted on the client's data4host server (CWP panel) at the domain root, deployed over FTPS by .github/workflows/deploy.yml.
 // Solutions merged on 2026-10-11: keep the old URLs working.
 const moved = { networking: 'infrastructure', software: 'managed' };
 const redirects = Object.fromEntries(

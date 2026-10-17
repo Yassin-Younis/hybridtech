@@ -1,7 +1,7 @@
 name: Deploy to hybridtech-eg.com
-# Builds the site and uploads dist/ to the client's cPanel host (data4host) over FTPS.
+# Builds the site and uploads dist/ to the client's data4host server (CWP panel) over FTPS.
 # Only changed files are sent: the action keeps .ftp-deploy-sync-state.json next to the site.
-# Needs repo secrets FTP_USERNAME and FTP_PASSWORD (the cPanel/FTP login).
+# Needs repo secrets FTP_USERNAME and FTP_PASSWORD (the CWP panel / FTP login).
 on:
   push:
     branches: [main]

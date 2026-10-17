@@ -1,4 +1,4 @@
-# Apache settings for the static Astro build on the cPanel host. Lives in public/ so every deploy ships it.
+# Apache settings for the static Astro build on the data4host (CWP) server. Lives in public/ so every deploy ships it.
 Options -Indexes
 DirectoryIndex index.html
 ErrorDocument 404 /404.html
