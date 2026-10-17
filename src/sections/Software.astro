@@ -42,7 +42,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <div class="sw__intro" data-reveal>
         <p class="sw__lead">{s.lead}</p>
         <p class="sw__proof"><Icon name="eye" />{s.proof}</p>
-        <a class="sw__proof sw__pdf" href={asset(brochures.software.file)} download={brochures.software.name}><Icon name="file" />{d.brochures.downloadSoftware}<small>{d.brochures.pdf}</small></a>
+        <a class="sw__proof sw__pdf" href={asset(brochures.software[lang].file)} download={brochures.software[lang].name}><Icon name="file" />{d.brochures.downloadSoftware}<small>{d.brochures.pdf}</small></a>
       </div>
     </div>
   </div>
@@ -82,7 +82,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
       <div class="sw__cta">
         <a class="btn" href="#contact" data-interest="custom-software" data-magnetic>{s.cta}<Icon name="arrow" class="icon--dir" /></a>
         <a class="btn btn--ghost" href={wa} target="_blank" rel="noopener"><Icon name="whatsapp" />{s.ctaAlt}</a>
-        <a class="btn btn--ghost" href={asset(brochures.software.file)} download={brochures.software.name}><Icon name="file" />{d.brochures.downloadSoftware}</a>
+        <a class="btn btn--ghost" href={asset(brochures.software[lang].file)} download={brochures.software[lang].name}><Icon name="file" />{d.brochures.downloadSoftware}</a>
       </div>
     </div>
     <div class="sw__steps-wrap" data-reveal>

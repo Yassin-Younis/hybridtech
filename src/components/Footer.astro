@@ -44,8 +44,8 @@ const year = new Date().getFullYear();
       </ul>
       <h2 class="ftr__h ftr__h--next">{d.brochures.title}</h2>
       <ul>
-        <li><a href={asset(brochures.company.file)} download={brochures.company.name}><Icon name="file" />{d.brochures.company}<small>{d.brochures.pdf}</small></a></li>
-        <li><a href={asset(brochures.software.file)} download={brochures.software.name}><Icon name="file" />{d.brochures.software}<small>{d.brochures.pdf}</small></a></li>
+        <li><a href={asset(brochures.company[lang].file)} download={brochures.company[lang].name}><Icon name="file" />{d.brochures.company}<small>{d.brochures.pdf}</small></a></li>
+        <li><a href={asset(brochures.software[lang].file)} download={brochures.software[lang].name}><Icon name="file" />{d.brochures.software}<small>{d.brochures.pdf}</small></a></li>
       </ul>
     </div>
   </div>

@@ -42,7 +42,7 @@ const jsonLd = [
       <p class="eyebrow">{d.solutions.eyebrow}</p>
       <h1 class="title sh__title">{d.solutions.title}</h1>
       <p class="lead">{d.solutions.intro}</p>
-      <a class="btn btn--ghost sh__pdf" href={asset(brochures.company.file)} download={brochures.company.name}><Icon name="file" />{d.brochures.downloadCompany}<small>{d.brochures.pdf}</small></a>
+      <a class="btn btn--ghost sh__pdf" href={asset(brochures.company[lang].file)} download={brochures.company[lang].name}><Icon name="file" />{d.brochures.downloadCompany}<small>{d.brochures.pdf}</small></a>
     </div>
   </section>
   <Solutions lang={lang} head={false} />
