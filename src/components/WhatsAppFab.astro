@@ -12,8 +12,8 @@ const text = encodeURIComponent(Astro.props.lang === 'ar' ? 'مرحبًا هيب
   <span class="fab__label">{d.contact.whatsappFab}</span>
 </a>
 <style>
-  .fab { display: inline-flex; align-items: center; gap: 10px; background: #25d366; color: #fff; padding: 12px 14px; border-radius: 999px; box-shadow: 0 12px 30px -10px rgba(37, 211, 102, 0.6); transition: box-shadow 0.3s; }
+  .fab { display: inline-flex; align-items: center; background: #25d366; color: #fff; padding: 12px; border-radius: 999px; box-shadow: 0 12px 30px -10px rgba(37, 211, 102, 0.6); transition: box-shadow 0.3s; }
   .fab .icon { width: 26px; height: 26px; }
   .fab__label { font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.4s var(--ease-out), padding 0.4s; }
-  .fab:hover .fab__label, .fab:focus-visible .fab__label { max-width: 220px; padding-inline-end: 4px; }
+  .fab:hover .fab__label, .fab:focus-visible .fab__label { max-width: 220px; padding-inline: 10px 4px; }
 </style>

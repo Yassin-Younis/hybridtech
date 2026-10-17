@@ -1,6 +1,7 @@
 ---
-// Floating "Download brochure" beside the WhatsApp button (Haitham, 2026-10-18): the software brochure
+// Floating brochure download above the WhatsApp button (Haitham, 2026-10-18): the software brochure
 // on the software page, the company profile (services) everywhere else, in the page's language.
+// Icon only, with a small PDF tag, as he asked (no "brochure" wording on the button).
 import type { Lang } from '../i18n';
 import { t, asset } from '../i18n';
 import { brochures } from '../data/brochures';
@@ -10,18 +11,15 @@ const { lang, page } = Astro.props;
 const d = t(lang);
 const kind = page.startsWith('/software') ? 'software' : 'company';
 const file = brochures[kind][lang];
-const label = kind === 'software' ? d.brochures.downloadSoftware : d.brochures.downloadCompany;
+const label = `${kind === 'software' ? d.brochures.downloadSoftware : d.brochures.downloadCompany} (${d.brochures.pdf})`;
 ---
-<a class="bfab" href={asset(file.file)} download={file.name} aria-label={`${label} (${d.brochures.pdf})`}>
-  <Icon name="download" />
-  <span class="bfab__long">{d.brochures.fab}</span>
-  <span class="bfab__short">{d.brochures.fabShort}</span>
+<a class="bfab" href={asset(file.file)} download={file.name} aria-label={label} title={label}>
+  <Icon name="file-download" />
+  <span class="bfab__tag" aria-hidden="true">PDF</span>
 </a>
 <style>
-  .bfab { display: inline-flex; align-items: center; gap: 8px; height: 50px; padding-inline: 14px 18px; border-radius: 999px; background: var(--orange); color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 12px 30px -10px rgba(241, 81, 27, 0.6); transition: background 0.25s, box-shadow 0.3s; }
+  .bfab { position: relative; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; background: var(--orange); color: #fff; box-shadow: 0 12px 30px -10px rgba(241, 81, 27, 0.6); transition: background 0.25s, box-shadow 0.3s; }
   .bfab:hover, .bfab:focus-visible { background: #d9420f; box-shadow: 0 14px 32px -10px rgba(241, 81, 27, 0.75); }
-  .bfab .icon { width: 22px; height: 22px; }
-  :lang(ar) .bfab { font-size: 1rem; }
-  .bfab__short { display: none; }
-  @media (max-width: 560px) { .bfab__long { display: none; } .bfab__short { display: inline; } }
+  .bfab .icon { width: 26px; height: 26px; }
+  .bfab__tag { position: absolute; inset-block-start: -5px; inset-inline-end: -6px; padding: 1px 5px; border-radius: 6px; background: #fff; color: var(--orange); font-family: var(--font-num); font-weight: 700; font-size: 0.62rem; line-height: 1.4; letter-spacing: 0.04em; box-shadow: 0 2px 6px rgba(0, 38, 61, 0.25); }
 </style>
