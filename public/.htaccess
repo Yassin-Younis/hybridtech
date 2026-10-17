@@ -27,15 +27,14 @@ ErrorDocument 404 /404.html
 </IfModule>
 
 # Pages and data revalidate on every visit, so a publish from /admin/ shows up at once.
-# Photos and logos keep their names when replaced, so they get a short cache; hashed /_astro/ files
-# are cached for a year by public/_astro/.htaccess.
-<IfModule mod_expires.c>
-  ExpiresActive On
-  ExpiresDefault "access plus 1 day"
-  ExpiresByType text/html "access plus 0 seconds"
-  ExpiresByType application/json "access plus 0 seconds"
-  ExpiresByType application/xml "access plus 0 seconds"
-  ExpiresByType text/xml "access plus 0 seconds"
+# Photos, logos and PDFs keep their names when replaced, so they get a short cache; hashed /_astro/
+# files are cached for a year by public/_astro/.htaccess. Done with mod_headers because the
+# data4host server has no mod_expires.
+<IfModule mod_headers.c>
+  Header set Cache-Control "public, max-age=86400"
+  <FilesMatch "\.(html|json|xml|txt|webmanifest)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
 </IfModule>
 
 # FTP-Deploy-Action's bookkeeping file (see .github/workflows/deploy.yml) is not for visitors.
