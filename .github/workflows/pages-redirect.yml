@@ -1,0 +1,42 @@
+name: Redirect old GitHub Pages URL
+# The site moved from https://yassin-younis.github.io/hybridtech/ to https://hybridtech-eg.com/.
+# This replaces the Pages copy with a page that forwards every old link (path, query and #hash)
+# to the same place on the new domain, so shared links and the /admin/#token=... links keep working.
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/pages-redirect.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Write redirect pages
+        run: |
+          mkdir -p out
+          cat > out/404.html <<'EOF'
+          <!doctype html>
+          <meta charset="utf-8">
+          <meta name="robots" content="noindex">
+          <title>Hybrid Technology has moved to hybridtech-eg.com</title>
+          <link rel="canonical" href="https://hybridtech-eg.com/">
+          <script>location.replace('https://hybridtech-eg.com' + (location.pathname.replace(/^\/hybridtech/, '') || '/') + location.search + location.hash);</script>
+          <noscript><meta http-equiv="refresh" content="0;url=https://hybridtech-eg.com/"></noscript>
+          <p>Hybrid Technology has moved to <a href="https://hybridtech-eg.com/">hybridtech-eg.com</a>.</p>
+          EOF
+          cp out/404.html out/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+      - id: deployment
+        uses: actions/deploy-pages@v4
