@@ -13,7 +13,7 @@ export const pick = (lang: Lang, v: { en: string; ar: string }) => v[lang];
 export const fill = (s: string, vars: Record<string, string | number>) =>
   s.replace(/\{(\w+)\}/g, (_, k) => String(vars[k] ?? ''));
 
-/** Base-aware path builder: path('/products') -> '/hybridtech/products' or '/hybridtech/ar/products' */
+/** Base-aware path builder: path('/products') -> '/products' or '/ar/products' */
 export const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
 export const path = (lang: Lang, p = '/') => {
   const clean = p.startsWith('/') ? p : `/${p}`;
