@@ -188,7 +188,7 @@ export const en = {
     site: 'hybridtech-eg.com',
     explore: 'Explore', reach: 'Reach us',
   },
-  brochures: { title: 'Brochures', company: 'Company profile', software: 'Software brochure', downloadCompany: 'Download company profile', downloadSoftware: 'Download the brochure', pdf: 'PDF' },
+  brochures: { title: 'Brochures', company: 'Company profile', software: 'Software brochure', downloadCompany: 'Download company profile', downloadSoftware: 'Download the brochure', pdf: 'PDF', fab: 'Download brochure', fabShort: 'Brochure' },
   seo: {
     title: 'Hybrid Technology | IT Solutions Provider in Cairo, Egypt',
     description: 'Hybrid Technology Egypt: official HP Amplify Partner supplying laptops, servers, networking, firewalls, printers and managed IT services in Cairo since 2020.',

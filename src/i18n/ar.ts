@@ -190,7 +190,7 @@ export const ar = {
     site: 'hybridtech-eg.com',
     explore: 'روابط سريعة', reach: 'تواصل معنا',
   },
-  brochures: { title: 'الكتيّبات', company: 'الملف التعريفي للشركة', software: 'كتيّب البرمجيات', downloadCompany: 'تحميل الملف التعريفي', downloadSoftware: 'تحميل الكتيّب', pdf: 'PDF' },
+  brochures: { title: 'الكتيّبات', company: 'الملف التعريفي للشركة', software: 'كتيّب البرمجيات', downloadCompany: 'تحميل الملف التعريفي', downloadSoftware: 'تحميل الكتيّب', pdf: 'PDF', fab: 'تحميل الكتيّب', fabShort: 'الكتيّب' },
   seo: {
     title: 'هيبرد تكنولوجي (Hybrid Technology) | حلول تكنولوجيا المعلومات في القاهرة',
     description: 'هيبرد تكنولوجي (Hybrid Technology): شريك HP Amplify الرسمي في القاهرة، نورّد اللابتوب والخوادم والشبكات وجدران الحماية والطابعات والخدمات المُدارة منذ 2020.',
