@@ -20,6 +20,16 @@ Every push to `main` runs `.github/workflows/deploy.yml`: it builds the site and
 
 The old address `https://yassin-younis.github.io/hybridtech/` forwards every link to the same page on the new domain (`.github/workflows/pages-redirect.yml`).
 
+## Brochures (PDF)
+
+Two English A4 brochures are served from `public/brochures/` and linked from the footer, the Solutions page and the Software page (they download, see `public/.htaccess`): the company profile and the software brochure. They are HTML pages in `brochures/` rendered with Chrome; the copy comes from `src/i18n/en.ts` and `src/data/`, so regenerate after changing it:
+
+```sh
+node --experimental-strip-types brochures/build.mjs   # needs `brew install qrencode`
+```
+
+`brochures/img/` holds the software scenes and website screenshots, captured from a local preview with `node brochures/capture.mjs` (run `pnpm build && pnpm preview --port 4329` first). Re-capture when the software scenes or the homepage hero change.
+
 ## Catalogue admin (`/admin/`)
 
 `https://hybridtech-eg.com/admin/` is a static page (`src/pages/admin/`, `src/scripts/admin/`) that edits products, categories, photos and prices. It is not linked from the site, is excluded from the sitemap and robots, and needs a GitHub token to do anything. **Publish** writes one commit to `main` through the GitHub API (products.json, categories.json, new/removed photos), and the normal deploy workflow uploads it in about two minutes. Photos are resized in the browser (max 1200 px, WebP) before upload.
