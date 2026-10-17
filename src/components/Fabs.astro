@@ -1,0 +1,17 @@
+---
+// The floating buttons in the bottom corner: download this page's brochure, and WhatsApp.
+// scripts/nav.ts hides the group while the contact section (which has its own buttons) is on screen.
+import type { Lang } from '../i18n';
+import BrochureFab from './BrochureFab.astro';
+import WhatsAppFab from './WhatsAppFab.astro';
+interface Props { lang: Lang; page: string }
+const { lang, page } = Astro.props;
+---
+<div class="fabs" id="fabs">
+  <BrochureFab {lang} {page} />
+  <WhatsAppFab {lang} />
+</div>
+<style>
+  .fabs { position: fixed; inset-inline-end: 20px; bottom: 20px; z-index: 40; display: flex; align-items: center; gap: 10px; transition: translate 0.4s var(--ease-out), opacity 0.4s; }
+  .fabs.is-hidden { translate: 0 120px; opacity: 0; pointer-events: none; }
+</style>

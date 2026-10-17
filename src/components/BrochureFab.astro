@@ -1,0 +1,27 @@
+---
+// Floating "Download brochure" beside the WhatsApp button (Haitham, 2026-10-18): the software brochure
+// on the software page, the company profile (services) everywhere else, in the page's language.
+import type { Lang } from '../i18n';
+import { t, asset } from '../i18n';
+import { brochures } from '../data/brochures';
+import Icon from './Icon.astro';
+interface Props { lang: Lang; page: string }
+const { lang, page } = Astro.props;
+const d = t(lang);
+const kind = page.startsWith('/software') ? 'software' : 'company';
+const file = brochures[kind][lang];
+const label = kind === 'software' ? d.brochures.downloadSoftware : d.brochures.downloadCompany;
+---
+<a class="bfab" href={asset(file.file)} download={file.name} aria-label={`${label} (${d.brochures.pdf})`}>
+  <Icon name="download" />
+  <span class="bfab__long">{d.brochures.fab}</span>
+  <span class="bfab__short">{d.brochures.fabShort}</span>
+</a>
+<style>
+  .bfab { display: inline-flex; align-items: center; gap: 8px; height: 50px; padding-inline: 14px 18px; border-radius: 999px; background: var(--orange); color: #fff; font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; white-space: nowrap; box-shadow: 0 12px 30px -10px rgba(241, 81, 27, 0.6); transition: background 0.25s, box-shadow 0.3s; }
+  .bfab:hover, .bfab:focus-visible { background: #d9420f; box-shadow: 0 14px 32px -10px rgba(241, 81, 27, 0.75); }
+  .bfab .icon { width: 22px; height: 22px; }
+  :lang(ar) .bfab { font-size: 1rem; }
+  .bfab__short { display: none; }
+  @media (max-width: 560px) { .bfab__long { display: none; } .bfab__short { display: inline; } }
+</style>

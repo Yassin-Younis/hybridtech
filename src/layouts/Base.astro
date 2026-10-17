@@ -8,7 +8,7 @@ import { dirOf, path, asset, otherLang } from '../i18n';
 import SEO from '../components/SEO.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import WhatsAppFab from '../components/WhatsAppFab.astro';
+import Fabs from '../components/Fabs.astro';
 import Intro from '../components/Intro.astro';
 // Above-the-fold faces per language (same hashed assets fonts.css points at), preloaded so the
 // hero heading and first paragraph don't wait for style/layout to discover them.
@@ -57,7 +57,7 @@ const preloadFonts = lang === 'ar' ? [messiri700, messiri400] : [chakra700, inst
     <Header {lang} {page} />
     <main id="main"><slot /></main>
     <Footer {lang} {page} />
-    <WhatsAppFab {lang} />
+    <Fabs {lang} {page} />
     <script>
       import '../scripts/main';
     </script>

@@ -10,8 +10,8 @@ toggle?.addEventListener('change', () => { document.body.style.overflow = toggle
 document.querySelectorAll<HTMLAnchorElement>('[data-lang-toggle]').forEach((a) =>
   a.addEventListener('click', () => { try { localStorage.setItem('hy_lang', a.dataset.langToggle || 'en'); sessionStorage.removeItem('hy_redir'); } catch {} }),
 );
-// Hide the WhatsApp button while the contact section is on screen.
-const fab = document.getElementById('wa-fab');
+// Hide the floating buttons (brochure + WhatsApp) while the contact section is on screen.
+const fab = document.getElementById('fabs');
 const contact = document.getElementById('contact');
 if (fab && contact && 'IntersectionObserver' in window) {
   new IntersectionObserver(([e]) => fab.classList.toggle('is-hidden', e.isIntersecting), { threshold: 0.15 }).observe(contact);
